@@ -35,8 +35,7 @@ If you want to contribute to the project, have a look at our [contributing guide
 
 Building the `SRGLetterbox-demo` target requires command-line tools for icon generation, easily installed with [Homebrew](https://brew.sh/):
 
-	brew install imagemagick ghostscript
-	brew install jq
+	brew install imagemagick ghostscript jq
 
 ## Integration
 
@@ -70,7 +69,13 @@ You are required to provide additional information about the data collected by y
 
 ## Demo project
 
-To test what the library is capable of, run the associated demo. Before running it, you should initialize the project by calling `make setup` (or `make public.setup` if you are not part of the SRG SSR organization) from the main repository directory.
+To test what the library is capable of, run the associated demo. Before running it you should initialize the project by calling
+
+```
+make setup
+```
+
+from the main repository directory.
 
 #### URL schemes (iOS)
 
@@ -89,6 +94,8 @@ If you need to make changes to the settings:
 1. Switch to the `Configuration` directory and commit changes there.
 1. Update the [Makefile](../Makefile) `CONFIGURATION_COMMIT_SHA1` variable to point at the configuration commit to use.
 1. Push all commits when you are ready.
+
+The project can be built without private settings but some features might not be available or configured in a different way.
 
 ## Migration between major versions
 

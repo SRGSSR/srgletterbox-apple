@@ -26,4 +26,10 @@ OBJC_EXPORT NSString *LetterboxDemoAccessibilityLocalizedString(NSString *key, N
  */
 OBJC_EXPORT NSString *LetterboxDemoResourceNameForUIClass(Class cls);
 
+@interface NSBundle (SRGLetterbox)
+
+@property (nonatomic, readonly) NSString *letterbox_demo_friendlyVersionNumber;
+
+@end
+
 NS_ASSUME_NONNULL_END

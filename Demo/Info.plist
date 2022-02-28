@@ -8,6 +8,8 @@
 	<string>$(APPCENTER_URL)</string>
 	<key>BuildName</key>
 	<string>$(BUILD_NAME)</string>
+	<key>BundleDisplayNameSuffix</key>
+	<string>$(BUNDLE_DISPLAY_NAME_SUFFIX)</string>
 	<key>BundleNameSuffix</key>
 	<string>$(BUNDLE_DISPLAY_NAME_SUFFIX)</string>
 	<key>CFBundleDevelopmentRegion</key>

@@ -48,160 +48,195 @@ platform :ios do
     srg_junit_files
   end
 
+  # Nightlies
+
   desc 'Build a new iOS nightly demo on App Center'
-  lane :iOSnightly do
+  lane :nightly do
     platform = 'iOS'
+    service = 'AppCenter'
 
-    appcenter_build_number = latest_appcenter_build_number(
-      ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
+    build_number = latest_appcenter_build_number(
+      ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME']
     )
+    build_number = xcode_override_build_number(build_number + 1)
 
-    nightly(
-      platform: platform,
-      current_build_number: appcenter_build_number
+    branch_name = git_branch_name
+
+    notify_build_number_to_ci(nightly_build_name(branch_name))
+
+    build_lane(
+      configuration: 'Nightly_AppCenter',
+      scheme: demo_scheme,
+      display_name_suffix: nighlty_display_name_suffix(branch_name),
+      version_suffix: nightly_version_suffix(branch_name),
+      build_name: nightly_build_name(branch_name),
+      platform: platform
     )
-
-    changelog = default_changelog_for_nightlies(platform)
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_DESTINATIONS'],
-      notes: changelog
+      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
+      notes: nightly_changelog(platform, service)
     )
 
     clean_build_artifacts
 
-    save_last_nightlies_success_git_commit_hash(platform)
+    UI.message "SRGLetterbox-demo (Nightly #{build_number}) uploaded and distributed. ✅"
+
+    save_last_nightlies_success_git_commit_hash(platform, service)
   end
 
   desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing.'
   lane :tvOSnightly do
-    platform = 'tvOS'
-
-    update_app_identifier_to_appstore
-
-    appstore_build_number = srg_latest_testflight_build_number(platform)
-
-    nightly(
-      platform: platform,
-      current_build_number: appstore_build_number,
-      export_to_appstore: true
-    )
-
-    changelog = default_changelog_for_nightlies(platform)
-
-    srg_pilot(platform, changelog)
-
-    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
-    update_dsyms(platform, appcenter_appname, nil)
-
-    clean_build_artifacts
-
-    save_last_nightlies_success_git_commit_hash(platform)
+    testflight_nightlies(platform: 'tvOS')
   end
 
-  desc 'Send latest tvOS nightly dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
+  desc 'Send latest tvOS nightly dSYMs to App Center. Optional \'build_number\', \'version\' or \'min_version\' parameters.'
   lane :tvOSnightlyDSYMs do |options|
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
     update_dsyms('tvOS', appcenter_appname, options)
   end
 
+  desc 'Build a new iOS nightly demo on AppStore Connect and wait build processing.'
+  lane :iOSnightly do
+    testflight_nightlies(platform: 'iOS')
+  end
+
+  desc 'Send latest iOS nightly dSYMs to App Center. Optional \'build_number\', \'version\' or \'min_version\' parameters.'
+  lane :iOSnightlyDSYMs do |options|
+    appcenter_appname = ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
+    update_dsyms('iOS', appcenter_appname, options)
+  end
+
+  # Demo
+
   desc 'Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).'
-  lane :iOSdemo do
+  lane :demo do
     platform = 'iOS'
 
-    demo(
+    notify_build_number_to_ci(nil)
+
+    build_lane(
+      configuration: 'Release_AppCenter',
+      scheme: demo_scheme,
       platform: platform
     )
-
-    changelog = what_s_new_for_demo
 
     appcenter_lane(
       appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
       destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
-      notes: changelog,
+      notes: what_s_new_for_demo,
       notify_testers: true
     )
 
     clean_build_artifacts
+
+    UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded and distributed. ✅"
 
     UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
 
   desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
   lane :tvOSdemo do
-    platform = 'tvOS'
-    build_number = xcode_current_project_version
-
-    can_upload = can_upload_testflight_build(nil, platform, build_number)
-    UI.message("SRGLetterbox-demo (Build #{build_number}) already uploaded 🔁 ✅") unless can_upload
-    next unless can_upload
-
-    update_app_identifier_to_appstore
-
-    demo(
-      platform: platform,
-      export_to_appstore: true
-    )
-
-    changelog = what_s_new_for_demo
-
-    srg_pilot(platform, changelog)
-
-    appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
-    update_dsyms(platform, appcenter_appname, nil)
-
-    clean_build_artifacts
-
-    UI.important('You are responsible to tag the library and bump the version (and the build number).')
+    testflight_demo(platform: 'tvOS')
   end
 
-  desc 'Send latest tvOS demo dSYMs to App Center, with optional \'version\' or \'min_version\' parameters.'
+  desc 'Send latest tvOS demo dSYMs to App Center. Optional \'build_number\', \'version\' or \'min_version\' parameters.'
   lane :tvOSdemoDSYMs do |options|
     appcenter_appname = ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
     update_dsyms('tvOS', appcenter_appname, options)
   end
 
-  desc 'Common stuff to build a new nightly demo.'
-  private_lane :nightly do |options|
-    platform = options[:platform] || 'iOS'
-    export_to_appstore = options[:export_to_appstore] || false
-    current_build_number = options[:current_build_number]
+  desc 'Build a new iOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
+  lane :iOSdemo do
+    testflight_demo(platform: 'iOS')
+  end
 
-    override_current_project_version(current_build_number + 1)
+  desc 'Send latest iOS demo dSYMs to App Center. Optional \'build_number\', \'version\' or \'min_version\' parameters.'
+  lane :iOSdemoDSYMs do |options|
+    appcenter_appname = ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME']
+    update_dsyms('iOS', appcenter_appname, options)
+  end
+
+  # Private lanes
+
+  desc 'Builds a new nightly on AppStore Connect and waits build processing.'
+  private_lane :testflight_nightlies do |options|
+    platform = options[:platform] || 'iOS'
+    service = 'TestFlight'
+
+    build_number = srg_latest_testflight_build_number(platform)
+    build_number = xcode_override_build_number(build_number + 1)
 
     branch_name = git_branch_name
 
-    notify_build_number_to_ci(nightly_build_name_suffix(branch_name))
-
-    clean_derived_data
+    notify_build_number_to_ci(nightly_build_name(branch_name))
 
     build_lane(
       configuration: 'Nightly',
-      scheme: 'SRGLetterbox-demo',
+      scheme: demo_scheme,
       display_name_suffix: nighlty_display_name_suffix(branch_name),
       version_suffix: nightly_version_suffix(branch_name),
-      build_name_suffix: nightly_build_name_suffix(branch_name),
+      build_name: nightly_build_name(branch_name),
       platform: platform,
-      export_to_appstore: export_to_appstore
+      export_to_appstore: true
     )
+
+    pilot_fast_upload(platform)
+
+    clean_build_artifacts
+
+    UI.message "SRGLetterbox-demo (Nightly #{build_number}) uploaded. ✅"
+
+    pilot_distribute(platform, build_number, nightly_changelog(platform, service))
+
+    UI.message "SRGLetterbox-demo (Nightly #{build_number}) distributed. ✅"
+
+    appcenter_appname = appcenter_testflight_nightly_name(platform)
+    dsyms_options = { build_number: build_number }
+    update_dsyms(platform, appcenter_appname, dsyms_options)
+
+    UI.message "SRGLetterbox-demo (Nightly #{build_number}) dSYM file OK. ✅"
+
+    save_last_nightlies_success_git_commit_hash(platform, service)
   end
 
-  desc 'Common stuff to build a new demo.'
-  private_lane :demo do |options|
+  desc 'Builds a new demo on AppStore Connect with the current build number and waits build processing. If on the develop branch, tries to tag the current version, then bumps the build number and pushes.'
+  private_lane :testflight_demo do |options|
     platform = options[:platform] || 'iOS'
-    export_to_appstore = options[:export_to_appstore] || false
 
     notify_build_number_to_ci(nil)
 
-    clean_derived_data
+    build_number = xcode_build_number
+
+    can_upload = can_upload_testflight_build(nil, platform, build_number)
+    UI.message("SRGLetterbox-demo (Release #{build_number}) already uploaded 🔁 ✅") unless can_upload
+    next unless can_upload
 
     build_lane(
       configuration: 'Release',
-      scheme: 'SRGLetterbox-demo',
+      scheme: demo_scheme,
       platform: platform,
-      export_to_appstore: export_to_appstore
+      export_to_appstore: true
     )
+
+    pilot_fast_upload(platform)
+
+    clean_build_artifacts
+
+    UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded. ✅"
+
+    pilot_distribute(platform, build_number, what_s_new_for_demo)
+
+    UI.message "SRGLetterbox-demo (Release #{build_number}) distributed. ✅"
+
+    appcenter_appname = appcenter_testflight_demo_name(platform)
+    dsyms_options = { build_number: build_number }
+    update_dsyms(platform, appcenter_appname, dsyms_options)
+
+    UI.message "SRGLetterbox-demo (Release #{build_number}) dSYM file OK. ✅"
+
+    UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
 
   desc 'Build for a scheme and a configuration'
@@ -209,7 +244,7 @@ platform :ios do
     options[:export_to_appstore] ||= false
     options[:display_name_suffix] ||= ''
     options[:version_suffix] ||= ''
-    options[:build_name_suffix] ||= ''
+    options[:build_name] ||= ''
     options[:platform] ||= 'iOS'
     options[:version] = xcode_marketing_version
 
@@ -281,10 +316,14 @@ def app_config
   CredentialsManager::AppfileConfig
 end
 
+def srg_pwd
+  Dir.chdir('..') { Dir.pwd }
+end
+
 def can_upload_testflight_build(app_identifier, platform, build_number)
   app_identifier ||= app_config.try_fetch_value(:app_identifier)
   platform ||= 'iOS'
-  build_number ||= xcode_current_project_version
+  build_number ||= xcode_build_number
 
   login_with_app_store_connect_api_key
   appstore_build_number = latest_testflight_build_number(
@@ -304,8 +343,6 @@ def update_options_to_appstore(options)
   index = version.index('-')
   return options unless index
 
-  suffix = version[index..version.length - 1]
-  options[:build_name_suffix] = suffix + options[:build_name_suffix]
   options[:version] = version[0..index - 1]
   options
 end
@@ -316,8 +353,21 @@ def srg_xcargs(options)
   xcargs += " BUNDLE_DISPLAY_NAME_SUFFIX='#{options[:display_name_suffix]}'"
   xcargs += " MARKETING_VERSION='#{options[:version]}'"
   xcargs += " MARKETING_VERSION_SUFFIX='#{options[:version_suffix]}'"
-  xcargs += " BUILD_NAME_SUFFIX='#{options[:build_name_suffix]}'"
+  xcargs += " BUILD_NAME='#{options[:build_name]}'"
   xcargs += " DEVELOPMENT_TEAM='#{options[:team_id]}'"
+  xcargs + srg_xcargs_code_signing(export_to_appstore)
+end
+
+# Use cloud signing if available
+def srg_xcargs_code_signing(export_to_appstore)
+  asc_api_key = srg_app_store_connect_api_key if export_to_appstore
+
+  xcargs = ''
+  if asc_api_key
+    xcargs += " -authenticationKeyIssuerID '#{asc_api_key[:issuerId]}'"
+    xcargs += " -authenticationKeyID '#{asc_api_key[:id]}'"
+    xcargs += " -authenticationKeyPath '#{asc_api_key[:filePath]}'"
+  end
   "#{xcargs} -allowProvisioningUpdates"
 end
 
@@ -335,17 +385,17 @@ def nightly_version_suffix(branch_name)
   nightly_version_suffix
 end
 
-def nightly_build_name_suffix(branch_name)
-  nightly_build_name_suffix = ''
+def nightly_build_name(branch_name)
   if branch_name.include? 'feature/'
-    nightly_build_name_suffix = "+#{branch_name.sub('feature/', '').strip}"
+    branch_name.sub('feature/', '').strip
+  else
+    ''
   end
-  nightly_build_name_suffix
 end
 
-# Returns a default changelog for nightlies
-def default_changelog_for_nightlies(platform)
-  last_commit_hash = last_nightlies_success_git_commit_hash(platform)
+# Return a nightly changelog from git commit messages
+def nightly_changelog(platform, service)
+  last_commit_hash = last_nightlies_success_git_commit_hash(platform, service)
   last_commit_hash = 'HEAD^^^^^' if last_commit_hash.length < 12
 
   changelog = changelog_from_git_commits(
@@ -355,40 +405,25 @@ def default_changelog_for_nightlies(platform)
 
   # HAX: strip emoji from changelog
   changelog = changelog ? changelog.sub(/[\u{1F300}-\u{1F6FF}]/, '').lstrip : ''
-  changelog = 'No change log found for this build.' if changelog.length.zero?
-  Actions.lane_context[SharedValues::FL_CHANGELOG] = changelog
-end
 
-# Returns current build number on App Center
-def latest_appcenter_build_number(app_name)
-  appcenter_hash = appcenter_fetch_version_number(
-    api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-    owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
-    app_name: app_name
-  )
-
-  Integer(appcenter_hash['build_number'])
-end
-
-# Returns current build number on AppStore Connect
-def srg_latest_testflight_build_number(platform)
-  login_with_app_store_connect_api_key
-  latest_testflight_build_number(platform: appstore_platform(platform))
+  changelog.empty? ? 'No change log found for this build.' : changelog
 end
 
 # Save the git commit hash in a local text file for nightlies
-def save_last_nightlies_success_git_commit_hash(platform)
+def save_last_nightlies_success_git_commit_hash(platform, service)
   last = last_git_commit
-  unique_file = platform ? "#{platform.downcase}-" : ''
-  file_name = "last-#{unique_file}nightlies-success-git-commit-hash.txt"
+  platform = platform ? "#{platform.downcase}-" : ''
+  service = service ? "#{service.downcase}-" : ''
+  file_name = "last-#{service}#{platform}nightlies-success-git-commit-hash.txt"
   File.write(file_name, last[:commit_hash])
   last[:commit_hash]
 end
 
 # Read the git commit hash in a local text file for nightlies
-def last_nightlies_success_git_commit_hash(platform)
-  unique_file = platform ? "#{platform.downcase}-" : ''
-  file_name = "last-#{unique_file}nightlies-success-git-commit-hash.txt"
+def last_nightlies_success_git_commit_hash(platform, service)
+  platform = platform ? "#{platform.downcase}-" : ''
+  service = service ? "#{service.downcase}-" : ''
+  file_name = "last-#{service}#{platform}nightlies-success-git-commit-hash.txt"
   file = File.open(file_name, 'a+')
   nightlies_success_git_commit_hash = file.read
   file.close
@@ -397,31 +432,61 @@ end
 
 # Returns the marketing version, without suffix
 def xcode_marketing_version
-  marketing_version = nil
-  Dir.chdir('../Demo') do
-    command = 'xcodebuild -showBuildSettings | grep "MARKETING_VERSION ="'
-    marketing_version = xcodebuid_grep_output sh command
-  end
-  marketing_version['MARKETING_VERSION ='] = ''
-  marketing_version.gsub(/\s+/, '').chomp
+  get_xcconfig_value(
+    path: srg_xcconfig_path,
+    name: 'MARKETING_VERSION'
+  )
 end
 
-# Returns the current project version
-def xcode_current_project_version
-  version = nil
-  Dir.chdir('../Demo') do
-    command = 'xcodebuild -showBuildSettings | grep "CURRENT_PROJECT_VERSION ="'
-    version = xcodebuid_grep_output sh command
+# Returns the build number
+def xcode_build_number
+  get_xcconfig_value(
+    path: srg_xcconfig_path,
+    name: 'CURRENT_PROJECT_VERSION'
+  )
+end
+
+# Override build number (current project version)
+def xcode_override_build_number(build_number)
+  update_xcconfig_value(
+    path: srg_xcconfig_path,
+    name: 'CURRENT_PROJECT_VERSION',
+    value: build_number.to_s
+  )
+  build_number.to_s
+end
+
+def srg_xcconfig_path
+  'Demo/Xcode/Shared/Targets/Application.xcconfig'
+end
+
+def demo_scheme
+  'SRGLetterbox-demo'
+end
+
+def appcenter_testflight_nightly_name(platform)
+  platform ||= 'iOS'
+
+  if platform == 'iOS'
+    ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
+  else
+    ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
   end
-  version['CURRENT_PROJECT_VERSION ='] = ''
-  version.gsub(/\s+/, '').chomp
+end
+
+def appcenter_testflight_demo_name(platform)
+  platform ||= 'iOS'
+
+  if platform == 'iOS'
+    ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME']
+  else
+    ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
+  end
 end
 
 # Return current tag version
 def tag_version
-  build_number = xcode_current_project_version
-  marketing_version = xcode_marketing_version
-  "#{marketing_version}-#{build_number}"
+  "#{xcode_marketing_version}-#{xcode_build_number}"
 end
 
 # Return the what's new text from WhatsNew-demo.json file in the repository
@@ -433,49 +498,62 @@ def what_s_new_for_demo
   what_s_new || ''
 end
 
-# Update only the demo app identifier for App Store Connect submit.
-def update_app_identifier_to_appstore
-  update_app_identifier(
-    xcodeproj: 'Demo/SRGLetterbox-demo.xcodeproj',
-    plist_path: 'Info.plist'
-  )
-end
+def pilot_fast_upload(platform)
+  lane_context.delete(SharedValues::FL_CHANGELOG)
 
-def srg_pilot(platform, changelog)
   login_with_app_store_connect_api_key
   pilot(
     app_platform: appstore_platform(platform),
-    changelog: changelog,
-    distribute_external: true,
-    demo_account_required: false,
-    beta_app_review_info: beta_app_review_info,
-    groups: ENV['ITUNES_CONNECT_TESTFLIGHT_GROUPS']
+    skip_waiting_for_build_processing: true
   )
 end
 
-# Update dSYMs from AppStore to App Center.
+def pilot_distribute(platform, build_number, changelog)
+  srg_pilot_distribute(platform, build_number, changelog)
+rescue StandardError => e
+  raise unless e.message.include? 'Another build is in review'
+
+  UI.important('Another build is already in external beta review. Skipping external distribution. ⚠️')
+end
+
+def srg_pilot_distribute(platform, build_number, changelog)
+  login_with_app_store_connect_api_key
+  pilot(
+    distribute_only: true,
+    app_platform: appstore_platform(platform),
+    build_number: build_number,
+    changelog: changelog,
+    distribute_external: true,
+    groups: ENV['ITUNES_CONNECT_TESTFLIGHT_GROUPS'],
+    notify_external_testers: true,
+    demo_account_required: false,
+    beta_app_review_info: beta_app_review_info
+  )
+end
+
+# Update dSYMs from AppStore Connect to App Center.
 def update_dsyms(platform, appcenter_appname, options)
   platform ||= 'iOS'
-  min_version = options ? options[:min_version] : nil
-  version = options ? options[:version] : nil
+
   output_directory = "fastlane/export/#{lane_context[SharedValues::LANE_NAME]}"
   Dir.chdir('..') { FileUtils.mkdir_p(output_directory) }
 
-  download_appstore_dsyms(platform, min_version, version, output_directory)
+  download_appstore_dsyms(platform, options, output_directory)
   upload_appcenter_dsyms(appcenter_appname)
 
   lane_context.delete(SharedValues::DSYM_PATHS)
 end
 
-def download_appstore_dsyms(platform, min_version, version, output_directory)
+def download_appstore_dsyms(platform, options, output_directory)
   platform ||= 'iOS'
-  version ||= 'latest'
+  options[:version] ||= 'latest'
 
   login_with_app_store_connect_api_key
   download_dsyms(
     platform: appstore_platform(platform),
-    min_version: min_version,
-    version: min_version ? nil : version,
+    min_version: options[:build_number] ? nil : options[:min_version],
+    version: options[:min_version] || options[:build_number] ? nil : options[:version],
+    build_number: options[:build_number],
     output_directory: output_directory,
     wait_for_dsym_processing: true,
     wait_timeout: 90
@@ -492,41 +570,30 @@ def upload_appcenter_dsyms(appcenter_appname)
   end
 end
 
-# Override common current project version
-def override_current_project_version(build_number)
-  set_xcconfig_value(
-    path: 'Demo/Demo.xcconfig',
-    name: 'CURRENT_PROJECT_VERSION',
-    value: build_number.to_s
-  )
-end
-
-# Returns the library scheme
-def xcode_library_scheme
-  scheme = nil
-  Dir.chdir('..') do
-    command = 'xcodebuild -list | grep "Schemes:" -A 1'
-    scheme = xcodebuid_grep_output sh command
-  end
-  scheme.gsub(/\s+/, '').chomp
-end
-
-# Returns clean xcodebuid grep output, without warning and errors
-def xcodebuid_grep_output(output)
-  line_count = output.lines.count
-  output.split(/\n/) [line_count - 1]
-end
-
 # Share build number to the continuous integration
-def notify_build_number_to_ci(suffix)
+def notify_build_number_to_ci(build_name)
   return unless ENV['TEAMCITY_VERSION']
 
-  suffix ||= ''
-
+  build_name ||= ''
   displayed_build_number = xcode_marketing_version
-  displayed_build_number += "-#{xcode_current_project_version}"
-  displayed_build_number += suffix
+  displayed_build_number += "-#{xcode_build_number}"
+  displayed_build_number += "+#{build_name}" unless build_name.empty?
   puts "##teamcity[buildNumber '#{displayed_build_number}']"
+end
+
+# Returns current build number on App Center
+def latest_appcenter_build_number(app_name)
+  Integer(appcenter_fetch_version_number(
+    api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
+    owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
+    app_name: app_name
+  )['build_number'])
+end
+
+# Returns current build number on AppStore Connect
+def srg_latest_testflight_build_number(platform)
+  login_with_app_store_connect_api_key
+  latest_testflight_build_number(platform: appstore_platform(platform))
 end
 
 def git_branch_name
@@ -547,11 +614,20 @@ def appstore_platform(platform)
   appstore_platforms[platform]
 end
 
+def srg_app_store_connect_api_key
+  { id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ID'],
+    issuerId: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ISSUER_ID'],
+    filePath: "#{srg_pwd}/Configuration/#{ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_PATH']}" }
+end
+
 def login_with_app_store_connect_api_key
+  asc_api_key = srg_app_store_connect_api_key
+  return unless asc_api_key
+
   app_store_connect_api_key(
-    key_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ID'],
-    issuer_id: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_ISSUER_ID'],
-    key_content: ENV['SRGSSR_APPSTORE_CONNECT_API_KEY_CONTENT']
+    key_id: asc_api_key[:id],
+    issuer_id: asc_api_key[:issuerId],
+    key_filepath: asc_api_key[:filePath]
   )
 end
 
