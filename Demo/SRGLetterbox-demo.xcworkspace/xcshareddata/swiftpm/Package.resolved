@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "de8577f58200195a882d3b21f1270775b02b78e2",
-          "version": "6.9.0"
+          "revision": "7e3c521ad689b0e2bbf5cfb62e19c9e1619feae2",
+          "version": "6.10.0"
         }
       },
       {
@@ -77,9 +77,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "26c38b56c51a1a4b84b01fec6ec0f067a6eab5d7",
-          "version": "7.3.1"
+          "branch": "develop",
+          "revision": "e4781a12893191bf7356ac33df290b10c8c472c3",
+          "version": null
         }
       },
       {
