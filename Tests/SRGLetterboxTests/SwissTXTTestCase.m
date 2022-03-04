@@ -88,8 +88,6 @@
 - (void)testSkipToLiveForSwissTXTFullDVRStream
 {
 #warning "This flaky test has been disabled. See issue #166"
-    return;
-    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -170,8 +168,6 @@
 - (void)testSwissTXTFullDVRNotYetAvailable
 {
 #warning "This flaky test has been disabled. See issue #166"
-    return;
-    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -455,8 +451,6 @@
 - (void)testSwissTXTFullDVRWithHighlightRemoved
 {
 #warning "This flaky test has been disabled. See issue #166"
-    return;
-    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
@@ -531,8 +525,6 @@
 - (void)testSwissTXTLimitedDVRWithHighlightRemoved
 {
 #warning "This flaky test has been disabled. See issue #166"
-    return;
-    
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
