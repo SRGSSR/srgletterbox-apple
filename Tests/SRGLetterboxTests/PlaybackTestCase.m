@@ -435,7 +435,8 @@
     SRGLetterboxPlaybackSettings *settings = [[SRGLetterboxPlaybackSettings alloc] init];
     settings.streamType = SRGStreamTypeLive;
     
-    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:settings];
+    // FIXME: Restore `LiveVideoURN` URN when IL fixed MediaComposition on segment (no more 400 return)
+    [self.controller playURN:LiveVideo2URN atPosition:nil withPreferredSettings:settings];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
@@ -1579,7 +1580,8 @@
         return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
     }];
     
-    [self.controller playURN:LiveVideoURN atPosition:nil withPreferredSettings:nil];
+    // FIXME: Restore `LiveVideoURN` URN when IL fixed MediaComposition on segment (no more 400 return)
+    [self.controller playURN:LiveVideo2URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:20. handler:nil];
     
