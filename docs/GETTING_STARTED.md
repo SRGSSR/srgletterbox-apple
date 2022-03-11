@@ -234,7 +234,7 @@ self.controller.textStyleRules = @[rule];
 
 ## Playback rate
 
-Letterbox provides playback rate support, directly in the player view itself or through its `playbackRate` controller API. Some streams, most notably livestreams played in live conditions, might not support rates larger than 1.
+Letterbox setting offer playback rate controls. Note that some streams, most notably livestreams played in live conditions, might not support rates larger than 1. The playback rate can also be controlled programmatically using the dedicated `playbackRate` controller property.
 
 ## URL overrides and local file playback
 
