@@ -1014,12 +1014,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
-- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
+- (void)controlsViewWillShowSettings:(SRGControlsView *)controlsView
 {
     [self stopInactivityTracker];
 }
 
-- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView
+- (void)controlsViewDidHideSettings:(SRGControlsView *)controlsView
 {
     [self restartInactivityTracker];
 }

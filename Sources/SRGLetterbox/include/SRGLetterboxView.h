@@ -110,7 +110,8 @@ API_UNAVAILABLE(tvos)
  *    - Buttons to control playback (play / pause, - 10 / + 30 seconds, back to live for DVR streams).
  *    - Slider with elapsed and remaining time (on-demand streams), or time position (DVR streams).
  *    - Error display.
- *    - AirPlay, picture in picture and subtitles / audio tracks buttons.
+ *    - AirPlay and picture in picture buttons.
+ *    - Settings button (audio tracks, subtitles and playback rate).
  *    - Optional full screen button (see below).
  *    - Overlay displayed when external AirPlay playback is active.
  *    - Activity indicator.
@@ -312,8 +313,8 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 - (void)setTimelineAlwaysHidden:(BOOL)timelineAlwaysHidden animated:(BOOL)animated;
 
 /**
- *  The style to be applied for the view and views depending on it, like the audio track and subtitle selection popover.
- *  The default value is `SRGMediaPlayerUserInterfaceStyleUnspecified`.
+ *  The style to be applied for the view and views depending on it, like the settings popover. The default value is
+ *  `SRGMediaPlayerUserInterfaceStyleUnspecified`.
  *
  *  @discussion Style changes might be applied at a later time.
  */

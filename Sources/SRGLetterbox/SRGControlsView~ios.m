@@ -58,7 +58,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGAirPlayButton *airPlayButton;
 @property (nonatomic, weak) SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) SRGLetterboxTimeSlider *timeSlider;
-@property (nonatomic, weak) SRGTracksButton *tracksButton;
+@property (nonatomic, weak) SRGSettingsButton *settingsButton;
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenPhantomButton;
 
 @property (nonatomic, weak) UILabel *durationLabel;
@@ -136,7 +136,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self layoutTimeSliderInStackView:bottomStackView];
     [self layoutDurationLabelInStackView:bottomStackView];
     [self layoutLiveLabelInStackView:bottomStackView];
-    [self layoutTracksButtonInStackView:bottomStackView];
+    [self layoutSettingsButtonInStackView:bottomStackView];
     [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
 }
 
@@ -247,18 +247,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)layoutTracksButtonInStackView:(UIStackView *)stackView
+- (void)layoutSettingsButtonInStackView:(UIStackView *)stackView
 {
-    SRGTracksButton *tracksButton = [[SRGTracksButton alloc] init];
-    tracksButton.tintColor = UIColor.whiteColor;
-    tracksButton.image = [UIImage srg_letterboxImageNamed:@"subtitles_off"];
-    tracksButton.selectedImage = [UIImage srg_letterboxImageNamed:@"subtitles_on"];
-    tracksButton.delegate = self;
-    [stackView addArrangedSubview:tracksButton];
-    self.tracksButton = tracksButton;
+    SRGSettingsButton *settingsButton = [[SRGSettingsButton alloc] init];
+    settingsButton.tintColor = UIColor.whiteColor;
+    settingsButton.delegate = self;
+    [stackView addArrangedSubview:settingsButton];
+    self.settingsButton = settingsButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [[tracksButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
+        [[settingsButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
 }
 
@@ -378,7 +376,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
 {
     _userInterfaceStyle = userInterfaceStyle;
-    self.tracksButton.userInterfaceStyle = userInterfaceStyle;
+    self.settingsButton.userInterfaceStyle = userInterfaceStyle;
 }
 
 - (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
@@ -452,7 +450,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.pictureInPictureButton.mediaPlayerController = nil;
     self.airPlayButton.mediaPlayerController = nil;
-    self.tracksButton.mediaPlayerController = nil;
+    self.settingsButton.mediaPlayerController = nil;
     self.timeSlider.mediaPlayerController = nil;
     
     self.viewModeButton.mediaPlayerView = nil;
@@ -468,7 +466,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airPlayButton.mediaPlayerController = mediaPlayerController;
-    self.tracksButton.mediaPlayerController = mediaPlayerController;
+    self.settingsButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
@@ -577,7 +575,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
     self.liveLabelWrapperView.alwaysHidden = NO;
-    self.tracksButton.alwaysHidden = NO;
+    self.settingsButton.hidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 167.f) {
@@ -592,7 +590,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
-        self.tracksButton.alwaysHidden = YES;
+        self.settingsButton.hidden = YES;
     }
     
     CGFloat width = CGRectGetWidth(self.frame);
@@ -610,7 +608,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
-        self.tracksButton.alwaysHidden = YES;
+        self.settingsButton.hidden = YES;
     }
     
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
@@ -676,16 +674,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
 }
 
-#pragma mark SRGTracksButtonDelegate protocol
+#pragma mark SRGSettingsButtonDelegate protocol
 
-- (void)tracksButtonWillShowTrackSelection:(SRGTracksButton *)tracksButton
+- (void)settingsButtonWillShowSettings:(SRGSettingsButton *)settingsButton
 {
-    [self.delegate controlsViewWillShowTrackSelectionPopover:self];
+    [self.delegate controlsViewWillShowSettings:self];
 }
 
-- (void)tracksButtonDidHideTrackSelection:(SRGTracksButton *)tracksButton
+- (void)settingsButtonDidHideSettings:(SRGSettingsButton *)settingsButton
 {
-    [self.delegate controlsViewDidHideTrackSelectionPopover:self];
+    [self.delegate controlsViewDidHideSettings:self];
 }
 
 #pragma mark Actions

@@ -43,14 +43,14 @@ API_UNAVAILABLE(tvos)
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value interactive:(BOOL)interactive;
 
 /**
- *  Method called when the track selection popover is about to be shown.
+ *  Method called when the settings are about to be shown.
  */
-- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView;
+- (void)controlsViewWillShowSettings:(SRGControlsView *)controlsView;
 
 /**
- *  Method called when the track selection popover has been hidden.
+ *  Method called when the settings have been hidden.
  */
-- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView;
+- (void)controlsViewDidHideSettings:(SRGControlsView *)controlsView;
 
 @end
 
@@ -58,7 +58,7 @@ API_UNAVAILABLE(tvos)
  *  View displaying controls.
  */
 API_UNAVAILABLE(tvos)
-@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGTracksButtonDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGSettingsButtonDelegate>
 
 /**
  *  View optional delegate.
@@ -66,8 +66,8 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
 /**
- *  The style to be applied for the view and views depending on it, like the audio track and subtitle selection popover.
- *  The default value is `SRGMediaPlayerUserInterfaceStyleUnspecified`.
+ *  The style to be applied for the view and views depending on it, like the settings popover. The default value is
+ *  `SRGMediaPlayerUserInterfaceStyleUnspecified`.
  *
  *  @discussion Style changes might be applied at a later time.
  */
