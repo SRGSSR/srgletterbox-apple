@@ -23,27 +23,27 @@ NSString *MMFCachedScheduledOnDemandVideoURN(NSDate *startDate, NSDate *endDate)
 
 NSString *MMFURLChangeVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_couleur3_killswitch_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFBlockingReasonChangeVideoURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_couleur3_geoblocked_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTFullDVRURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_fulldvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_couleur3_fulldvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTLimitedDVRURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_liveonly_limiteddvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_couleur3_liveonly_limiteddvr_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 NSString *MMFSwissTXTLiveOnlyURN(NSDate *startDate, NSDate *endDate)
 {
-    return [NSString stringWithFormat:@"urn:rts:video:_tagesschau24_ard_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
+    return [NSString stringWithFormat:@"urn:rts:video:_couleur3_liveonly_delay_%@_%@", @((NSInteger)startDate.timeIntervalSince1970), @((NSInteger)endDate.timeIntervalSince1970)];
 }
 
 @implementation LetterboxBaseTestCase
