@@ -54,5 +54,6 @@
   "7.3.0-86": "- This Letterbox release updates dependencies to avoid rare crashes on tvOS 15.",
   "7.3.1-87": "- Fix an issue with Picture in Picture and video playback when the screen has been locked, affecting devices runing iOS 15.",
   "7.3.2-88": "- Fix an issue appeared with iOS 14, and which could lead to Picture in Picture enabled unnecessarily when moving the app to the background.",
-  "7.3.2-89": "- Demo use the MediaPlayer patch release, which fixes some background video playback incorrectly paused "
+  "7.3.2-89": "- Demo use the MediaPlayer patch release, which fixes some background video playback incorrectly paused ",
+  "7.4.0-91": "- Fix crash during continuous playback transitions on tvOS 15.2.\n- Fix countdown layout issue."
 }
