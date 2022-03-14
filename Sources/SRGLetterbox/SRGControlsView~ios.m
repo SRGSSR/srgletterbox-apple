@@ -58,7 +58,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGAirPlayButton *airPlayButton;
 @property (nonatomic, weak) SRGPictureInPictureButton *pictureInPictureButton;
 @property (nonatomic, weak) SRGLetterboxTimeSlider *timeSlider;
-@property (nonatomic, weak) SRGSettingsButton *settingsButton;
+@property (nonatomic, weak) SRGPlaybackSettingsButton *playbackSettingsButton;
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenPhantomButton;
 
 @property (nonatomic, weak) UILabel *durationLabel;
@@ -136,7 +136,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self layoutTimeSliderInStackView:bottomStackView];
     [self layoutDurationLabelInStackView:bottomStackView];
     [self layoutLiveLabelInStackView:bottomStackView];
-    [self layoutSettingsButtonInStackView:bottomStackView];
+    [self layoutPlaybackSettingsButtonInStackView:bottomStackView];
     [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
 }
 
@@ -247,16 +247,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)layoutSettingsButtonInStackView:(UIStackView *)stackView
+- (void)layoutPlaybackSettingsButtonInStackView:(UIStackView *)stackView
 {
-    SRGSettingsButton *settingsButton = [[SRGSettingsButton alloc] init];
-    settingsButton.tintColor = UIColor.whiteColor;
-    settingsButton.delegate = self;
-    [stackView addArrangedSubview:settingsButton];
-    self.settingsButton = settingsButton;
+    SRGPlaybackSettingsButton *playbackSettingsButton = [[SRGPlaybackSettingsButton alloc] init];
+    playbackSettingsButton.tintColor = UIColor.whiteColor;
+    playbackSettingsButton.delegate = self;
+    [stackView addArrangedSubview:playbackSettingsButton];
+    self.playbackSettingsButton = playbackSettingsButton;
     
     [NSLayoutConstraint activateConstraints:@[
-        [[settingsButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
+        [[playbackSettingsButton.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
 }
 
@@ -376,7 +376,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
 {
     _userInterfaceStyle = userInterfaceStyle;
-    self.settingsButton.userInterfaceStyle = userInterfaceStyle;
+    self.playbackSettingsButton.userInterfaceStyle = userInterfaceStyle;
 }
 
 - (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
@@ -450,7 +450,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.pictureInPictureButton.mediaPlayerController = nil;
     self.airPlayButton.mediaPlayerController = nil;
-    self.settingsButton.mediaPlayerController = nil;
+    self.playbackSettingsButton.mediaPlayerController = nil;
     self.timeSlider.mediaPlayerController = nil;
     
     self.viewModeButton.mediaPlayerView = nil;
@@ -466,7 +466,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airPlayButton.mediaPlayerController = mediaPlayerController;
-    self.settingsButton.mediaPlayerController = mediaPlayerController;
+    self.playbackSettingsButton.mediaPlayerController = mediaPlayerController;
     self.timeSlider.mediaPlayerController = mediaPlayerController;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
@@ -495,8 +495,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
-            || playbackState == SRGMediaPlayerPlaybackStatePreparing
-            || playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        || playbackState == SRGMediaPlayerPlaybackStatePreparing
+        || playbackState == SRGMediaPlayerPlaybackStateEnded) {
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
         self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
@@ -513,7 +513,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         
         self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
-
+        
         self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
@@ -542,11 +542,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
     self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
-                                    || streamType != SRGStreamTypeOnDemand);
+                                 || streamType != SRGStreamTypeOnDemand);
     self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
     // The reference frame for controls is given by the available width (as occupied by the bottom stack view) as
-    // well as the whole parent Letterbox height. Critical size is aligned on iPhone Plus devices in landscape. 
+    // well as the whole parent Letterbox height. Critical size is aligned on iPhone Plus devices in landscape.
     SRGImageSet imageSet = (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
     CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 16.f : 36.f;
     
@@ -575,7 +575,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.viewModeButton.alwaysHidden = NO;
     self.pictureInPictureButton.alwaysHidden = ! self.controller.pictureInPictureEnabled;
     self.liveLabelWrapperView.alwaysHidden = NO;
-    self.settingsButton.hidden = NO;
+    self.playbackSettingsButton.hidden = NO;
     
     CGFloat height = CGRectGetHeight(self.frame);
     if (height < 167.f) {
@@ -590,7 +590,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
-        self.settingsButton.hidden = YES;
+        self.playbackSettingsButton.hidden = YES;
     }
     
     CGFloat width = CGRectGetWidth(self.frame);
@@ -608,7 +608,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
-        self.settingsButton.hidden = YES;
+        self.playbackSettingsButton.hidden = YES;
     }
     
     // Fix incorrect empty space after hiding the full screen button on iOS 9.
@@ -674,16 +674,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
 }
 
-#pragma mark SRGSettingsButtonDelegate protocol
+#pragma mark SRGPlaybackSettingsButtonDelegate protocol
 
-- (void)settingsButtonWillShowSettings:(SRGSettingsButton *)settingsButton
+- (void)playbackSettingsButtonWillShowSettings:(SRGPlaybackSettingsButton *)playbackSettingsButton
 {
-    [self.delegate controlsViewWillShowSettings:self];
+    [self.delegate controlsViewWillShowPlaybackSettings:self];
 }
 
-- (void)settingsButtonDidHideSettings:(SRGSettingsButton *)settingsButton
+- (void)playbackSettingsButtonDidHideSettings:(SRGPlaybackSettingsButton *)playbackSettingsButton
 {
-    [self.delegate controlsViewDidHideSettings:self];
+    [self.delegate controlsViewDidHidePlaybackSettings:self];
 }
 
 #pragma mark Actions

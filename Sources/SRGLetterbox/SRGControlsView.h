@@ -43,14 +43,14 @@ API_UNAVAILABLE(tvos)
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value interactive:(BOOL)interactive;
 
 /**
- *  Method called when the settings are about to be shown.
+ *  Method called when the playback settings are about to be shown.
  */
-- (void)controlsViewWillShowSettings:(SRGControlsView *)controlsView;
+- (void)controlsViewWillShowPlaybackSettings:(SRGControlsView *)controlsView;
 
 /**
- *  Method called when the settings have been hidden.
+ *  Method called when the playback settings have been hidden.
  */
-- (void)controlsViewDidHideSettings:(SRGControlsView *)controlsView;
+- (void)controlsViewDidHidePlaybackSettings:(SRGControlsView *)controlsView;
 
 @end
 
@@ -58,7 +58,7 @@ API_UNAVAILABLE(tvos)
  *  View displaying controls.
  */
 API_UNAVAILABLE(tvos)
-@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGSettingsButtonDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
 
 /**
  *  View optional delegate.
@@ -66,7 +66,7 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
 /**
- *  The style to be applied for the view and views depending on it, like the settings popover. The default value is
+ *  The style to be applied for the view and views depending on it, like the playback settings popover. The default value is
  *  `SRGMediaPlayerUserInterfaceStyleUnspecified`.
  *
  *  @discussion Style changes might be applied at a later time.
