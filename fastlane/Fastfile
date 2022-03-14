@@ -123,8 +123,8 @@ platform :ios do
     )
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
+      appname: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_DESTINATIONS'],
       notes: what_s_new_for_demo,
       notify_testers: true
     )
