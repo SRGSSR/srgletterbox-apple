@@ -131,7 +131,7 @@ platform :ios do
 
     clean_build_artifacts
 
-    UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded and distributed. ✅"
+    UI.message "SRGLetterbox-demo (Release #{xcode_build_number}) uploaded and distributed. ✅"
 
     UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
