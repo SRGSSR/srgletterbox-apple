@@ -24,13 +24,11 @@ static void lockComplete(CFNotificationCenterRef center, void *observer, CFStrin
 
 #pragma mark Getters and setters
 
-- (NSString *)hardware
+- (NSString *)srg_letterbox_hardware
 {
     struct utsname systemInfo;
     uname(&systemInfo);
-    
-    return [NSString stringWithCString:systemInfo.machine
-                              encoding:NSUTF8StringEncoding];
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark Notifications

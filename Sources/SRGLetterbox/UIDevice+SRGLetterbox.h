@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Return the kind of hardware the code is running on.
  */
-@property (nonatomic, readonly, copy) NSString *hardware;
+@property (nonatomic, readonly, copy) NSString *srg_letterbox_hardware;
 
 @end
 

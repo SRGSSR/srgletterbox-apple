@@ -65,6 +65,20 @@
                BlueprintName = "SRGLetterboxTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTFullDVRStream">
+               </Test>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSwissTXTFullDVRNotYetAvailable">
+               </Test>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSwissTXTFullDVRWithHighlightRemoved">
+               </Test>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSwissTXTLimitedDVRWithHighlightRemoved">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

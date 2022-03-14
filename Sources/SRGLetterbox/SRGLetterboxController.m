@@ -89,7 +89,7 @@ static BOOL SRGLetterboxControllerIsLoading(SRGLetterboxDataAvailability dataAva
 
 static NSString *SRGDeviceInformation(void)
 {
-    return [NSString stringWithFormat:@"%@ (%@)", UIDevice.currentDevice.hardware, UIDevice.currentDevice.systemVersion];
+    return [NSString stringWithFormat:@"%@ (%@)", UIDevice.currentDevice.srg_letterbox_hardware, UIDevice.currentDevice.systemVersion];
 }
 
 static NSString *SRGLetterboxNetworkType(void)
