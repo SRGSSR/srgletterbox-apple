@@ -43,6 +43,21 @@ API_UNAVAILABLE(tvos)
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value interactive:(BOOL)interactive;
 
 /**
+ *  Method called when the user changed the playback speed.
+ */
+- (void)controlsView:(SRGControlsView *)controlsView didSelectPlaybackRate:(float)playbackRate;
+
+/**
+ *  Method called when the user changed the audio language (`nil` if the default application language is selected).
+ */
+- (void)controlsView:(SRGControlsView *)controlsView didSelectAudioLanguageCode:(nullable NSString *)languageCode;
+
+/**
+ *  Method called when the user changed the subtitle language (`nil` if none or automatic).
+ */
+- (void)controlsView:(SRGControlsView *)controlsView didSelectSubtitleLanguageCode:(nullable NSString *)languageCode;
+
+/**
  *  Method called when the playback settings are about to be shown.
  */
 - (void)controlsViewWillShowPlaybackSettings:(SRGControlsView *)controlsView;

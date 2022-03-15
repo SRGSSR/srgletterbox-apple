@@ -676,6 +676,21 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 #pragma mark SRGPlaybackSettingsButtonDelegate protocol
 
+- (void)playbackSettingsButton:(SRGPlaybackSettingsButton *)playbackSettingsButton didSelectPlaybackRate:(float)playbackRate
+{
+    [self.delegate controlsView:self didSelectPlaybackRate:playbackRate];
+}
+
+- (void)playbackSettingsButton:(SRGPlaybackSettingsButton *)playbackSettingsButton didSelectAudioLanguageCode:(NSString *)languageCode
+{
+    [self.delegate controlsView:self didSelectAudioLanguageCode:languageCode];
+}
+
+- (void)playbackSettingsButton:(SRGPlaybackSettingsButton *)playbackSettingsButton didSelectSubtitleLanguageCode:(NSString *)languageCode
+{
+    [self.delegate controlsView:self didSelectSubtitleLanguageCode:languageCode];
+}
+
 - (void)playbackSettingsButtonWillShowSettings:(SRGPlaybackSettingsButton *)playbackSettingsButton
 {
     [self.delegate controlsViewWillShowPlaybackSettings:self];

@@ -76,6 +76,21 @@ API_UNAVAILABLE(tvos)
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didLongPressSubdivision:(SRGSubdivision *)subdivision;
 
 /**
+ *  This method is called when the user changed the playback speed.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectPlaybackRate:(float)playbackRate;
+
+/**
+ *  This method is called when the user changed the audio language (`nil` if the default application language is selected).
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectAudioLanguageCode:(nullable NSString *)languageCode;
+
+/**
+ *  This method is called when the user changed the subtitle language (`nil` if none or automatic).
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didSelectSubtitleLanguageCode:(nullable NSString *)languageCode;
+
+/**
  *  This method is called when the user proactively plays the media suggested during continuous playback.
  */
 - (void)letterboxView:(SRGLetterboxView *)letterboxView didEngageInContinuousPlaybackWithUpcomingMedia:(SRGMedia *)upcomingMedia;
