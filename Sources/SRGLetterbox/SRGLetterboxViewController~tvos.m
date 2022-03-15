@@ -558,6 +558,13 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     } completion:nil];
 }
 
+- (void)playerViewController:(SRGMediaPlayerViewController *)playerViewController didSelectPlaybackRate:(float)playbackRate
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxViewController:didSelectPlaybackRate:)]) {
+        [self.delegate letterboxViewController:self didSelectPlaybackRate:playbackRate];
+    }
+}
+
 - (void)playerViewControllerWillStartPictureInPicture:(AVPlayerViewController *)playerViewController
 {
     if (@available(tvOS 14, *)) {
