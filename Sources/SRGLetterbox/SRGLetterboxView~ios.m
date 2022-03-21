@@ -850,6 +850,19 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     self.completion = completion;
 }
 
+- (BOOL)isFullScreenButtonHidden
+{
+    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        return YES;
+    }
+    
+    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
+        return NO;
+    }
+    
+    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+}
+
 #pragma mark Timer management
 
 // For optimal results, this method must be called when any form of user interaction is detected.
@@ -973,11 +986,11 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
                     playerLayer.videoGravity = videoGravity;
                 }];
             }
-            else if (! isZooming) {
+            else if (! isZooming && ! [self isFullScreenButtonHidden]) {
                 [self setFullScreen:NO animated:YES];
             }
         }
-        else if (isZooming) {
+        else if (isZooming && ! [self isFullScreenButtonHidden]) {
             [self setFullScreen:YES animated:YES];
         }
     }
@@ -1033,15 +1046,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
-    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
-        return YES;
-    }
-    
-    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
-        return NO;
-    }
-    
-    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+    return [self isFullScreenButtonHidden];
 }
 
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
