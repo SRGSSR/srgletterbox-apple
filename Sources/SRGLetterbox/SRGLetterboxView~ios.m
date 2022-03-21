@@ -948,7 +948,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     
-    if (! self.userInterfaceTogglable) {
+    if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
     }
     
