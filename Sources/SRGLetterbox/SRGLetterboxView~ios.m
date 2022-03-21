@@ -179,12 +179,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skip:)];
     skipDoubleTapGestureRecognizer.numberOfTapsRequired = 2;
     skipDoubleTapGestureRecognizer.tapDelay = kDoubleTapDelay;
-    skipDoubleTapGestureRecognizer.delegate = self;
     [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
     self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
     
     UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
-    videoGravityChangePinchGestureRecognizer.delegate = self;
     videoGravityChangePinchGestureRecognizer.enabled = NO;
     [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
     self.videoGravityChangePinchGestureRecognizer = videoGravityChangePinchGestureRecognizer;
@@ -1102,8 +1100,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return gestureRecognizer == self.activityGestureRecognizer
-        || gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer
-        || gestureRecognizer == self.skipDoubleTapGestureRecognizer;
+        || (gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer && otherGestureRecognizer == self.skipDoubleTapGestureRecognizer);
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
