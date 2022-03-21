@@ -973,7 +973,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
             @strongify(self)
             AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-            if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+            if (gestureRecognizer.velocity > 0.f) {
                 playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
             }
             else {
