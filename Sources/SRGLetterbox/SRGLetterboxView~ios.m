@@ -937,7 +937,13 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"--> Skip");
+    CGPoint location = [gestureRecognizer locationInView:self];
+    if (location.x < CGRectGetMidX(self.bounds)) {
+        [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+    }
+    else {
+        [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    }
 }
 
 - (void)changeVideoGravity:(UIPinchGestureRecognizer *)gestureRecognizer
