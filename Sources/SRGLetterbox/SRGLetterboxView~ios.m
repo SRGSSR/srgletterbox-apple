@@ -39,6 +39,8 @@
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
+static const NSTimeInterval kDoubleTapDelay = 0.25;
+
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -62,6 +64,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 @property (nonatomic, weak) UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
+@property (nonatomic) BOOL toggleUserInterfaceTapGestureDisabled;
 
 @property (nonatomic, copy) NSString *notificationMessage;
 
@@ -175,7 +178,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skip:)];
     skipDoubleTapGestureRecognizer.numberOfTapsRequired = 2;
-    skipDoubleTapGestureRecognizer.tapDelay = 0.25;
+    skipDoubleTapGestureRecognizer.tapDelay = kDoubleTapDelay;
     skipDoubleTapGestureRecognizer.delegate = self;
     [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
     self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
@@ -900,7 +903,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self setNeedsLayoutAnimated:animated];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
-    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5.];
+    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5. inModes:@[ NSRunLoopCommonModes ]];
 }
 
 - (void)dismissNotificationViewAutomatically
@@ -932,6 +935,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (void)toggleUserInterface:(UITapGestureRecognizer *)gestureRecognizer
 {
+    if (self.toggleUserInterfaceTapGestureDisabled) {
+        return;
+    }
+    
     [self setTogglableUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
 }
 
@@ -944,6 +951,19 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     else {
         [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
     }
+    
+    // Disable the tap gesture for a while after the skip gesture has been used (2 * the delay is a good value). This ensures
+    // that fast double taps keep the user interface in its current state, no matter whether the user tapped an even or odd
+    // number of times.
+    self.toggleUserInterfaceTapGestureDisabled = YES;
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
+    [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
+}
+
+- (void)enableToggleUserInterfaceTapGesture
+{
+    self.toggleUserInterfaceTapGestureDisabled = NO;
 }
 
 - (void)changeVideoGravity:(UIPinchGestureRecognizer *)gestureRecognizer
