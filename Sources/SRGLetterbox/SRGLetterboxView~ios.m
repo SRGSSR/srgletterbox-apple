@@ -933,6 +933,12 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
+    
+    if (! self.userInterfaceTogglable) {
+        return;
+    }
+    
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds)) {
         [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
@@ -946,7 +952,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     // number of times.
     self.toggleUserInterfaceTapGestureDisabled = YES;
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
 }
 
