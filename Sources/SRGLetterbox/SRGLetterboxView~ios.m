@@ -967,16 +967,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (void)changeVideoGravity:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        @weakify(self)
+        AVLayerVideoGravity videoGravity = (gestureRecognizer.scale > 1.f) ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
+        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
         [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
-            @strongify(self)
-            AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-            if (gestureRecognizer.scale > 1.f) {
-                playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-            }
-            else {
-                playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-            }
+            playerLayer.videoGravity = videoGravity;
         }];
     }
 }
