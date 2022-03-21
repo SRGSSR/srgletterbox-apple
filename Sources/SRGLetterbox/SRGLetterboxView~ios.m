@@ -968,7 +968,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         if (self.isFullScreen) {
             AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
             AVLayerVideoGravity videoGravity = isZooming ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
-            if (playerLayer.videoGravity != videoGravity) {
+            if (playerLayer && playerLayer.videoGravity != videoGravity) {
                 [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
                     playerLayer.videoGravity = videoGravity;
                 }];
