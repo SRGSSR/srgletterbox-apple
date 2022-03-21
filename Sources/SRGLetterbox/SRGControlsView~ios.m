@@ -109,9 +109,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [userInterfaceToggleActiveView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
     ]];
-    
-    UITapGestureRecognizer *hideUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideUserInterface:)];
-    [userInterfaceToggleActiveView addGestureRecognizer:hideUserInterfaceTapGestureRecognizer];
 }
 
 - (void)layoutBottomControlsInView:(UIView *)view
@@ -705,11 +702,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)skipToLive:(id)sender
 {
     [self.controller skipToLiveWithCompletionHandler:nil];
-}
-
-- (void)hideUserInterface:(id)sender
-{
-    [self.delegate controlsViewDidTap:self];
 }
 
 - (void)toggleFullScreen:(id)sender

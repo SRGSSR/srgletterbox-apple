@@ -56,8 +56,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 @property (nonatomic, weak) NSLayoutConstraint *timelineToSelfBottomConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *notificationHeightConstraint;
 
-@property (nonatomic, weak) UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
-@property (nonatomic, weak) SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+@property (nonatomic, weak) SRGActivityGestureRecognizer *activityGestureRecognizer;
+@property (nonatomic, weak) UITapGestureRecognizer *toggleUserInterfaceTapGestureRecognizer;
+@property (nonatomic, weak) SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer;
+@property (nonatomic, weak) UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 
@@ -112,6 +114,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
                                                                                                             action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
     [self.contentView addGestureRecognizer:activityGestureRecognizer];
+    self.activityGestureRecognizer = activityGestureRecognizer;
     
     [self layoutTimelineViewInView:self.contentView];
     [self layoutPlayerViewInView:self.contentView];
@@ -165,18 +168,23 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
     ]];
     
-    UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showUserInterface:)];
-    showUserInterfaceTapGestureRecognizer.delegate = self;
-    [playbackView addGestureRecognizer:showUserInterfaceTapGestureRecognizer];
-    self.showUserInterfaceTapGestureRecognizer = showUserInterfaceTapGestureRecognizer;
+    UITapGestureRecognizer *toggleUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
+    toggleUserInterfaceTapGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:toggleUserInterfaceTapGestureRecognizer];
+    self.toggleUserInterfaceTapGestureRecognizer = toggleUserInterfaceTapGestureRecognizer;
     
-    SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
-    videoGravityTapChangeGestureRecognizer.numberOfTapsRequired = 2;
-    videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
-    videoGravityTapChangeGestureRecognizer.delegate = self;
-    videoGravityTapChangeGestureRecognizer.enabled = NO;
-    [playbackView addGestureRecognizer:videoGravityTapChangeGestureRecognizer];
-    self.videoGravityTapChangeGestureRecognizer = videoGravityTapChangeGestureRecognizer;
+    SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skip:)];
+    skipDoubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    skipDoubleTapGestureRecognizer.tapDelay = 0.25;
+    skipDoubleTapGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
+    self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
+    
+    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
+    videoGravityChangePinchGestureRecognizer.delegate = self;
+    videoGravityChangePinchGestureRecognizer.enabled = NO;
+    [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
+    self.videoGravityChangePinchGestureRecognizer = videoGravityChangePinchGestureRecognizer;
 }
 
 - (void)layoutControlsViewInView:(UIView *)view
@@ -429,7 +437,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
     
     BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
-    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    self.videoGravityChangePinchGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
 }
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
@@ -466,7 +474,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
             self->_fullScreen = fullScreen;
             
             BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-            self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+            self.videoGravityChangePinchGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
             [self setNeedsLayoutAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
@@ -917,29 +925,36 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark Gesture recognizers
 
-- (void)resetInactivity:(UIGestureRecognizer *)gestureRecognizer
+- (void)resetInactivity:(SRGActivityGestureRecognizer *)gestureRecognizer
 {
     [self restartInactivityTracker];
 }
 
-- (void)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
+- (void)toggleUserInterface:(UITapGestureRecognizer *)gestureRecognizer
 {
-    [self setTogglableUserInterfaceHidden:NO animated:YES];
+    [self setTogglableUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
 }
 
-- (void)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
+- (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
-    @weakify(self)
-    [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
-        @strongify(self)
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        }
-        else {
-            playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-        }
-    }];
+    NSLog(@"--> Skip");
+}
+
+- (void)changeVideoGravity:(UIPinchGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        @weakify(self)
+        [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+            @strongify(self)
+            AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+            if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
+                playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+            }
+            else {
+                playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+            }
+        }];
+    }
 }
 
 #pragma mark Actions
@@ -989,14 +1004,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 }
 
 #pragma mark SRGControlsViewDelegate protocol
-
-- (void)controlsViewDidTap:(SRGControlsView *)controlsView
-{
-    // Defer execution to avoid conflicts with the activity gesture
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setTogglableUserInterfaceHidden:YES animated:YES];
-    });
-}
 
 - (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
@@ -1068,13 +1075,15 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return gestureRecognizer == self.activityGestureRecognizer
+        || gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer
+        || gestureRecognizer == self.skipDoubleTapGestureRecognizer;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:SRGActivityGestureRecognizer.class] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
+    if (gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer) {
+        return otherGestureRecognizer == self.skipDoubleTapGestureRecognizer;
     }
     else {
         return NO;
