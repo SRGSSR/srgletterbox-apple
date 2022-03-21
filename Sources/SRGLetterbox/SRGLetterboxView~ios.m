@@ -61,7 +61,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 @property (nonatomic, weak) SRGActivityGestureRecognizer *activityGestureRecognizer;
 @property (nonatomic, weak) UITapGestureRecognizer *toggleUserInterfaceTapGestureRecognizer;
 @property (nonatomic, weak) SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer;
-@property (nonatomic, weak) UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 @property (nonatomic) BOOL toggleUserInterfaceTapGestureDisabled;
@@ -182,10 +181,8 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
     self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
     
-    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
-    videoGravityChangePinchGestureRecognizer.enabled = NO;
+    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
-    self.videoGravityChangePinchGestureRecognizer = videoGravityChangePinchGestureRecognizer;
 }
 
 - (void)layoutControlsViewInView:(UIView *)view
@@ -436,9 +433,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
-    self.videoGravityChangePinchGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
 }
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
@@ -473,9 +467,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
         if (finished) {
             self->_fullScreen = fullScreen;
-            
-            BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-            self.videoGravityChangePinchGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
             [self setNeedsLayoutAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
@@ -964,14 +955,26 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     self.toggleUserInterfaceTapGestureDisabled = NO;
 }
 
-- (void)changeVideoGravity:(UIPinchGestureRecognizer *)gestureRecognizer
+- (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        AVLayerVideoGravity videoGravity = (gestureRecognizer.scale > 1.f) ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
-            playerLayer.videoGravity = videoGravity;
-        }];
+        BOOL isZooming = (gestureRecognizer.scale > 1.f);
+        
+        if (self.isFullScreen) {
+            AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+            AVLayerVideoGravity videoGravity = isZooming ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
+            if (playerLayer.videoGravity != videoGravity) {
+                [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+                    playerLayer.videoGravity = videoGravity;
+                }];
+            }
+            else if (! isZooming) {
+                [self setFullScreen:NO animated:YES];
+            }
+        }
+        else if (isZooming) {
+            [self setFullScreen:YES animated:YES];
+        }
     }
 }
 
