@@ -852,6 +852,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (BOOL)isFullScreenButtonHidden
 {
+    if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
+        return YES;
+    }
+    
     if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
         return YES;
     }
