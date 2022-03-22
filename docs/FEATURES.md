@@ -12,7 +12,7 @@ The SRG Letterbox library provides an advanced player with several features:
 * Support for blocked media time ranges.
 * Countdown, automatic playback start and interruption for content whose availability is limited in time.
 * Simultaneous playback of several streams.
-* Programmatic control of subtitles and audio tracks.
+* Programmatic control of subtitles, audio tracks and playback speed.
 * Playlist support with optional continuous playback.
 * AirPlay (iOS). Google Cast is not natively supported by Letterbox and must be implemented by applications directly.
 * Native picture in picture on compatible devices (iOS).
@@ -25,7 +25,7 @@ The SRG Letterbox library provides an advanced player with several features:
 * Controls togglable by the user, or always hidden / displayed (iOS).
 * A responsive user interface (iOS).
 * Skip buttons for on-demand and DVR streams.
-* Subtitle and audio track selection.
+* Subtitle, audio track and playback speed selection.
 * Safe area automatic support for display on notch-decorated screens (iOS).
 * Full screen mode.
 * Complete VoiceOver support.

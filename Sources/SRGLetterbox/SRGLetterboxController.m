@@ -394,6 +394,26 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
 }
 
+- (float)playbackRate
+{
+    return self.mediaPlayerController.playbackRate;
+}
+
+- (void)setPlaybackRate:(float)playbackRate
+{
+    self.mediaPlayerController.playbackRate = playbackRate;
+}
+
+- (NSArray<NSNumber *> *)supportedPlaybackRates
+{
+    return self.mediaPlayerController.supportedPlaybackRates;
+}
+
+- (float)effectivePlaybackRate
+{
+    return self.mediaPlayerController.effectivePlaybackRate;
+}
+
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
 {
     self.mediaPlayerController.endTolerance = endTolerance;
