@@ -674,6 +674,16 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
 }
 
+- (void)timeSlider:(SRGTimeSlider *)slider accessibilityDecrementFromValue:(float)value time:(CMTime)time
+{
+    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+}
+
+- (void)timeSlider:(SRGTimeSlider *)slider accessibilityIncrementFromValue:(float)value time:(CMTime)time
+{
+    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+}
+
 #pragma mark SRGPlaybackSettingsButtonDelegate protocol
 
 - (void)playbackSettingsButton:(SRGPlaybackSettingsButton *)playbackSettingsButton didSelectPlaybackRate:(float)playbackRate
