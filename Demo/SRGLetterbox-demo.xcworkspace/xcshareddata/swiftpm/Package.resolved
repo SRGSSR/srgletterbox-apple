@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "b84bc8a39ff04bc8d5ae7b4d230c171c562891aa",
-          "version": "4.4.1"
+          "revision": "8354a50fe01a7e54e196d3b5493b5ab53dd5866a",
+          "version": "4.4.2"
         }
       },
       {
@@ -77,8 +77,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "110fc44dd839e8ba73390f23eb07b383f3420816",
+          "branch": "feature/sprite-sheet",
+          "revision": "8cf6baf2defdf5e789fa850235454234f368e6cd",
           "version": null
         }
       },
@@ -104,9 +104,9 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": null,
-          "revision": "04d1d4a45fd83044116c77ba7f2c64e2618aea94",
-          "version": "13.0.0"
+          "branch": "feature/sprite-sheet",
+          "revision": "56f4a8de17ebefc3c5329c2e40a1517e9cf58e6f",
+          "version": null
         }
       },
       {
