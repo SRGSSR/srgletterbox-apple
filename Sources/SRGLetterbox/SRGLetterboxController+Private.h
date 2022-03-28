@@ -56,6 +56,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 /**
+ *  Thumbnail image matching the specified time, if any.
+ */
+- (nullable UIImage *)thumbnailAtTime:(CMTime)time;
+
+/**
  *  Return the displayable subdivision (segment or chapter) at the specified time, `nil` if none.
  */
 - (nullable SRGSubdivision *)displayableSubdivisionAtTime:(CMTime)time;

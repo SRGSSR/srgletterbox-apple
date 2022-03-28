@@ -975,6 +975,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
 
+#pragma mark Sprite sheet
+
 + (SRGRequest *)spriteSheetRequestForMediaComposition:(SRGMediaComposition *)mediaComposition withCompletionBlock:(void (^)(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error))completionBlock
 {
     NSParameterAssert(completionBlock);
@@ -1000,6 +1002,40 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
             completionBlock(image, response, error);
         });
     }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled];
+}
+
+- (CGRect)spriteSheetThumbnailRectAtTime:(CMTime)time
+{
+    SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
+    if (! spriteSheet) {
+        return CGRectZero;
+    }
+    
+    NSInteger index = CMTimeGetSeconds(time) * 1000 / spriteSheet.interval;
+    NSInteger row = index / spriteSheet.columns;
+    if (row >= spriteSheet.rows) {
+        return CGRectZero;
+    }
+    
+    NSInteger column = index % spriteSheet.columns;
+    return CGRectMake(column * spriteSheet.thumbnailWidth, row * spriteSheet.thumbnailHeight, spriteSheet.thumbnailWidth, spriteSheet.thumbnailHeight);
+}
+
+- (UIImage *)thumbnailAtTime:(CMTime)time
+{
+    if (! self.spriteSheetImage) {
+        return nil;
+    }
+    
+    CGRect thumbnailRect = [self spriteSheetThumbnailRectAtTime:time];
+    if (CGRectIsEmpty(thumbnailRect)) {
+        return nil;
+    }
+    
+    CGImageRef thumbnailImageRef = CGImageCreateWithImageInRect(self.spriteSheetImage.CGImage, thumbnailRect);
+    UIImage *thumbnailImage = [UIImage imageWithCGImage:thumbnailImageRef];
+    CGImageRelease(thumbnailImageRef);
+    return thumbnailImage;
 }
 
 #pragma mark Playback
