@@ -66,6 +66,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 @property (nonatomic, weak) SRGControlWrapperView *liveLabelWrapperView;
 
+@property (nonatomic, weak) UIImageView *seekThumbnailImageView;
+
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingBackwardToPlaybackConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
@@ -87,6 +89,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     [self layoutUserInterfaceToggleActiveViewInView:self.contentView];
     [self layoutBottomControlsInView:self.contentView];
+    [self layoutSeekThumbnailImageViewInView:self.contentView];
     [self layoutCenterControlsInView:self.contentView];
     
     // Track controller changes to ensure picture in picture availability is correctly displayed.
@@ -138,6 +141,21 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self layoutLiveLabelInStackView:bottomStackView];
     [self layoutPlaybackSettingsButtonInStackView:bottomStackView];
     [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
+}
+
+- (void)layoutSeekThumbnailImageViewInView:(UIView *)view
+{
+    UIImageView *seekThumbnailImageView = [[UIImageView alloc] init];
+    seekThumbnailImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:seekThumbnailImageView];
+    self.seekThumbnailImageView = seekThumbnailImageView;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [seekThumbnailImageView.topAnchor constraintEqualToAnchor:view.topAnchor],
+        [seekThumbnailImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+        [seekThumbnailImageView.widthAnchor constraintEqualToConstant:150.f],
+        [seekThumbnailImageView.heightAnchor constraintEqualToConstant:84.f]
+    ]];
 }
 
 - (void)layoutViewModeButtonInStackView:(UIStackView *)stackView
@@ -645,6 +663,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
+    self.seekThumbnailImageView.image = interactive ? [self.controller thumbnailAtTime:time] : nil;
+    
     [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
 
