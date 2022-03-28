@@ -147,6 +147,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, copy) NSString *URN;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
+@property (nonatomic) UIImage *spriteSheetImage;
 @property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGPosition *startPosition;
@@ -906,6 +907,20 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                         return;
                     }
                 }
+                
+                if (! self.spriteSheetImage) {
+                    SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                        if (! error) {
+                            self.spriteSheetImage = image;
+                        }
+                    }];
+                    if (spriteSheetRequest) {
+                        [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+                    }
+                    else {
+                        self.spriteSheetImage = nil;
+                    }
+                }
             }
             
             updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
@@ -958,6 +973,33 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
+}
+
++ (SRGRequest *)spriteSheetRequestForMediaComposition:(SRGMediaComposition *)mediaComposition withCompletionBlock:(void (^)(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error))completionBlock
+{
+    NSParameterAssert(completionBlock);
+    
+    NSURL *spriteSheetURL = mediaComposition.mainChapter.spriteSheet.URL;
+    if (! spriteSheetURL) {
+        return nil;
+    }
+    
+    NSURLRequest *URLRequest = [NSURLRequest requestWithURL:spriteSheetURL];
+    
+    @weakify(self)
+    return [[SRGRequest dataRequestWithURLRequest:URLRequest session:NSURLSession.sharedSession completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        @strongify(self)
+        
+        if (error) {
+            completionBlock(nil, response, error);
+            return;
+        }
+        
+        UIImage *image = [UIImage imageWithData:data];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(image, response, error);
+        });
+    }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled];
 }
 
 #pragma mark Playback
@@ -1030,6 +1072,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self.report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
+        
+        SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            if (! error) {
+                self.spriteSheetImage = image;
+            }
+        }];
+        if (spriteSheetRequest) {
+            [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+        }
+        else {
+            self.spriteSheetImage = nil;
+        }
         
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -1223,6 +1277,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.dataProvider = nil;
     }
     
+    self.spriteSheetImage = nil;
     self.error = nil;
     
     self.lastUpdateDate = nil;
@@ -1286,6 +1341,20 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
+        }
+        
+        if (! [mediaComposition.mainChapter isEqual:self.mediaComposition.mainChapter]) {
+            SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                if (! error) {
+                    self.spriteSheetImage = image;
+                }
+            }];
+            if (spriteSheetRequest) {
+                [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+            }
+            else {
+                self.spriteSheetImage = nil;
+            }
         }
         
         [self stop];
