@@ -58,7 +58,7 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 /**
  *  Thumbnail image matching the specified time, if any.
  */
-- (nullable UIImage *)thumbnailAtTime:(CMTime)time;
+- (nullable UIImage *)thumbnailAtTime:(CMTime)time API_UNAVAILABLE(tvos);
 
 /**
  *  Return the displayable subdivision (segment or chapter) at the specified time, `nil` if none.
