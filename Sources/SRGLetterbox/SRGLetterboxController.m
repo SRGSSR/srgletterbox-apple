@@ -1656,6 +1656,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+- (SRGBlockingReason)blockingReasonAtTime:(CMTime)time
+{
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id<SRGSegment> _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
+        return CMTimeRangeContainsTime(segmentTimeRange, time);
+    }];
+    SRGSegment *segment = (SRGSegment *)[self.mediaPlayerController.segments filteredArrayUsingPredicate:predicate].firstObject;
+    return [segment blockingReasonAtDate:NSDate.date];
+}
+
 #pragma mark Configuration
 
 - (void)reloadMediaConfiguration

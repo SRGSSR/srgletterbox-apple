@@ -56,6 +56,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly, getter=isUsingAirPlay) BOOL usingAirPlay;
 
 /**
+ *  Blocking reason at the specified time, if any.
+ */
+- (SRGBlockingReason)blockingReasonAtTime:(CMTime)time;
+
+/**
  *  Thumbnail image matching the specified time, if any.
  */
 - (nullable UIImage *)thumbnailAtTime:(CMTime)time API_UNAVAILABLE(tvos);

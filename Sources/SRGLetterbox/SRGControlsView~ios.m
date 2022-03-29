@@ -664,7 +664,15 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    self.seekThumbnailImageView.image = [self.controller thumbnailAtTime:time];
+    if (self.seekThumbnailImageView.alpha == 1.f) {
+        SRGBlockingReason blockingReason = [self.controller blockingReasonAtTime:time];
+        if (blockingReason == SRGBlockingReasonNone) {
+            self.seekThumbnailImageView.image = [self.controller thumbnailAtTime:time];
+        }
+        else {
+            self.seekThumbnailImageView.image = nil;
+        }
+    }
     
     [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
