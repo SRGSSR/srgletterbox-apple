@@ -147,6 +147,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     UIImageView *seekThumbnailImageView = [[UIImageView alloc] init];
     seekThumbnailImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    seekThumbnailImageView.alpha = 0.f;
     [view addSubview:seekThumbnailImageView];
     self.seekThumbnailImageView = seekThumbnailImageView;
     
@@ -663,9 +664,23 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    self.seekThumbnailImageView.image = interactive ? [self.controller thumbnailAtTime:time] : nil;
+    self.seekThumbnailImageView.image = [self.controller thumbnailAtTime:time];
     
     [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
+}
+
+- (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time
+{
+    [UIView animateWithDuration:0.1 animations:^{
+        self.seekThumbnailImageView.alpha = 1.f;
+    }];
+}
+
+- (void)timeSlider:(SRGTimeSlider *)slider didStopDraggingAtTime:(CMTime)time
+{
+    [UIView animateWithDuration:0.1 animations:^{
+        self.seekThumbnailImageView.alpha = 0.f;
+    }];
 }
 
 - (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date
