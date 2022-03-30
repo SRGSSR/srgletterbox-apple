@@ -86,11 +86,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         self.valueLabel.hidden = YES;
     }
     
-    UIColor *backgroundColor = self.live ? UIColor.srg_lightRedColor : UIColor.whiteColor;
-    UIColor *textColor = self.live ? UIColor.whiteColor  : UIColor.blackColor;
-    
-    self.valueLabel.backgroundColor = backgroundColor;
-    self.valueLabel.textColor = textColor;
+    self.valueLabel.backgroundColor = self.live ? UIColor.srg_lightRedColor : UIColor.srg_gray23Color;
 }
 
 @end
@@ -99,6 +95,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
 {
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     valueLabel.textAlignment = NSTextAlignmentCenter;
+    valueLabel.textColor = UIColor.whiteColor;
     valueLabel.layer.masksToBounds = YES;
     valueLabel.layer.cornerRadius = 3.f;
     valueLabel.isAccessibilityElement = NO;
