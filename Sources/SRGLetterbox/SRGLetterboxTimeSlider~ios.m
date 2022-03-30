@@ -17,12 +17,6 @@
 
 static void commonInit(SRGLetterboxTimeSlider *self);
 
-@interface SRGLetterboxTimeSlider ()
-
-@property (nonatomic, weak) CAShapeLayer *tipLayer;
-
-@end
-
 @implementation SRGLetterboxTimeSlider
 
 #pragma mark Object lifecycle
@@ -79,7 +73,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     
     if (self.valueLabel.text.length != 0) {
         self.valueLabel.hidden = NO;
-        self.tipLayer.hidden = NO;
         
         CGSize intrinsicContentSize = self.valueLabel.intrinsicContentSize;
         CGFloat width = intrinsicContentSize.width + 2 * kHorizontalMargin;
@@ -88,21 +81,14 @@ static void commonInit(SRGLetterboxTimeSlider *self);
                                            CGRectGetMinY(thumbRect) - height - kBubbleDistance,
                                            fminf(width, CGRectGetWidth(self.bounds)),
                                            height);
-        
-        self.tipLayer.frame = CGRectMake(CGRectGetMidX(thumbRect) - CGRectGetWidth(self.tipLayer.frame) / 2.f,
-                                         CGRectGetMaxY(self.valueLabel.frame),
-                                         CGRectGetWidth(self.tipLayer.frame),
-                                         CGRectGetHeight(self.tipLayer.frame));
     }
     else {
         self.valueLabel.hidden = YES;
-        self.tipLayer.hidden = YES;
     }
     
     UIColor *backgroundColor = self.live ? UIColor.srg_lightRedColor : UIColor.whiteColor;
     UIColor *textColor = self.live ? UIColor.whiteColor  : UIColor.blackColor;
     
-    self.tipLayer.fillColor = backgroundColor.CGColor;
     self.valueLabel.backgroundColor = backgroundColor;
     self.valueLabel.textColor = textColor;
 }
@@ -118,23 +104,6 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     valueLabel.isAccessibilityElement = NO;
     [self addSubview:valueLabel];
     self.valueLabel = valueLabel;
-    
-    CGFloat kTipWidth = 6.f;
-    CGFloat kTipHeight = 4.f;
-    
-    UIBezierPath *tipPath = [UIBezierPath bezierPath];
-    [tipPath moveToPoint:CGPointZero];
-    [tipPath addLineToPoint:CGPointMake(kTipWidth, 0.f)];
-    [tipPath addLineToPoint:CGPointMake(kTipWidth / 2.f, kTipHeight)];
-    [tipPath closePath];
-    
-    CAShapeLayer *tipLayer = [CAShapeLayer layer];
-    tipLayer.frame = CGRectMake(0.f, 0.f, kTipWidth, kTipHeight);
-    tipLayer.path = tipPath.CGPath;
-    tipLayer.actions = @{ @keypath(tipLayer.position) : [NSNull null],
-                          @keypath(tipLayer.fillColor) : [NSNull null] };        // Disable implicit animations so that tip updates are applied instantaneously
-    [self.layer addSublayer:tipLayer];
-    self.tipLayer = tipLayer;
     
     [self updateLayoutForValue:self.value];
 }
