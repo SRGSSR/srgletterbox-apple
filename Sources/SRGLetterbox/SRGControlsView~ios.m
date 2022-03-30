@@ -75,6 +75,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
 
+@property (nonatomic, getter=isMovingSlider) BOOL movingSlider;
+
 @end
 
 @implementation SRGControlsView
@@ -527,23 +529,24 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
         BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
         
-        self.forwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
         self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         
-        self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         
-        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
+        self.startOverButton.alpha = (! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
         BOOL canSkipToLive = [self.controller canSkipToLive];
-        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = (! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive)) ? 1.f : 0.f;
         self.skipToLiveButton.enabled = canSkipToLive;
         
         self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    self.seekThumbnailImageView.alpha = self.movingSlider ? 1.f : 0.f;
     
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
     self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
@@ -679,16 +682,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time
 {
-    [UIView animateWithDuration:0.1 animations:^{
-        self.seekThumbnailImageView.alpha = 1.f;
-    }];
+    self.movingSlider = YES;
 }
 
 - (void)timeSlider:(SRGTimeSlider *)slider didStopDraggingAtTime:(CMTime)time
 {
-    [UIView animateWithDuration:0.1 animations:^{
-        self.seekThumbnailImageView.alpha = 0.f;
-    }];
+    self.movingSlider = NO;
 }
 
 - (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date
