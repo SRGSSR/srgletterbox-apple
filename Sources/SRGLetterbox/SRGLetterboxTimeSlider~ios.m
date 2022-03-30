@@ -17,6 +17,12 @@
 
 static void commonInit(SRGLetterboxTimeSlider *self);
 
+@interface SRGLetterboxTimeSlider ()
+
+@property (nonatomic, weak) UIImageView *thumbnailImageView;
+
+@end
+
 @implementation SRGLetterboxTimeSlider
 
 #pragma mark Object lifecycle
@@ -81,9 +87,25 @@ static void commonInit(SRGLetterboxTimeSlider *self);
                                            CGRectGetMinY(thumbRect) - height - kBubbleDistance,
                                            fminf(width, CGRectGetWidth(self.bounds)),
                                            height);
+        
+        UIImage *thumbnailImage = [self.thumbnailDelegate srg_timeSliderThumbnailAtTime:self.time];
+        if (thumbnailImage) {
+            self.thumbnailImageView.hidden = NO;
+            self.thumbnailImageView.image = thumbnailImage;
+            
+            self.thumbnailImageView.frame = CGRectMake(CGRectGetMidX(thumbRect) - 150.f / 2.f,
+                                             CGRectGetMinY(self.valueLabel.frame) - 84.f,
+                                             150.f,
+                                             84.f);
+        }
+        else {
+            self.thumbnailImageView.hidden = YES;
+            self.thumbnailImageView.image = nil;
+        }
     }
     else {
         self.valueLabel.hidden = YES;
+        self.thumbnailImageView.hidden = YES;
     }
     
     self.valueLabel.backgroundColor = self.live ? UIColor.srg_lightRedColor : UIColor.srg_gray23Color;
@@ -101,6 +123,15 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     valueLabel.isAccessibilityElement = NO;
     [self addSubview:valueLabel];
     self.valueLabel = valueLabel;
+    
+    UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    thumbnailImageView.contentMode = UIViewContentModeScaleAspectFit;
+    thumbnailImageView.layer.masksToBounds = YES;
+    thumbnailImageView.layer.cornerRadius = 3.f;
+    thumbnailImageView.isAccessibilityElement = NO;
+    
+    [self addSubview:thumbnailImageView];
+    self.thumbnailImageView = thumbnailImageView;
     
     [self updateLayoutForValue:self.value];
 }

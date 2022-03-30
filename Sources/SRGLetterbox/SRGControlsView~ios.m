@@ -66,8 +66,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 @property (nonatomic, weak) SRGControlWrapperView *liveLabelWrapperView;
 
-@property (nonatomic, weak) UIImageView *seekThumbnailImageView;
-
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingBackwardToPlaybackConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
@@ -91,7 +89,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     [self layoutUserInterfaceToggleActiveViewInView:self.contentView];
     [self layoutBottomControlsInView:self.contentView];
-    [self layoutSeekThumbnailImageViewInView:self.contentView];
     [self layoutCenterControlsInView:self.contentView];
     
     // Track controller changes to ensure picture in picture availability is correctly displayed.
@@ -143,22 +140,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self layoutLiveLabelInStackView:bottomStackView];
     [self layoutPlaybackSettingsButtonInStackView:bottomStackView];
     [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
-}
-
-- (void)layoutSeekThumbnailImageViewInView:(UIView *)view
-{
-    UIImageView *seekThumbnailImageView = [[UIImageView alloc] init];
-    seekThumbnailImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    seekThumbnailImageView.alpha = 0.f;
-    [view addSubview:seekThumbnailImageView];
-    self.seekThumbnailImageView = seekThumbnailImageView;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [seekThumbnailImageView.topAnchor constraintEqualToAnchor:view.topAnchor],
-        [seekThumbnailImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-        [seekThumbnailImageView.widthAnchor constraintEqualToConstant:150.f],
-        [seekThumbnailImageView.heightAnchor constraintEqualToConstant:84.f]
-    ]];
 }
 
 - (void)layoutViewModeButtonInStackView:(UIStackView *)stackView
@@ -216,6 +197,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     timeSlider.bufferingTrackColor = [UIColor colorWithWhite:1.f alpha:0.5f];
     timeSlider.resumingAfterSeek = YES;
     timeSlider.delegate = self;
+    timeSlider.thumbnailDelegate = self;
     [timeSliderWrapperView addSubview:timeSlider];
     self.timeSlider = timeSlider;
     
@@ -546,7 +528,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
     
     self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
-    self.seekThumbnailImageView.alpha = self.movingSlider ? 1.f : 0.f;
     
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
     self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
@@ -663,20 +644,23 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
 }
 
+#pragma mark SRGLetterboxTimeSliderDelegate protocol
+
+- (UIImage *)srg_timeSliderThumbnailAtTime:(CMTime)time
+{
+    SRGBlockingReason blockingReason = [self.controller blockingReasonAtTime:time];
+    if (blockingReason == SRGBlockingReasonNone && self.isMovingSlider) {
+        return [self.controller thumbnailAtTime:time];
+    }
+    else {
+        return nil;
+    }
+}
+
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    if (self.seekThumbnailImageView.alpha == 1.f) {
-        SRGBlockingReason blockingReason = [self.controller blockingReasonAtTime:time];
-        if (blockingReason == SRGBlockingReasonNone) {
-            self.seekThumbnailImageView.image = [self.controller thumbnailAtTime:time];
-        }
-        else {
-            self.seekThumbnailImageView.image = nil;
-        }
-    }
-    
     [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
 
