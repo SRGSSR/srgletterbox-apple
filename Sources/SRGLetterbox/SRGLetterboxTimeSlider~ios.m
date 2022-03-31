@@ -143,6 +143,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         return [self.controller thumbnailAtTime:time];
     }
     else {
+        // TODO: add block reason icon with a black transparent overlay (like subdivision cell?)
         return nil;
     }
 }
