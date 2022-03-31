@@ -522,7 +522,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    self.playbackButton.alpha = (self.movingSlider || self.controller.loading) ? 0.f : 1.f;
     
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
     self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
