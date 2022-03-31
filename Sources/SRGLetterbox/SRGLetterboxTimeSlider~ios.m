@@ -88,7 +88,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
                                            fminf(width, CGRectGetWidth(self.bounds)),
                                            height);
         
-        UIImage *thumbnailImage = [self.thumbnailDelegate srg_timeSliderThumbnailAtTime:self.time];
+        UIImage *thumbnailImage = [self.thumbnailDelegate timeSlider:self thumbnailAtTime:self.time];
         if (thumbnailImage) {
             self.thumbnailImageView.hidden = NO;
             self.thumbnailImageView.image = thumbnailImage;

@@ -35,7 +35,7 @@ API_UNAVAILABLE(tvos)
  *
  *  @return Thumbnail image matching the specified time, if any.
  */
-- (nullable UIImage *)srg_timeSliderThumbnailAtTime:(CMTime)time;
+- (nullable UIImage *)timeSlider:(SRGTimeSlider *)slider thumbnailAtTime:(CMTime)time;
 
 @end
 

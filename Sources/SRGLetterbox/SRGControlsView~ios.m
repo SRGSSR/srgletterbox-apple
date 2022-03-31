@@ -646,7 +646,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 #pragma mark SRGLetterboxTimeSliderDelegate protocol
 
-- (UIImage *)srg_timeSliderThumbnailAtTime:(CMTime)time
+- (UIImage *)timeSlider:(SRGTimeSlider *)slider thumbnailAtTime:(CMTime)time
 {
     SRGBlockingReason blockingReason = [self.controller blockingReasonAtTime:time];
     if (blockingReason == SRGBlockingReasonNone && self.isMovingSlider) {
