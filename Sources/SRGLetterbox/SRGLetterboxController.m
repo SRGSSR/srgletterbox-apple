@@ -1030,6 +1030,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return self.spriteSheetImage != nil;
 }
 
+- (CGFloat)thumbnailsAspectRatio
+{
+    SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
+    if (! spriteSheet) {
+        return 16.f / 9.f;
+    }
+    
+    return spriteSheet.thumbnailWidth / spriteSheet.thumbnailHeight;
+}
+
 - (UIImage *)thumbnailAtTime:(CMTime)time
 {
     if (! self.spriteSheetImage) {

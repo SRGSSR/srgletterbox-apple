@@ -66,6 +66,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 @property (nonatomic, readonly, getter=areThumbnailsAvailable) BOOL thumbnailsAvailable API_UNAVAILABLE(tvos);
 
 /**
+ *  Thumbnail image ratio, if any thumbnails, 16 / 9 by default.
+ */
+- (CGFloat)thumbnailsAspectRatio API_UNAVAILABLE(tvos);
+
+/**
  *  Thumbnail image matching the specified time, if any.
  */
 - (nullable UIImage *)thumbnailAtTime:(CMTime)time API_UNAVAILABLE(tvos);
