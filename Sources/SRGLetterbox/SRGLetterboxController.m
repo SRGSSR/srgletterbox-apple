@@ -1025,6 +1025,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return CGRectMake(column * spriteSheet.thumbnailWidth, row * spriteSheet.thumbnailHeight, spriteSheet.thumbnailWidth, spriteSheet.thumbnailHeight);
 }
 
+- (BOOL)areThumbnailsAvailable
+{
+    return self.spriteSheetImage != nil;
+}
+
 - (UIImage *)thumbnailAtTime:(CMTime)time
 {
     if (! self.spriteSheetImage) {

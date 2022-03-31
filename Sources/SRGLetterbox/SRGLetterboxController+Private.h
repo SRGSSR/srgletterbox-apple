@@ -61,6 +61,11 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
 - (SRGBlockingReason)blockingReasonAtTime:(CMTime)time;
 
 /**
+ *  Return `YES` iff thumbnails are available.
+ */
+@property (nonatomic, readonly, getter=areThumbnailsAvailable) BOOL thumbnailsAvailable API_UNAVAILABLE(tvos);
+
+/**
  *  Thumbnail image matching the specified time, if any.
  */
 - (nullable UIImage *)thumbnailAtTime:(CMTime)time API_UNAVAILABLE(tvos);

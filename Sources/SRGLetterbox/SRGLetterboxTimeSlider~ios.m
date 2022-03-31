@@ -96,26 +96,30 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
     CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
     
-    static const CGFloat kHorizontalMargin = 5.f;
-    static const CGFloat kVerticalMargin = 3.f;
-    static const CGFloat kBubbleDistance = 6.f;
+    static const CGFloat kHorizontalValueLabelMargin = 5.f;
+    static const CGFloat kVerticalValueLabelMargin = 3.f;
+    static const CGFloat kValueLabelBottomDistance = 6.f;
+    
+    CGSize kThumbnailSize = CGSizeMake(150.f, 84.f);
     
     if (self.slider.valueLabel.text.length != 0) {
         self.slider.valueLabel.hidden = NO;
         
         CGSize intrinsicContentSize = self.slider.valueLabel.intrinsicContentSize;
-        CGFloat width = intrinsicContentSize.width + 2 * kHorizontalMargin;
-        CGFloat height = intrinsicContentSize.height + 2 * kVerticalMargin;
+        CGFloat valueLabelWidth = intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin;
+        CGFloat valueLabelHeight = intrinsicContentSize.height + 2 * kVerticalValueLabelMargin;
+        
+        CGFloat width = self.thumbnailImageView.alpha == 1.f ? fmax(valueLabelWidth, kThumbnailSize.width) : valueLabelWidth;
         
         CGRect valueLabelFrame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
-                                            CGRectGetMinY(thumbRect) - height - kBubbleDistance,
+                                            CGRectGetMinY(thumbRect) - valueLabelHeight - kValueLabelBottomDistance,
                                             fminf(width, CGRectGetWidth(self.bounds)),
-                                            height);
+                                            valueLabelHeight);
         self.slider.valueLabel.frame = valueLabelFrame;
-        self.thumbnailImageView.frame = CGRectMake(CGRectGetMidX(thumbRect) - 150.f / 2.f,
-                                                   CGRectGetMinY(valueLabelFrame) - 84.f,
-                                                   150.f,
-                                                   84.f);
+        self.thumbnailImageView.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
+                                                   CGRectGetMinY(valueLabelFrame) - kThumbnailSize.height,
+                                                   width,
+                                                   kThumbnailSize.height);
     }
     else {
         self.slider.valueLabel.hidden = YES;
@@ -148,9 +152,13 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time
 {
-    [UIView animateWithDuration:0.1 animations:^{
-        self.thumbnailImageView.alpha = 1.f;
-    }];
+    if (self.controller.thumbnailsAvailable) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.thumbnailImageView.alpha = 1.f;
+            self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+            [self updateLayoutForValue:self.slider.value];
+        }];
+    }
     [self.delegate timeSlider:self didStartDraggingAtTime:time];
 }
 
@@ -158,6 +166,8 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 {
     [UIView animateWithDuration:0.1 animations:^{
         self.thumbnailImageView.alpha = 0.f;
+        self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+        [self updateLayoutForValue:self.slider.value];
     }];
     [self.delegate timeSlider:self didStopDraggingAtTime:time];
 }
@@ -226,6 +236,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     thumbnailImageView.alpha = 0.f;
     thumbnailImageView.layer.masksToBounds = YES;
     thumbnailImageView.layer.cornerRadius = 3.f;
+    thumbnailImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
     thumbnailImageView.isAccessibilityElement = NO;
     [self.contentView addSubview:thumbnailImageView];
     self.thumbnailImageView = thumbnailImageView;
