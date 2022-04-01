@@ -86,7 +86,23 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 {
     [super didAttachToController];
     
-    self.slider.mediaPlayerController = self.controller.mediaPlayerController;
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    self.slider.mediaPlayerController = mediaPlayerController;
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(mediaPlayerDidSeek:)
+                                               name:SRGMediaPlayerSeekNotification
+                                             object:mediaPlayerController];
+}
+
+- (void)willDetachFromController
+{
+    [super willDetachFromController];
+    
+    SRGMediaPlayerController *mediaPlayerController = self.controller.mediaPlayerController;
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:SRGMediaPlayerSeekNotification
+                                                object:mediaPlayerController];
 }
 
 - (void)didDetachFromController
@@ -222,6 +238,13 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 - (void)timeSlider:(SRGTimeSlider *)slider accessibilityIncrementFromValue:(float)value time:(CMTime)time
 {
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+}
+
+#pragma mark Notifications
+
+- (void)mediaPlayerDidSeek:(NSNotification *)notification
+{
+    [self updateLayoutForValue:self.slider.value interactive:NO];
 }
 
 @end
