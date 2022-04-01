@@ -27,8 +27,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 @property (nonatomic, weak) SRGTimeSlider *slider;
 @property (nonatomic, weak) UIImageView *thumbnailImageView;
 
-@property (nonatomic, readonly, getter=isDisplayingThumbnail) BOOL displayingThumbnail;
-
 @end
 
 @implementation SRGLetterboxTimeSlider
@@ -93,7 +91,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 #pragma mark Layout
 
-- (void)updateLayoutForValue:(float)value
+- (void)updateLayoutForValue:(float)value interactive:(BOOL)interactive
 {
     CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
     CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
@@ -101,33 +99,47 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     static const CGFloat kHorizontalValueLabelMargin = 5.f;
     static const CGFloat kVerticalValueLabelMargin = 3.f;
     static const CGFloat kValueLabelBottomDistance = 6.f;
+    static const CGFloat kHorizontalMargin = 4.f;
     
     if (self.slider.valueLabel.text.length != 0) {
         self.slider.valueLabel.hidden = NO;
         
         CGSize intrinsicContentSize = self.slider.valueLabel.intrinsicContentSize;
-        CGFloat valueLabelWidth = intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin;
         CGFloat valueLabelHeight = intrinsicContentSize.height + 2 * kVerticalValueLabelMargin;
+        CGRect parentFrame = [self.parentLetterboxView convertRect:self.parentLetterboxView.bounds toView:self];
+        CGFloat thumbnailAspectRatio = (self.controller.thumbnailsAspectRatio != SRGAspectRatioUndefined) ? self.controller.thumbnailsAspectRatio : 16.f / 9.f;
         
-        CGSize kThumbnailPreferredMaxSize = CGSizeMake(150.f, 90.f);
-        CGFloat kThumbnailMaxAspectRatio = kThumbnailPreferredMaxSize.width / kThumbnailPreferredMaxSize.height;
+        UIEdgeInsets safeAreaInsets = self.parentLetterboxView.safeAreaInsets;
+        CGRect parentSafeFrame = CGRectMake(CGRectGetMinX(parentFrame) + safeAreaInsets.left,
+                                            CGRectGetMinY(parentFrame) + safeAreaInsets.top,
+                                            fmaxf(CGRectGetWidth(parentFrame) - safeAreaInsets.left - safeAreaInsets.right, 0.f),
+                                            fmaxf(CGRectGetHeight(parentFrame) - safeAreaInsets.top - safeAreaInsets.bottom, 0.f));
         
-        CGFloat thumbnailAspectRatio = self.controller.thumbnailsAspectRatio;
-        CGFloat thumbnailPreferredWidth = thumbnailAspectRatio > kThumbnailMaxAspectRatio ? kThumbnailPreferredMaxSize.width : kThumbnailPreferredMaxSize.height * thumbnailAspectRatio;
+        CGFloat contentWidth = 0.f;
         
-        CGFloat width = self.displayingThumbnail ? fmax(valueLabelWidth, thumbnailPreferredWidth) : valueLabelWidth;
+        BOOL thumbnailsDisplayed = interactive && self.controller.thumbnailsAvailable;
+        if (thumbnailsDisplayed) {
+            // TODO: Probably a better way to take the actual aspect ratio value into account to optimize the width
+            //       based on width / height min / max constraints.
+            contentWidth = (thumbnailAspectRatio > 1.f) ? 150.f : 70.f;
+            
+            self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+            self.thumbnailImageView.alpha = 1.f;
+        }
+        else {
+            contentWidth = intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin;
+            
+            self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+            self.thumbnailImageView.alpha = 0.f;
+        }
         
-        CGRect valueLabelFrame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
-                                            CGRectGetMinY(thumbRect) - valueLabelHeight - kValueLabelBottomDistance,
-                                            fminf(width, CGRectGetWidth(self.bounds)),
-                                            valueLabelHeight);
-        self.slider.valueLabel.frame = valueLabelFrame;
-        
+        CGFloat width = fminf(contentWidth, CGRectGetWidth(parentSafeFrame) - 2 * kHorizontalMargin);
+        CGFloat valueLabelX = fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetMaxX(parentSafeFrame) - width - kHorizontalMargin), CGRectGetMinX(parentSafeFrame) + kHorizontalMargin);
+        CGFloat valueLabelY = CGRectGetMinY(thumbRect) - valueLabelHeight - kValueLabelBottomDistance;
         CGFloat thumbnailHeight = width / thumbnailAspectRatio;
-        self.thumbnailImageView.frame = CGRectMake(fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetWidth(self.bounds) - width), 0.f),
-                                                   CGRectGetMinY(valueLabelFrame) - thumbnailHeight,
-                                                   width,
-                                                   thumbnailHeight);
+        
+        self.thumbnailImageView.frame = CGRectMake(valueLabelX, valueLabelY - thumbnailHeight, width, thumbnailHeight);
+        self.slider.valueLabel.frame = CGRectMake(valueLabelX, valueLabelY, width, valueLabelHeight);
     }
     else {
         self.slider.valueLabel.hidden = YES;
@@ -148,41 +160,24 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     }
 }
 
-- (BOOL)isDisplayingThumbnail
-{
-    return self.thumbnailImageView.alpha == 1.f;
-}
-
 #pragma mark SRGTimeSliderDelegate protocol
 
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
-    if (self.displayingThumbnail) {
+    if (interactive) {
         self.thumbnailImageView.image = [self thumbnailAtTime:time];
     }
-    [self updateLayoutForValue:value];
+    [self updateLayoutForValue:value interactive:interactive];
     [self.delegate timeSlider:self isMovingToTime:time date:date withValue:value interactive:interactive];
 }
 
 - (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time
 {
-    if (self.controller.thumbnailsAvailable) {
-        [UIView animateWithDuration:0.1 animations:^{
-            self.thumbnailImageView.alpha = 1.f;
-            self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
-            [self updateLayoutForValue:self.slider.value];
-        }];
-    }
     [self.delegate timeSlider:self didStartDraggingAtTime:time];
 }
 
 - (void)timeSlider:(SRGTimeSlider *)slider didStopDraggingAtTime:(CMTime)time
 {
-    [UIView animateWithDuration:0.1 animations:^{
-        self.thumbnailImageView.alpha = 0.f;
-        self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
-        [self updateLayoutForValue:self.slider.value];
-    }];
     [self.delegate timeSlider:self didStopDraggingAtTime:time];
 }
 
@@ -255,7 +250,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     [self.contentView addSubview:thumbnailImageView];
     self.thumbnailImageView = thumbnailImageView;
     
-    [self updateLayoutForValue:self.slider.value];
+    [self updateLayoutForValue:self.slider.value interactive:NO];
 }
 
 #endif

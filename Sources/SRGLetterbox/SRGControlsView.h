@@ -5,7 +5,6 @@
 //
 
 #import "SRGLetterboxControllerView.h"
-
 #import "SRGLetterboxTimeSlider.h"
 
 @import SRGMediaPlayer;

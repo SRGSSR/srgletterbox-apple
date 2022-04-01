@@ -1034,7 +1034,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
     if (! spriteSheet) {
-        return 16.f / 9.f;
+        return SRGAspectRatioUndefined;
     }
     
     return spriteSheet.thumbnailWidth / spriteSheet.thumbnailHeight;
