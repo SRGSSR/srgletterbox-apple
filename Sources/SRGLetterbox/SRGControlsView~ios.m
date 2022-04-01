@@ -525,6 +525,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
     self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
     self.fullScreenButton.selected = parentLetterboxView.fullScreen;
+    
+    self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
