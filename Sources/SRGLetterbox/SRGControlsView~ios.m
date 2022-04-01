@@ -11,7 +11,6 @@
 #import "SRGControlsView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSDateFormatter+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "SRGControlButton.h"
@@ -24,7 +23,6 @@
 #import "SRGLetterboxTimeSlider.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
-#import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 @import libextobjc;
