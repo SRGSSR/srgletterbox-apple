@@ -107,7 +107,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         CGSize intrinsicContentSize = self.slider.valueLabel.intrinsicContentSize;
         CGFloat valueLabelHeight = intrinsicContentSize.height + 2 * kVerticalValueLabelMargin;
         CGRect parentFrame = [self.parentLetterboxView convertRect:self.parentLetterboxView.bounds toView:self];
-        CGFloat thumbnailAspectRatio = (self.controller.thumbnailsAspectRatio != SRGAspectRatioUndefined) ? self.controller.thumbnailsAspectRatio : 16.f / 9.f;
+        CGFloat thumbnailAspectRatio = (self.controller && self.controller.thumbnailsAspectRatio != SRGAspectRatioUndefined) ? self.controller.thumbnailsAspectRatio : 16.f / 9.f;
         
         UIEdgeInsets safeAreaInsets = self.parentLetterboxView.safeAreaInsets;
         CGRect parentSafeFrame = CGRectMake(CGRectGetMinX(parentFrame) + safeAreaInsets.left,
