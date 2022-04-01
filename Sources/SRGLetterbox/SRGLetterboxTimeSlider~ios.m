@@ -75,6 +75,13 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 #pragma mark Overrides
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self updateLayoutForValue:self.slider.value interactive:NO];
+}
+
 - (void)didAttachToController
 {
     [super didAttachToController];
@@ -249,8 +256,6 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     thumbnailImageView.isAccessibilityElement = NO;
     [self.contentView addSubview:thumbnailImageView];
     self.thumbnailImageView = thumbnailImageView;
-    
-    [self updateLayoutForValue:self.slider.value interactive:NO];
 }
 
 #endif
