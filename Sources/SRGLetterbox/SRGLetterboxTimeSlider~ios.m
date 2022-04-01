@@ -27,7 +27,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 @property (nonatomic, weak) SRGTimeSlider *slider;
 @property (nonatomic, weak) UIImageView *thumbnailImageView;
-@property (nonatomic, weak) UIView *blockingOverlayView;
 @property (nonatomic, weak) UIImageView *blockingReasonImageView;
 
 @end
@@ -151,14 +150,14 @@ static void commonInit(SRGLetterboxTimeSlider *self);
             
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
             self.thumbnailImageView.alpha = 1.f;
-            self.blockingOverlayView.hidden = self.blockingReasonImageView.image != nil ? NO : YES;
+            self.blockingReasonImageView.alpha = 1.f;
         }
         else {
             contentWidth = intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin;
             
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
             self.thumbnailImageView.alpha = 0.f;
-            self.blockingOverlayView.hidden = YES;
+            self.blockingReasonImageView.alpha = 0.f;
         }
         
         CGFloat width = fminf(contentWidth, CGRectGetWidth(parentSafeFrame) - 2 * kHorizontalMargin);
@@ -181,9 +180,9 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 - (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
     if (interactive) {
-        self.thumbnailImageView.image = [self.controller thumbnailAtTime:time];
-        
         SRGBlockingReason blockingReason = [self.controller blockingReasonAtTime:time];
+
+        self.thumbnailImageView.image = (blockingReason == SRGBlockingReasonNone) ? [self.controller thumbnailAtTime:time] : nil;
         self.blockingReasonImageView.image = [UIImage srg_letterboxImageForBlockingReason:blockingReason];
     }
     [self updateLayoutForValue:value interactive:interactive];
@@ -267,6 +266,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     slider.valueLabel = valueLabel;
     
     UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    thumbnailImageView.backgroundColor = UIColor.blackColor;
     thumbnailImageView.contentMode = UIViewContentModeScaleAspectFit;
     thumbnailImageView.alpha = 0.f;
     thumbnailImageView.layer.masksToBounds = YES;
@@ -276,29 +276,17 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     [self.contentView addSubview:thumbnailImageView];
     self.thumbnailImageView = thumbnailImageView;
     
-    UIView *blockingOverlayView = [[UIView alloc] init];
-    blockingOverlayView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
-    blockingOverlayView.hidden = YES;
-    blockingOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.contentView addSubview:blockingOverlayView];
-    self.blockingOverlayView = blockingOverlayView;
-    
-    [NSLayoutConstraint activateConstraints:@[
-        [blockingOverlayView.leadingAnchor constraintEqualToAnchor:thumbnailImageView.leadingAnchor],
-        [blockingOverlayView.trailingAnchor constraintEqualToAnchor:thumbnailImageView.trailingAnchor],
-        [blockingOverlayView.topAnchor constraintEqualToAnchor:thumbnailImageView.topAnchor],
-        [blockingOverlayView.bottomAnchor constraintEqualToAnchor:thumbnailImageView.bottomAnchor],
-    ]];
-    
     UIImageView *blockingReasonImageView = [[UIImageView alloc] init];
     blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    blockingReasonImageView.alpha = 0.f;
     blockingReasonImageView.tintColor = UIColor.whiteColor;
-    [blockingOverlayView addSubview:blockingReasonImageView];
+    blockingReasonImageView.isAccessibilityElement = NO;
+    [self.contentView addSubview:blockingReasonImageView];
     self.blockingReasonImageView = blockingReasonImageView;
     
     [NSLayoutConstraint activateConstraints:@[
-        [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:blockingOverlayView.centerXAnchor],
-        [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:blockingOverlayView.centerYAnchor]
+        [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:thumbnailImageView.centerXAnchor],
+        [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:thumbnailImageView.centerYAnchor]
     ]];
 }
 
