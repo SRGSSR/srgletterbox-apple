@@ -60,8 +60,8 @@ API_UNAVAILABLE(tvos)
  *  See corresponding methods from `SRGTimeSlider`.
  */
 - (void)timeSlider:(SRGLetterboxTimeSlider *)slider isMovingToTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value interactive:(BOOL)interactive;
-- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStartDraggingAtTime:(CMTime)time;
-- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStopDraggingAtTime:(CMTime)time;
+- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStartDraggingAtTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value;
+- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStopDraggingAtTime:(CMTime)time date:(nullable NSDate *)date withValue:(float)value;
 
 @end
 

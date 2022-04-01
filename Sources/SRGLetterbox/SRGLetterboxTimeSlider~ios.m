@@ -171,14 +171,14 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     [self.delegate timeSlider:self isMovingToTime:time date:date withValue:value interactive:interactive];
 }
 
-- (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time
+- (void)timeSlider:(SRGTimeSlider *)slider didStartDraggingAtTime:(CMTime)time date:(NSDate *)date withValue:(float)value
 {
-    [self.delegate timeSlider:self didStartDraggingAtTime:time];
+    [self.delegate timeSlider:self didStartDraggingAtTime:time date:date withValue:value];
 }
 
-- (void)timeSlider:(SRGTimeSlider *)slider didStopDraggingAtTime:(CMTime)time
+- (void)timeSlider:(SRGTimeSlider *)slider didStopDraggingAtTime:(CMTime)time date:(NSDate *)date withValue:(float)value
 {
-    [self.delegate timeSlider:self didStopDraggingAtTime:time];
+    [self.delegate timeSlider:self didStopDraggingAtTime:time date:date withValue:value];
 }
 
 - (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date

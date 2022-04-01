@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/sprite-sheet",
-          "revision": "8cf6baf2defdf5e789fa850235454234f368e6cd",
+          "revision": "3242de4c3601ca54dd6b3350459dcec323849d5b",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": "feature/sprite-sheet",
-          "revision": "56f4a8de17ebefc3c5329c2e40a1517e9cf58e6f",
+          "revision": "17b0ef6ad2f4259551d2613e24e6aa21d17c6269",
           "version": null
         }
       },
@@ -140,8 +140,8 @@
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "410fe58bd1555a29a418acb657a6c1a81968ddc1",
+          "branch": "feature/slider-api-consistency",
+          "revision": "4f5329d6bcaeb2e2b1d56063e93201926255c7b3",
           "version": null
         }
       },
