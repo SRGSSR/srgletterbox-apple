@@ -30,7 +30,7 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>RTS VOD</string>
+					<string>RTS VOD (short clip)</string>
 					<key>urn</key>
 					<string>urn:rts:video:8591082</string>
 				</dict>
