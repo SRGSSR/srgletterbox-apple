@@ -118,9 +118,6 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (void)updateLayoutForValue:(float)value interactive:(BOOL)interactive
 {
-    CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
-    CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
-    
     static const CGFloat kHorizontalValueLabelMargin = 5.f;
     static const CGFloat kVerticalValueLabelMargin = 3.f;
     static const CGFloat kValueLabelBottomDistance = 6.f;
@@ -142,18 +139,19 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         
         CGFloat contentWidth = 0.f;
         
+        static const CGFloat kMinSide = 80.f;
+        static const CGFloat kMaxSide = 150.f;
+        
         BOOL thumbnailsDisplayed = interactive && self.controller.thumbnailsAvailable;
         if (thumbnailsDisplayed) {
-            // TODO: Probably a better way to take the actual aspect ratio value into account to optimize the width
-            //       based on width / height min / max constraints.
-            contentWidth = (thumbnailAspectRatio > 1.f) ? 150.f : 70.f;
+            contentWidth = (thumbnailAspectRatio > 1.f) ? kMaxSide : kMinSide;
             
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
             self.thumbnailImageView.alpha = 1.f;
             self.blockingReasonImageView.alpha = 1.f;
         }
         else {
-            contentWidth = intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin;
+            contentWidth = fmin(intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin, kMaxSide);
             
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
             self.thumbnailImageView.alpha = 0.f;
@@ -161,9 +159,12 @@ static void commonInit(SRGLetterboxTimeSlider *self);
         }
         
         CGFloat width = fminf(contentWidth, CGRectGetWidth(parentSafeFrame) - 2 * kHorizontalMargin);
+        CGFloat thumbnailHeight = fmin(width / thumbnailAspectRatio, kMaxSide);
+        
+        CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
+        CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
         CGFloat valueLabelX = fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetMaxX(parentSafeFrame) - width - kHorizontalMargin), CGRectGetMinX(parentSafeFrame) + kHorizontalMargin);
         CGFloat valueLabelY = CGRectGetMinY(thumbRect) - valueLabelHeight - kValueLabelBottomDistance;
-        CGFloat thumbnailHeight = width / thumbnailAspectRatio;
         
         self.thumbnailImageView.frame = CGRectMake(valueLabelX, valueLabelY - thumbnailHeight, width, thumbnailHeight);
         self.slider.valueLabel.frame = CGRectMake(valueLabelX, valueLabelY, width, valueLabelHeight);
