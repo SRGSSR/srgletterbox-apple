@@ -21,6 +21,9 @@
 @import libextobjc;
 @import SRGAppearance;
 
+static const CGFloat kPreviewHorizontalMargin = 4.f;
+static const CGFloat kPreviewVerticalDistance = 6.f;
+
 static void commonInit(SRGLetterboxTimeSlider *self);
 
 @interface SRGLetterboxTimeSlider ()
@@ -118,62 +121,98 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (void)updateLayoutForValue:(float)value interactive:(BOOL)interactive
 {
-    static const CGFloat kHorizontalValueLabelMargin = 5.f;
-    static const CGFloat kVerticalValueLabelMargin = 3.f;
-    static const CGFloat kValueLabelBottomDistance = 6.f;
-    static const CGFloat kHorizontalMargin = 4.f;
-    
     if (self.slider.valueLabel.text.length != 0) {
         self.slider.valueLabel.hidden = NO;
         
-        CGSize intrinsicContentSize = self.slider.valueLabel.intrinsicContentSize;
-        CGFloat valueLabelHeight = intrinsicContentSize.height + 2 * kVerticalValueLabelMargin;
-        CGRect parentFrame = [self.parentLetterboxView convertRect:self.parentLetterboxView.bounds toView:self];
-        CGFloat thumbnailAspectRatio = (self.controller && self.controller.thumbnailsAspectRatio != SRGAspectRatioUndefined) ? self.controller.thumbnailsAspectRatio : 16.f / 9.f;
+        CGRect parentFrame = [self parentFrame];
+        CGSize valueLabelSize = [self valueLabelSizeInFrame:parentFrame];
+        CGSize thumbnailSize = [self thumbnailSizeInFrame:parentFrame interactive:interactive];
         
-        UIEdgeInsets safeAreaInsets = self.parentLetterboxView.safeAreaInsets;
-        CGRect parentSafeFrame = CGRectMake(CGRectGetMinX(parentFrame) + safeAreaInsets.left,
-                                            CGRectGetMinY(parentFrame) + safeAreaInsets.top,
-                                            fmaxf(CGRectGetWidth(parentFrame) - safeAreaInsets.left - safeAreaInsets.right, 0.f),
-                                            fmaxf(CGRectGetHeight(parentFrame) - safeAreaInsets.top - safeAreaInsets.bottom, 0.f));
-        
-        CGFloat contentWidth = 0.f;
-        
-        static const CGFloat kMinSide = 80.f;
-        static const CGFloat kMaxSide = 150.f;
-        
-        BOOL thumbnailsDisplayed = interactive && self.controller.thumbnailsAvailable;
-        if (thumbnailsDisplayed) {
-            contentWidth = (thumbnailAspectRatio > 1.f) ? kMaxSide : kMinSide;
+        if (! CGSizeEqualToSize(thumbnailSize, CGSizeZero)) {
+            CGPoint position = [self positionForFrameWithWidth:thumbnailSize.width inFrame:parentFrame atValue:value];
             
+            CGFloat valueLabelY = position.y - valueLabelSize.height - kPreviewVerticalDistance;
+            self.slider.valueLabel.frame = CGRectMake(position.x,
+                                                      valueLabelY,
+                                                      thumbnailSize.width,
+                                                      valueLabelSize.height);
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+            
             self.thumbnailImageView.alpha = 1.f;
+            self.thumbnailImageView.frame = CGRectMake(position.x,
+                                                       valueLabelY - thumbnailSize.height,
+                                                       thumbnailSize.width,
+                                                       thumbnailSize.height);
+            
             self.blockingReasonImageView.alpha = 1.f;
         }
         else {
-            contentWidth = fmin(intrinsicContentSize.width + 2 * kHorizontalValueLabelMargin, kMaxSide);
+            CGPoint position = [self positionForFrameWithWidth:valueLabelSize.width inFrame:parentFrame atValue:value];
             
+            self.slider.valueLabel.frame = CGRectMake(position.x,
+                                                      position.y - valueLabelSize.height - kPreviewVerticalDistance,
+                                                      valueLabelSize.width,
+                                                      valueLabelSize.height);
             self.slider.valueLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+            
             self.thumbnailImageView.alpha = 0.f;
             self.blockingReasonImageView.alpha = 0.f;
         }
-        
-        CGFloat width = fminf(contentWidth, CGRectGetWidth(parentSafeFrame) - 2 * kHorizontalMargin);
-        CGFloat thumbnailHeight = fmin(width / thumbnailAspectRatio, kMaxSide);
-        
-        CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
-        CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
-        CGFloat valueLabelX = fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetMaxX(parentSafeFrame) - width - kHorizontalMargin), CGRectGetMinX(parentSafeFrame) + kHorizontalMargin);
-        CGFloat valueLabelY = CGRectGetMinY(thumbRect) - valueLabelHeight - kValueLabelBottomDistance;
-        
-        self.thumbnailImageView.frame = CGRectMake(valueLabelX, valueLabelY - thumbnailHeight, width, thumbnailHeight);
-        self.slider.valueLabel.frame = CGRectMake(valueLabelX, valueLabelY, width, valueLabelHeight);
     }
     else {
         self.slider.valueLabel.hidden = YES;
     }
     
     self.slider.valueLabel.backgroundColor = self.live ? UIColor.srg_lightRedColor : UIColor.srg_gray23Color;
+}
+
+- (CGRect)parentFrame
+{
+    CGRect parentFrame = [self.parentLetterboxView convertRect:self.parentLetterboxView.bounds toView:self];
+    UIEdgeInsets safeAreaInsets = self.parentLetterboxView.safeAreaInsets;
+    return CGRectMake(CGRectGetMinX(parentFrame) + safeAreaInsets.left,
+                      CGRectGetMinY(parentFrame) + safeAreaInsets.top,
+                      fmaxf(CGRectGetWidth(parentFrame) - safeAreaInsets.left - safeAreaInsets.right, 0.f),
+                      fmaxf(CGRectGetHeight(parentFrame) - safeAreaInsets.top - safeAreaInsets.bottom, 0.f));
+}
+
+- (CGSize)valueLabelSizeInFrame:(CGRect)frame
+{
+    static const CGFloat kHorizontalMargin = 5.f;
+    static const CGFloat kVerticalMargin = 3.f;
+    
+    CGSize intrinsicContentSize = self.slider.valueLabel.intrinsicContentSize;
+    return CGSizeMake(fminf(intrinsicContentSize.width + 2 * kHorizontalMargin, CGRectGetWidth(frame) - 2 * kPreviewHorizontalMargin),
+                      fminf(intrinsicContentSize.height + 2 * kVerticalMargin, CGRectGetHeight(frame)));
+}
+
+- (CGPoint)positionForFrameWithWidth:(CGFloat)width inFrame:(CGRect)frame atValue:(float)value
+{
+    CGRect trackFrame = [self.slider trackRectForBounds:self.bounds];
+    CGRect thumbRect = [self.slider thumbRectForBounds:self.bounds trackRect:trackFrame value:value];
+    CGFloat x = fmaxf(fminf(CGRectGetMidX(thumbRect) - width / 2.f, CGRectGetMaxX(frame) - width - kPreviewHorizontalMargin), CGRectGetMinX(frame) + kPreviewHorizontalMargin);
+    CGFloat y = CGRectGetMinY(thumbRect);
+    return CGPointMake(x, y);
+}
+
+- (CGSize)thumbnailSizeInFrame:(CGRect)frame interactive:(BOOL)interactive
+{
+    BOOL shouldDisplayThumbnails = interactive && self.controller.thumbnailsAvailable;
+    if (! shouldDisplayThumbnails) {
+        return CGSizeZero;
+    }
+    
+    static const CGFloat kMinSide = 80.f;
+    static const CGFloat kMaxSide = 150.f;
+    
+    CGFloat aspectRatio = (self.controller && self.controller.thumbnailsAspectRatio != SRGAspectRatioUndefined) ? self.controller.thumbnailsAspectRatio : 16.f / 9.f;
+    CGFloat width = fminf((aspectRatio > 1.f) ? kMaxSide : kMinSide, CGRectGetWidth(frame) - 2 * kPreviewHorizontalMargin);
+    CGFloat height = fmin(width / aspectRatio, kMaxSide);
+    if (height + kPreviewVerticalDistance + 70.f > CGRectGetHeight(frame)) {
+        return CGSizeZero;
+    }
+    
+    return CGSizeMake(width, height);
 }
 
 #pragma mark SRGTimeSliderDelegate protocol
