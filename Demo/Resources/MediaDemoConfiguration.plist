@@ -30,21 +30,33 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>RTS VOD (short clip)</string>
+					<string>RTS VOD</string>
 					<key>urn</key>
 					<string>urn:rts:video:8591082</string>
 				</dict>
 				<dict>
 					<key>name</key>
+					<string>RTS VOD (short clip)</string>
+					<key>urn</key>
+					<string>urn:rts:video:11852120</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>RTS 9:16 VOD</string>
+					<key>urn</key>
+					<string>urn:rts:video:12860995</string>
+				</dict>
+				<dict>
+					<key>name</key>
 					<string>RTS VOD (segments)</string>
 					<key>urn</key>
-					<string>urn:rts:video:10623665</string>
+					<string>urn:rts:video:12988936</string>
 				</dict>
 				<dict>
 					<key>name</key>
 					<string>RTS VOD (start on segment)</string>
 					<key>urn</key>
-					<string>urn:rts:video:10623653</string>
+					<string>urn:rts:video:12988930</string>
 				</dict>
 				<dict>
 					<key>name</key>
