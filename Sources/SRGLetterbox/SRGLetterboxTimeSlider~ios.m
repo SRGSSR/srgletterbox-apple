@@ -80,7 +80,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (NSArray *)accessibilityElements
 {
-    return @[self.slider];
+    return (self.alpha != 0) ? @[self.slider] : @[];
 }
 
 #pragma mark Overrides
