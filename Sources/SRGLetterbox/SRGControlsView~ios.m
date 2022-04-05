@@ -11,7 +11,6 @@
 #import "SRGControlsView.h"
 
 #import "NSBundle+SRGLetterbox.h"
-#import "NSDateFormatter+SRGLetterbox.h"
 #import "NSDateComponentsFormatter+SRGLetterbox.h"
 #import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "SRGControlButton.h"
@@ -24,7 +23,6 @@
 #import "SRGLetterboxTimeSlider.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
-#import "UIFont+SRGLetterbox.h"
 #import "UIImage+SRGLetterbox.h"
 
 @import libextobjc;
@@ -72,6 +70,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingStartOverToBackwardConstraint;
 
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
+
+@property (nonatomic, getter=isMovingSlider) BOOL movingSlider;
 
 @end
 
@@ -190,10 +190,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGLetterboxTimeSlider *timeSlider = [[SRGLetterboxTimeSlider alloc] init];
     timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     timeSlider.alpha = 0.f;
-    timeSlider.minimumTrackTintColor = UIColor.whiteColor;
-    timeSlider.maximumTrackTintColor = [UIColor colorWithWhite:1.f alpha:0.3f];
-    timeSlider.bufferingTrackColor = [UIColor colorWithWhite:1.f alpha:0.5f];
-    timeSlider.resumingAfterSeek = YES;
     timeSlider.delegate = self;
     [timeSliderWrapperView addSubview:timeSlider];
     self.timeSlider = timeSlider;
@@ -451,7 +447,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.pictureInPictureButton.mediaPlayerController = nil;
     self.airPlayButton.mediaPlayerController = nil;
     self.playbackSettingsButton.mediaPlayerController = nil;
-    self.timeSlider.mediaPlayerController = nil;
+    self.timeSlider.controller = nil;
     
     self.viewModeButton.mediaPlayerView = nil;
 }
@@ -467,7 +463,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.pictureInPictureButton.mediaPlayerController = mediaPlayerController;
     self.airPlayButton.mediaPlayerController = mediaPlayerController;
     self.playbackSettingsButton.mediaPlayerController = mediaPlayerController;
-    self.timeSlider.mediaPlayerController = mediaPlayerController;
+    self.timeSlider.controller = controller;
     
     self.viewModeButton.mediaPlayerView = mediaPlayerController.view;
     
@@ -508,23 +504,23 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
         BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
         
-        self.forwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.forwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
         self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         
-        self.backwardSeekButton.alpha = canSeek ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         
-        self.startOverButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
+        self.startOverButton.alpha = (! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
         BOOL canSkipToLive = [self.controller canSkipToLive];
-        self.skipToLiveButton.alpha = (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = (! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive)) ? 1.f : 0.f;
         self.skipToLiveButton.enabled = canSkipToLive;
         
         self.timeSlider.alpha = canSeek ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = self.controller.loading ? 0.f : 1.f;
+    self.playbackButton.alpha = (self.movingSlider || self.controller.loading) ? 0.f : 1.f;
     
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
     self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
@@ -641,47 +637,21 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }
 }
 
-#pragma mark SRGTimeSliderDelegate protocol
+#pragma mark SRGLetterboxTimeSliderDelegate protocol
 
-- (void)timeSlider:(SRGTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
+- (void)timeSlider:(SRGLetterboxTimeSlider *)slider isMovingToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
     [self.delegate controlsView:self isMovingSliderToTime:time date:date withValue:value interactive:interactive];
 }
 
-- (NSAttributedString *)timeSlider:(SRGTimeSlider *)slider labelForValue:(float)value time:(CMTime)time date:(NSDate *)date
+- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStartDraggingAtTime:(CMTime)time date:(NSDate *)date withValue:(float)value
 {
-    SRGMediaPlayerStreamType streamType = slider.mediaPlayerController.streamType;
-    if (slider.live) {
-        return [[NSAttributedString alloc] initWithString:SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightBold fixedSize:14.f] }];
-    }
-    else if (streamType == SRGMediaPlayerStreamTypeDVR) {
-        if (date) {
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:SRGLetterboxNonLocalizedString(@" ") attributes:@{ NSFontAttributeName : [UIFont srg_awesomeFontWithSize:14.f] }];
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSDateFormatter.srgletterbox_timeFormatter stringFromDate:date] attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }]];
-            return attributedString.copy;
-        }
-        else {
-            return [[NSAttributedString alloc] initWithString:@"--:--" attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }];
-        }
-    }
-    else if (streamType == SRGMediaPlayerStreamTypeLive) {
-        return nil;
-    }
-    else {
-        NSDateComponentsFormatter *dateComponentsFormatter = (fabsf(value) < 60.f * 60.f) ? NSDateComponentsFormatter.srg_shortDateComponentsFormatter : NSDateComponentsFormatter.srg_mediumDateComponentsFormatter;
-        NSString *string = [dateComponentsFormatter stringFromTimeInterval:value];
-        return [[NSAttributedString alloc] initWithString:string attributes:@{ NSFontAttributeName : [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightMedium fixedSize:14.f] }];
-    }
+    self.movingSlider = YES;
 }
 
-- (void)timeSlider:(SRGTimeSlider *)slider accessibilityDecrementFromValue:(float)value time:(CMTime)time
+- (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStopDraggingAtTime:(CMTime)time date:(NSDate *)date withValue:(float)value
 {
-    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
-}
-
-- (void)timeSlider:(SRGTimeSlider *)slider accessibilityIncrementFromValue:(float)value time:(CMTime)time
-{
-    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    self.movingSlider = NO;
 }
 
 #pragma mark SRGPlaybackSettingsButtonDelegate protocol
@@ -715,30 +685,22 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)skipBackward:(id)sender
 {
-    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
-    }];
+    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
 }
 
 - (void)skipForward:(id)sender
 {
-    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
-    }];
+    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
 }
 
 - (void)startOver:(id)sender
 {
-    [self.controller startOverWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
-    }];
+    [self.controller startOverWithCompletionHandler:nil];
 }
 
 - (void)skipToLive:(id)sender
 {
-    [self.controller skipToLiveWithCompletionHandler:^(BOOL finished) {
-        [self timeSlider:self.timeSlider isMovingToTime:self.timeSlider.time date:self.timeSlider.date withValue:self.timeSlider.value interactive:YES];
-    }];
+    [self.controller skipToLiveWithCompletionHandler:nil];
 }
 
 - (void)hideUserInterface:(id)sender

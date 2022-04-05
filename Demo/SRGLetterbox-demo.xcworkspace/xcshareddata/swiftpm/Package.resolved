@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "b84bc8a39ff04bc8d5ae7b4d230c171c562891aa",
-          "version": "4.4.1"
+          "revision": "8354a50fe01a7e54e196d3b5493b5ab53dd5866a",
+          "version": "4.4.2"
         }
       },
       {
@@ -78,7 +78,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "develop",
-          "revision": "110fc44dd839e8ba73390f23eb07b383f3420816",
+          "revision": "5cd36f384c5137e1d9c19825f7ba9e89215a6024",
           "version": null
         }
       },
@@ -104,9 +104,9 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": null,
-          "revision": "04d1d4a45fd83044116c77ba7f2c64e2618aea94",
-          "version": "13.0.0"
+          "branch": "develop",
+          "revision": "4b54b408048d9c05d361a05f244d5cf7cf1cc935",
+          "version": null
         }
       },
       {
@@ -141,7 +141,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": "develop",
-          "revision": "410fe58bd1555a29a418acb657a6c1a81968ddc1",
+          "revision": "e7bce8ee8ce6c96c1a8998a3da0991d783fafa39",
           "version": null
         }
       },

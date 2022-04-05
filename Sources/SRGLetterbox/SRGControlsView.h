@@ -5,6 +5,7 @@
 //
 
 #import "SRGLetterboxControllerView.h"
+#import "SRGLetterboxTimeSlider.h"
 
 @import SRGMediaPlayer;
 @import UIKit;
@@ -73,7 +74,7 @@ API_UNAVAILABLE(tvos)
  *  View displaying controls.
  */
 API_UNAVAILABLE(tvos)
-@interface SRGControlsView : SRGLetterboxControllerView <SRGTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGLetterboxTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
 
 /**
  *  View optional delegate.

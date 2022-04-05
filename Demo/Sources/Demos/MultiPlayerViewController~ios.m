@@ -147,6 +147,14 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
+#pragma mark Accessibility
+
+- (BOOL)accessibilityPerformEscape
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture

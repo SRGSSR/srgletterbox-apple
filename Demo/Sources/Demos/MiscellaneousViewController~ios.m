@@ -232,7 +232,7 @@
                 }
                     
                 case 1: {
-                    [self openMultiPlayerWithURN:@"urn:rts:video:8414077" URN1:@"urn:rts:video:10623665" URN2:@"urn:rts:video:1967124"];
+                    [self openMultiPlayerWithURN:@"urn:rts:video:8414077" URN1:@"urn:rts:video:12988936" URN2:@"urn:rts:video:1967124"];
                     break;
                 }
                     
