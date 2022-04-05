@@ -30,6 +30,22 @@
     }
 }
 
+- (SRGChapter *)srgletterbox_spriteSheetChapter
+{
+    SRGChapter *mainChapter = self.mainChapter;
+    if (mainChapter.spriteSheet) {
+        return mainChapter;
+    }
+    else if (mainChapter.fullLengthURN && mainChapter.fullLengthMarkIn != 0 && mainChapter.fullLengthMarkOut != 0) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(SRGChapter.new, URN), mainChapter.fullLengthURN];
+        SRGChapter *fullLengthChapter = [self.chapters filteredArrayUsingPredicate:predicate].firstObject;
+        return fullLengthChapter.spriteSheet != nil ? fullLengthChapter : nil;
+    }
+    else {
+        return nil;
+    }
+}
+
 - (NSArray<SRGSubdivision *> *)srgletterbox_subdivisionsForMediaPlayerController:(SRGMediaPlayerController *)mediaPlayerController
 {
     // Show visible segments for the current chapter (if any), and display other chapters but not expanded. If

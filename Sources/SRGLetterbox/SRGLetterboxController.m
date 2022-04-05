@@ -985,7 +985,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     NSParameterAssert(completionBlock);
     
-    NSURL *spriteSheetURL = mediaComposition.mainChapter.spriteSheet.URL;
+    NSURL *spriteSheetURL = mediaComposition.srgletterbox_spriteSheetChapter.spriteSheet.URL;
     if (! spriteSheetURL) {
         return nil;
     }
@@ -1010,7 +1010,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (CGRect)spriteSheetThumbnailRectAtTime:(CMTime)time
 {
-    SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
+    SRGSpriteSheet *spriteSheet = self.mediaComposition.srgletterbox_spriteSheetChapter.spriteSheet;
     if (! spriteSheet) {
         return CGRectZero;
     }
@@ -1044,6 +1044,11 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 {
     if (! self.spriteSheetImage) {
         return nil;
+    }
+    
+    SRGChapter *mainChapter = self.mediaComposition.mainChapter;
+    if (! [mainChapter.URN isEqualToString:self.mediaComposition.srgletterbox_spriteSheetChapter.URN]) {
+        time = CMTimeAdd(time, CMTimeMakeWithSeconds(mainChapter.fullLengthMarkIn / 1000., NSEC_PER_SEC));
     }
     
     CGRect thumbnailRect = [self spriteSheetThumbnailRectAtTime:time];
