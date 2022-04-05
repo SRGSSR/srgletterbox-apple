@@ -306,7 +306,6 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     valueLabel.textColor = UIColor.whiteColor;
     valueLabel.layer.masksToBounds = YES;
     valueLabel.layer.cornerRadius = 3.f;
-    valueLabel.isAccessibilityElement = NO;
     [self.contentView addSubview:valueLabel];
     slider.valueLabel = valueLabel;
     
@@ -317,7 +316,6 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     thumbnailImageView.layer.masksToBounds = YES;
     thumbnailImageView.layer.cornerRadius = 3.f;
     thumbnailImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-    thumbnailImageView.isAccessibilityElement = NO;
     [self.contentView addSubview:thumbnailImageView];
     self.thumbnailImageView = thumbnailImageView;
     
@@ -325,7 +323,6 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     blockingReasonImageView.alpha = 0.f;
     blockingReasonImageView.tintColor = UIColor.whiteColor;
-    blockingReasonImageView.isAccessibilityElement = NO;
     [self.contentView addSubview:blockingReasonImageView];
     self.blockingReasonImageView = blockingReasonImageView;
     
