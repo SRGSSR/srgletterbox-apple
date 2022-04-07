@@ -496,15 +496,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     CMTime time = CMTIME_IS_INDEFINITE(mediaPlayerController.seekTargetTime) ? mediaPlayerController.currentTime : mediaPlayerController.seekTargetTime;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(timeRange.duration));
-    
-    // Provide rate information so that the information can be interpolated whithout the need for continuous updates
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying || playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @(mediaPlayerController.player.rate);
-    }
-    else {
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @0.;
-    }
+    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @(mediaPlayerController.effectivePlaybackRate);
+    nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = @(mediaPlayerController.playbackRate);
     
     BOOL isLivestream = (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
     nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(isLivestream);
