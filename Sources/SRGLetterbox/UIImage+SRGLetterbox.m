@@ -57,19 +57,25 @@ CGFloat SRGWidthForImageScale(SRGImageScale imageScale)
     static dispatch_once_t s_onceToken;
     dispatch_once(&s_onceToken, ^{
 #if TARGET_OS_TV
-        s_widths = @{ @(SRGImageScaleSmall) : @(400.f),
-                      @(SRGImageScaleMedium) : @(800.f),
-                      @(SRGImageScaleLarge) : @(1920.f)};
+        s_widths = @{
+            @(SRGImageScaleSmall) : @400.f,
+            @(SRGImageScaleMedium) : @800.f,
+            @(SRGImageScaleLarge) : @1920.f
+        };
 #else
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-            s_widths = @{ @(SRGImageScaleSmall) : @(200.f),
-                          @(SRGImageScaleMedium) : @(350.f),
-                          @(SRGImageScaleLarge) : @(500.f)};
+            s_widths = @{
+                @(SRGImageScaleSmall) : @200.f,
+                @(SRGImageScaleMedium) : @350.f,
+                @(SRGImageScaleLarge) : @500.f
+            };
         }
         else {
-            s_widths = @{ @(SRGImageScaleSmall) : @(200.f),
-                          @(SRGImageScaleMedium) : @(500.f),
-                          @(SRGImageScaleLarge) : @(1000.f)};
+            s_widths = @{
+                @(SRGImageScaleSmall) : @200.f,
+                @(SRGImageScaleMedium) : @500.f,
+                @(SRGImageScaleLarge) : @1000.f
+            };
         }
 #endif
     });
