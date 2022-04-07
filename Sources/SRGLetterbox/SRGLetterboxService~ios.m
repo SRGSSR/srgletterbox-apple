@@ -430,7 +430,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackPosition) && SRG_CMTIMERANGE_IS_NOT_EMPTY(controller.timeRange);
         commandCenter.enableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
         commandCenter.disableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
-        commandCenter.changePlaybackRateCommand.enabled = YES;
+        commandCenter.changePlaybackRateCommand.enabled = (mediaPlayerController.streamType != SRGStreamTypeLive);
     }
     else {
         commandCenter.playCommand.enabled = NO;
