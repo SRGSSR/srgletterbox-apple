@@ -354,6 +354,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
     disableLanguageOptionCommand.enabled = NO;
     [disableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(disableLanguageOption:)];
+    
+    MPChangePlaybackRateCommand *changePlaybackRateCommand = commandCenter.changePlaybackRateCommand;
+    changePlaybackRateCommand.supportedPlaybackRates = self.controller.supportedPlaybackRates;
+    changePlaybackRateCommand.enabled = NO;
+    [changePlaybackRateCommand srg_addUniqueTarget:self action:@selector(changePlaybackRate:)];
 }
 
 - (void)resetRemoteCommandCenter
@@ -394,6 +399,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
     [disableLanguageOptionCommand removeTarget:self action:@selector(disableLanguageOption:)];
+    
+    MPChangePlaybackRateCommand *changePlaybackRateCommand = commandCenter.changePlaybackRateCommand;
+    [changePlaybackRateCommand removeTarget:self action:@selector(changePlaybackRate:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -422,6 +430,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackPosition) && SRG_CMTIMERANGE_IS_NOT_EMPTY(controller.timeRange);
         commandCenter.enableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
         commandCenter.disableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
+        commandCenter.changePlaybackRateCommand.enabled = YES;
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -435,6 +444,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = NO;
         commandCenter.enableLanguageOptionCommand.enabled = NO;
         commandCenter.disableLanguageOptionCommand.enabled = NO;
+        commandCenter.changePlaybackRateCommand.enabled = NO;
     }
 }
 
@@ -759,6 +769,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [playerItem selectMediaOption:nil inMediaSelectionGroup:audioGroup];
     }
     
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus)changePlaybackRate:(MPChangePlaybackRateCommandEvent *)event
+{
+    self.controller.playbackRate = event.playbackRate;
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
