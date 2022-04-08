@@ -32,6 +32,8 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 @property (nonatomic, weak) UIImageView *thumbnailImageView;
 @property (nonatomic, weak) UIImageView *blockingReasonImageView;
 
+@property (nonatomic, weak) id periodicTimeObserver;
+
 @end
 
 @implementation SRGLetterboxTimeSlider
@@ -103,6 +105,12 @@ static void commonInit(SRGLetterboxTimeSlider *self);
                                            selector:@selector(mediaPlayerDidSeek:)
                                                name:SRGMediaPlayerSeekNotification
                                              object:mediaPlayerController];
+    
+    @weakify(self)
+    self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
+        @strongify(self)
+        [self updateLayoutForValue:self.slider.value interactive:NO];
+    }];
 }
 
 - (void)willDetachFromController
@@ -113,6 +121,8 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     [NSNotificationCenter.defaultCenter removeObserver:self
                                                   name:SRGMediaPlayerSeekNotification
                                                 object:mediaPlayerController];
+    
+    [mediaPlayerController removePeriodicTimeObserver:self.periodicTimeObserver];
 }
 
 - (void)didDetachFromController
@@ -229,8 +239,9 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
         self.thumbnailImageView.image = (blockingReason == SRGBlockingReasonNone) ? [self.controller thumbnailAtTime:time] : nil;
         self.blockingReasonImageView.image = [UIImage srg_letterboxImageForBlockingReason:blockingReason];
+        
+        [self updateLayoutForValue:value interactive:YES];
     }
-    [self updateLayoutForValue:value interactive:interactive];
     [self.delegate timeSlider:self isMovingToTime:time date:date withValue:value interactive:interactive];
 }
 
