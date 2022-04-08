@@ -133,7 +133,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [_controller removeObserver:self keyPath:@keypath(_controller.media)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
-        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.effectivePlaybackRate)];
+        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.playbackRate)];
         
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
