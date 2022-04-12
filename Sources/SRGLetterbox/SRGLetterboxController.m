@@ -161,6 +161,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
 
+@property (nonatomic) float playbackRate;
+@property (nonatomic) float effectivePlaybackRate;
+
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
 
@@ -203,6 +206,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @implementation SRGLetterboxController
 
+@synthesize playbackRate = _playbackRate;
 @synthesize serviceURL = _serviceURL;
 
 #pragma mark Object lifecycle
@@ -237,6 +241,23 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
+        
+        _playbackRate = self.mediaPlayerController.playbackRate;
+        _effectivePlaybackRate = self.mediaPlayerController.effectivePlaybackRate;
+        
+        // KVO-forwarding for the playback rate stored property bound to the underlying SRG Media Player KVObservable mutable
+        // property.
+        [self.mediaPlayerController addObserver:self keyPath:@keypath(SRGMediaPlayerController.new, playbackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self willChangeValueForKey:@keypath(self.playbackRate)];
+            self->_playbackRate = self.mediaPlayerController.playbackRate;
+            [self didChangeValueForKey:@keypath(self.playbackRate)];
+        }];
+        
+        [self.mediaPlayerController addObserver:self keyPath:@keypath(SRGMediaPlayerController.new, effectivePlaybackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            self.effectivePlaybackRate = self.mediaPlayerController.effectivePlaybackRate;
+        }];
         
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
@@ -1870,7 +1891,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
 {
-    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]) {
+    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]
+            || [key isEqualToString:@keypath(SRGLetterboxController.new, playbackRate)]) {
         return NO;
     }
     else {

@@ -24,14 +24,15 @@ typedef NS_OPTIONS(NSInteger, SRGLetterboxCommands) {
     SRGLetterboxCommandPreviousTrack                = 1 << 2,           // Previous track.
     SRGLetterboxCommandNextTrack                    = 1 << 3,           // Next track.
     SRGLetterboxCommandChangePlaybackPosition       = 1 << 4,           // Slider to seek within the media.
-    SRGLetterboxCommandLanguageSelection            = 1 << 5            // Language selection (audio track and subtitles; AirPlay only).
+    SRGLetterboxCommandLanguageSelection            = 1 << 5,           // Language selection (audio track and subtitles; AirPlay only).
+    SRGLetterboxCommandChangePlaybackRate           = 1 << 6            // Playback rate cycle selection between supported playback rates (CarPlay only).
 } API_UNAVAILABLE(tvos);
 
 /**
  *  Default command set.
  */
 static SRGLetterboxCommands SRGLetterboxCommandsDefault API_UNAVAILABLE(tvos) = SRGLetterboxCommandSkipForward | SRGLetterboxCommandSkipBackward
-    | SRGLetterboxCommandChangePlaybackPosition | SRGLetterboxCommandLanguageSelection;
+    | SRGLetterboxCommandChangePlaybackPosition | SRGLetterboxCommandLanguageSelection | SRGLetterboxCommandChangePlaybackRate;
 
 /**
  *  Delegate protocol for picture in picture implementation. User interface behavior when entering or exiting picture

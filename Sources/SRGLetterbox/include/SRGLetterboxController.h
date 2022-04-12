@@ -801,7 +801,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 @interface SRGLetterboxController (PlaybackRate)
 
 /**
- *  The playback rate. Only values provided in `supportedPlaybackRates` are allowed.
+ *  The playback rate. Only values provided in `supportedPlaybackRates` are allowed. Key-value observable.
  */
 @property (nonatomic) float playbackRate;
 
@@ -813,6 +813,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 /**
  *  The current effective playback rate. Some streams might namely not support the desired `playbackRate` in all
  *  conditions (e.g. livestreams). The effective playback rate provides the currently applicable value.
+ *  Key-value observable.
  */
 @property (nonatomic, readonly) float effectivePlaybackRate;
 

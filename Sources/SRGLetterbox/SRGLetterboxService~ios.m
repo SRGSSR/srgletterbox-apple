@@ -133,6 +133,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [_controller removeObserver:self keyPath:@keypath(_controller.media)];
         
         SRGMediaPlayerController *previousMediaPlayerController = _controller.mediaPlayerController;
+        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.playbackRate)];
+        [previousMediaPlayerController removeObserver:self keyPath:@keypath(previousMediaPlayerController.effectivePlaybackRate)];
+        
         AVPictureInPictureController *pictureInPictureController = previousMediaPlayerController.pictureInPictureController;
         [pictureInPictureController removeObserver:self keyPath:@keypath(pictureInPictureController.pictureInPictureActive)];
         
@@ -173,6 +176,15 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [self enableExternalPlaybackForController:controller];
         
         SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.playbackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(controller)
+            [self updateNowPlayingInformationWithController:controller];
+        }];
+        [mediaPlayerController addObserver:self keyPath:@keypath(mediaPlayerController.effectivePlaybackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(controller)
+            [self updateNowPlayingInformationWithController:controller];
+        }];
+        
         AVPictureInPictureController *pictureInPictureController = mediaPlayerController.pictureInPictureController;
         if (pictureInPictureController) {
             pictureInPictureController.delegate = self;
@@ -347,6 +359,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
     disableLanguageOptionCommand.enabled = NO;
     [disableLanguageOptionCommand srg_addUniqueTarget:self action:@selector(disableLanguageOption:)];
+    
+    MPChangePlaybackRateCommand *changePlaybackRateCommand = commandCenter.changePlaybackRateCommand;
+    changePlaybackRateCommand.supportedPlaybackRates = self.controller.supportedPlaybackRates;
+    changePlaybackRateCommand.enabled = NO;
+    [changePlaybackRateCommand srg_addUniqueTarget:self action:@selector(changePlaybackRate:)];
 }
 
 - (void)resetRemoteCommandCenter
@@ -387,6 +404,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     MPRemoteCommand *disableLanguageOptionCommand = commandCenter.disableLanguageOptionCommand;
     [disableLanguageOptionCommand removeTarget:self action:@selector(disableLanguageOption:)];
+    
+    MPChangePlaybackRateCommand *changePlaybackRateCommand = commandCenter.changePlaybackRateCommand;
+    [changePlaybackRateCommand removeTarget:self action:@selector(changePlaybackRate:)];
 }
 
 - (void)updateRemoteCommandCenterWithController:(SRGLetterboxController *)controller
@@ -415,6 +435,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackPosition) && SRG_CMTIMERANGE_IS_NOT_EMPTY(controller.timeRange);
         commandCenter.enableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
         commandCenter.disableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
+        commandCenter.changePlaybackRateCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackRate) && (mediaPlayerController.streamType != SRGStreamTypeLive);
     }
     else {
         commandCenter.playCommand.enabled = NO;
@@ -428,6 +449,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = NO;
         commandCenter.enableLanguageOptionCommand.enabled = NO;
         commandCenter.disableLanguageOptionCommand.enabled = NO;
+        commandCenter.changePlaybackRateCommand.enabled = NO;
     }
 }
 
@@ -496,15 +518,8 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     CMTime time = CMTIME_IS_INDEFINITE(mediaPlayerController.seekTargetTime) ? mediaPlayerController.currentTime : mediaPlayerController.seekTargetTime;
     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = @(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start)));
     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = @(CMTimeGetSeconds(timeRange.duration));
-    
-    // Provide rate information so that the information can be interpolated whithout the need for continuous updates
-    SRGMediaPlayerPlaybackState playbackState = mediaPlayerController.playbackState;
-    if (playbackState == SRGMediaPlayerPlaybackStatePlaying || playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @(mediaPlayerController.player.rate);
-    }
-    else {
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @0.;
-    }
+    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = @(mediaPlayerController.effectivePlaybackRate);
+    nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = @(mediaPlayerController.playbackRate);
     
     BOOL isLivestream = (mediaPlayerController.streamType == SRGMediaPlayerStreamTypeLive);
     nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = @(isLivestream);
@@ -759,6 +774,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         [playerItem selectMediaOption:nil inMediaSelectionGroup:audioGroup];
     }
     
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus)changePlaybackRate:(MPChangePlaybackRateCommandEvent *)event
+{
+    self.controller.playbackRate = event.playbackRate;
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
