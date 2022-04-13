@@ -815,8 +815,8 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 NSDateComponents *SRGDateComponentsForTimeIntervalSinceNow(NSTimeInterval timeInterval)
 {
     NSDate *nowDate = NSDate.date;
-    return [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
-                                           fromDate:nowDate
-                                             toDate:[NSDate dateWithTimeInterval:timeInterval sinceDate:nowDate]
-                                            options:0];
+    return [NSCalendar.currentCalendar components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                         fromDate:nowDate
+                                           toDate:[NSDate dateWithTimeInterval:timeInterval sinceDate:nowDate]
+                                          options:0];
 }

@@ -19,8 +19,8 @@ NSString *LetterboxDemoAccessibilityShortTimeFromDate(NSDate *date)
         s_dateComponentsFormatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorNone;
     });
     
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitHour | NSCalendarUnitMinute
-                                                                   fromDate:date];
+    NSDateComponents *components = [NSCalendar.currentCalendar components:NSCalendarUnitHour | NSCalendarUnitMinute
+                                                                 fromDate:date];
     return [s_dateComponentsFormatter stringFromDateComponents:components];
 }
 
