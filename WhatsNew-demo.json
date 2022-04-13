@@ -55,5 +55,6 @@
   "7.3.1-87": "- Fix an issue with Picture in Picture and video playback when the screen has been locked, affecting devices runing iOS 15.",
   "7.3.2-88": "- Fix an issue appeared with iOS 14, and which could lead to Picture in Picture enabled unnecessarily when moving the app to the background.",
   "7.3.2-89": "- Demo use the MediaPlayer patch release, which fixes some background video playback incorrectly paused ",
-  "7.4.0-91": "- Fix crash during continuous playback transitions on tvOS 15.2.\n- Fix countdown layout issue."
+  "7.4.0-91": "- Fix crash during continuous playback transitions on tvOS 15.2.\n- Fix countdown layout issue.",
+  "7.5.0-92": "## Playback speed\n\n- On iOS, the settings button has playback speed, subtitles and audio tracks.\n- On tvOS, the playback speed can be selected using a dedicated button, like subtitles and audio tracks.\n\n## Seek preview (iOS only)\n\n- Seek preview automatically displayed when interacting with the slider.\n- The preview might not be available for old videos or depending on the kind of content protection (e.g. content protected by DRM).\n\n## Fixes (iOS only)\n\n- Avoid content overlaps during continuous playback transitions.\n- Fix slider up and down accessibility gestures."
 }
