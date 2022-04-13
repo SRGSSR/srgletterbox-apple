@@ -211,6 +211,14 @@
     return self.letterboxView.fullScreen && self.letterboxView.userInterfaceHidden;
 }
 
+#pragma mark Accessibility
+
+- (BOOL)accessibilityPerformEscape
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
 #pragma mark Keyboard shortcuts
 
 - (NSArray<UIKeyCommand *> *)keyCommands

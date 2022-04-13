@@ -61,11 +61,11 @@
         NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
         startDateComponents.day = 100;
         startDateComponents.second = 7;
-        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger startTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
         endDateComponents.day = 101;
-        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger endTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }
@@ -77,11 +77,11 @@
         NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
         startDateComponents.day = 1;
         startDateComponents.second = 7;
-        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger startTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
         endDateComponents.day = 2;
-        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger endTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }
@@ -93,11 +93,11 @@
         NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
         startDateComponents.hour = 1;
         startDateComponents.second = 7;
-        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger startTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
         endDateComponents.hour = 2;
-        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger endTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }
@@ -108,11 +108,11 @@
         
         NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
         startDateComponents.second = 7;
-        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger startTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
         endDateComponents.hour = 2;
-        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger endTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }
@@ -123,11 +123,11 @@
         
         NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
         startDateComponents.second = -100;
-        NSInteger startTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger startTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:startDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         NSDateComponents *endDateComponents = [[NSDateComponents alloc] init];
         endDateComponents.second = 10;
-        NSInteger endTimestamp = [[NSCalendar currentCalendar] dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
+        NSInteger endTimestamp = [NSCalendar.currentCalendar dateByAddingComponents:endDateComponents toDate:nowDate options:0].timeIntervalSince1970;
         
         return [NSString stringWithFormat:@"%@_%@_%@", originalURN, @(startTimestamp), @(endTimestamp)];
     }

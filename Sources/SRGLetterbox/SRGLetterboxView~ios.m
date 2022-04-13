@@ -949,6 +949,27 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
 
+- (void)controlsView:(SRGControlsView *)controlsView didSelectPlaybackRate:(float)playbackRate
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectPlaybackRate:)]) {
+        [self.delegate letterboxView:self didSelectPlaybackRate:playbackRate];
+    }
+}
+
+- (void)controlsView:(SRGControlsView *)controlsView didSelectAudioLanguageCode:(NSString *)languageCode
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectAudioLanguageCode:)]) {
+        [self.delegate letterboxView:self didSelectAudioLanguageCode:languageCode];
+    }
+}
+
+- (void)controlsView:(SRGControlsView *)controlsView didSelectSubtitleLanguageCode:(NSString *)languageCode
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectSubtitleLanguageCode:)]) {
+        [self.delegate letterboxView:self didSelectSubtitleLanguageCode:languageCode];
+    }
+}
+
 - (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
 {
     [self setTogglableUserInterfaceHidden:YES animated:NO];
@@ -1014,12 +1035,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
-- (void)controlsViewWillShowTrackSelectionPopover:(SRGControlsView *)controlsView
+- (void)controlsViewWillShowPlaybackSettings:(SRGControlsView *)controlsView
 {
     [self stopInactivityTracker];
 }
 
-- (void)controlsViewDidHideTrackSelectionPopover:(SRGControlsView *)controlsView
+- (void)controlsViewDidHidePlaybackSettings:(SRGControlsView *)controlsView
 {
     [self restartInactivityTracker];
 }

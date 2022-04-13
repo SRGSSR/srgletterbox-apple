@@ -83,6 +83,14 @@
     return self.letterboxView.userInterfaceHidden;
 }
 
+#pragma mark Accessibility
+
+- (BOOL)accessibilityPerformEscape
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return YES;
+}
+
 #pragma mark SRGLetterboxViewDelegate protocol
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView

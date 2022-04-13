@@ -43,21 +43,21 @@
 
 - (SRGMedia *)previousMediaForController:(SRGLetterboxController *)controller
 {
-    if (self.currentIndex != NSNotFound) {
-        return (self.currentIndex > 0) ? self.mediasSet[self.currentIndex - 1] : nil;
+    if (self.mediasSet.count == 0) {
+        return nil;
     }
     else {
-        return nil;
+        return self.currentIndex > 0 ? self.mediasSet[self.currentIndex - 1] : nil;
     }
 }
 
 - (SRGMedia *)nextMediaForController:(SRGLetterboxController *)controller
 {
-    if (self.currentIndex != NSNotFound) {
-        return (self.currentIndex < self.mediasSet.count - 1) ? self.mediasSet[self.currentIndex + 1] : nil;
+    if (self.mediasSet.count == 0) {
+        return nil;
     }
     else {
-        return self.mediasSet.firstObject;
+        return (self.currentIndex < self.mediasSet.count - 1) ? self.mediasSet[self.currentIndex + 1] : nil;
     }
 }
 

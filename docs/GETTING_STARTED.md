@@ -230,7 +230,11 @@ You can also customize subtitle styling as well if needed:
 AVTextStyleRule *rule = [[AVTextStyleRule alloc] initWithTextMarkupAttributes:@{ (id)kCMTextMarkupAttribute_ForegroundColorARGB : @[ @1, @1, @0, @0 ],
                                                                                  (id)kCMTextMarkupAttribute_ItalicStyle : @(YES)}];
 self.controller.textStyleRules = @[rule];
-``` 
+```
+
+## Playback rate
+
+Letterbox setting offer playback rate controls. Note that some streams, most notably livestreams played in live conditions, might not support rates larger than 1. The playback rate can also be controlled programmatically using the dedicated `playbackRate` controller property.
 
 ## URL overrides and local file playback
 

@@ -123,15 +123,15 @@ platform :ios do
     )
 
     appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_DESTINATIONS'],
+      appname: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME'],
+      destinations: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_DESTINATIONS'],
       notes: what_s_new_for_demo,
       notify_testers: true
     )
 
     clean_build_artifacts
 
-    UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded and distributed. ✅"
+    UI.message "SRGLetterbox-demo (Release #{xcode_build_number}) uploaded and distributed. ✅"
 
     UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end

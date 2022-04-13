@@ -147,6 +147,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic, copy) NSString *URN;
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMediaComposition *mediaComposition;
+@property (nonatomic) UIImage *spriteSheetImage API_UNAVAILABLE(tvos);
 @property (nonatomic) SRGChannel *channel;
 @property (nonatomic) SRGSubdivision *subdivision;
 @property (nonatomic) SRGPosition *startPosition;
@@ -159,6 +160,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 @property (nonatomic) SRGLetterboxDataAvailability dataAvailability;
 @property (nonatomic, getter=isLoading) BOOL loading;
 @property (nonatomic) SRGMediaPlayerPlaybackState playbackState;
+
+@property (nonatomic) float playbackRate;
+@property (nonatomic) float effectivePlaybackRate;
 
 @property (nonatomic) SRGDataProvider *dataProvider;
 @property (nonatomic) SRGRequestQueue *requestQueue;
@@ -202,6 +206,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 @implementation SRGLetterboxController
 
+@synthesize playbackRate = _playbackRate;
 @synthesize serviceURL = _serviceURL;
 
 #pragma mark Object lifecycle
@@ -236,6 +241,23 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.updateInterval = SRGLetterboxDefaultUpdateInterval;
         
         self.playbackState = SRGMediaPlayerPlaybackStateIdle;
+        
+        _playbackRate = self.mediaPlayerController.playbackRate;
+        _effectivePlaybackRate = self.mediaPlayerController.effectivePlaybackRate;
+        
+        // KVO-forwarding for the playback rate stored property bound to the underlying SRG Media Player KVObservable mutable
+        // property.
+        [self.mediaPlayerController addObserver:self keyPath:@keypath(SRGMediaPlayerController.new, playbackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            [self willChangeValueForKey:@keypath(self.playbackRate)];
+            self->_playbackRate = self.mediaPlayerController.playbackRate;
+            [self didChangeValueForKey:@keypath(self.playbackRate)];
+        }];
+        
+        [self.mediaPlayerController addObserver:self keyPath:@keypath(SRGMediaPlayerController.new, effectivePlaybackRate) options:0 block:^(MAKVONotification *notification) {
+            @strongify(self)
+            self.effectivePlaybackRate = self.mediaPlayerController.effectivePlaybackRate;
+        }];
         
         self.resumesAfterRetry = YES;
         self.resumesAfterRouteBecomesUnavailable = NO;
@@ -392,6 +414,26 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)isPictureInPictureActive
 {
     return self.pictureInPictureEnabled && self.mediaPlayerController.pictureInPictureController.pictureInPictureActive;
+}
+
+- (float)playbackRate
+{
+    return self.mediaPlayerController.playbackRate;
+}
+
+- (void)setPlaybackRate:(float)playbackRate
+{
+    self.mediaPlayerController.playbackRate = playbackRate;
+}
+
+- (NSArray<NSNumber *> *)supportedPlaybackRates
+{
+    return self.mediaPlayerController.supportedPlaybackRates;
+}
+
+- (float)effectivePlaybackRate
+{
+    return self.mediaPlayerController.effectivePlaybackRate;
 }
 
 - (void)setEndTolerance:(NSTimeInterval)endTolerance
@@ -886,6 +928,22 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
                         return;
                     }
                 }
+                
+#if TARGET_OS_IOS
+                if (! self.spriteSheetImage) {
+                    SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                        if (! error) {
+                            self.spriteSheetImage = image;
+                        }
+                    }];
+                    if (spriteSheetRequest) {
+                        [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+                    }
+                    else {
+                        self.spriteSheetImage = nil;
+                    }
+                }
+#endif
             }
             
             updateCompletionBlock(mediaComposition.srgletterbox_liveMedia, HTTPResponse, self.error ? error : nil, NO, previousMediaComposition.srgletterbox_liveMedia, previousBlockingReasonError);
@@ -939,6 +997,88 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     
     [NSNotificationCenter.defaultCenter postNotificationName:SRGLetterboxPlaybackDidFailNotification object:self userInfo:@{ SRGLetterboxErrorKey : self.error }];
 }
+
+#if TARGET_OS_IOS
+
+#pragma mark Sprite sheet
+
++ (SRGRequest *)spriteSheetRequestForMediaComposition:(SRGMediaComposition *)mediaComposition withCompletionBlock:(void (^)(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error))completionBlock
+{
+    NSParameterAssert(completionBlock);
+    
+    NSURL *spriteSheetURL = mediaComposition.mainChapter.spriteSheet.URL;
+    if (! spriteSheetURL) {
+        return nil;
+    }
+    
+    NSURLRequest *URLRequest = [NSURLRequest requestWithURL:spriteSheetURL];
+    
+    @weakify(self)
+    return [[SRGRequest dataRequestWithURLRequest:URLRequest session:NSURLSession.sharedSession completionBlock:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        @strongify(self)
+        
+        if (error) {
+            completionBlock(nil, response, error);
+            return;
+        }
+        
+        UIImage *image = [UIImage imageWithData:data];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(image, response, error);
+        });
+    }] requestWithOptions:SRGRequestOptionBackgroundCompletionEnabled];
+}
+
+- (CGRect)spriteSheetThumbnailRectAtTime:(CMTime)time
+{
+    SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
+    if (! spriteSheet) {
+        return CGRectZero;
+    }
+    
+    NSInteger index = CMTimeGetSeconds(time) * 1000 / spriteSheet.interval;
+    NSInteger row = index / spriteSheet.columns;
+    if (row >= spriteSheet.rows) {
+        return CGRectZero;
+    }
+    
+    NSInteger column = index % spriteSheet.columns;
+    return CGRectMake(column * spriteSheet.thumbnailWidth, row * spriteSheet.thumbnailHeight, spriteSheet.thumbnailWidth, spriteSheet.thumbnailHeight);
+}
+
+- (BOOL)areThumbnailsAvailable
+{
+    return self.spriteSheetImage != nil;
+}
+
+- (CGFloat)thumbnailsAspectRatio
+{
+    SRGSpriteSheet *spriteSheet = self.mediaComposition.mainChapter.spriteSheet;
+    if (! spriteSheet) {
+        return SRGAspectRatioUndefined;
+    }
+    
+    return spriteSheet.thumbnailWidth / spriteSheet.thumbnailHeight;
+}
+
+- (UIImage *)thumbnailAtTime:(CMTime)time
+{
+    if (! self.spriteSheetImage) {
+        return nil;
+    }
+    
+    CGRect thumbnailRect = [self spriteSheetThumbnailRectAtTime:time];
+    if (CGRectIsEmpty(thumbnailRect)) {
+        return nil;
+    }
+    
+    CGImageRef thumbnailImageRef = CGImageCreateWithImageInRect(self.spriteSheetImage.CGImage, thumbnailRect);
+    UIImage *thumbnailImage = [UIImage imageWithCGImage:thumbnailImageRef];
+    CGImageRelease(thumbnailImageRef);
+    return thumbnailImage;
+}
+
+#endif
 
 #pragma mark Playback
 
@@ -1010,6 +1150,20 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         [self.report setString:self.usingAirPlay ? @"airplay" : @"local" forKey:@"screenType"];
         
         [self updateWithURN:nil media:nil mediaComposition:mediaComposition subdivision:mediaComposition.mainSegment channel:nil];
+        
+#if TARGET_OS_IOS
+        SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            if (! error) {
+                self.spriteSheetImage = image;
+            }
+        }];
+        if (spriteSheetRequest) {
+            [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+        }
+        else {
+            self.spriteSheetImage = nil;
+        }
+#endif
         
         SRGMedia *media = [mediaComposition mediaForSubdivision:mediaComposition.mainChapter];
         [self notifyLivestreamEndWithMedia:media previousMedia:nil];
@@ -1203,6 +1357,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         self.dataProvider = nil;
     }
     
+#if TARGET_OS_IOS
+    self.spriteSheetImage = nil;
+#endif
     self.error = nil;
     
     self.lastUpdateDate = nil;
@@ -1267,6 +1424,22 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         if (blockingReasonError) {
             self.dataAvailability = SRGLetterboxDataAvailabilityLoaded;
         }
+        
+#if TARGET_OS_IOS
+        if (! [mediaComposition.mainChapter isEqual:self.mediaComposition.mainChapter]) {
+            SRGRequest *spriteSheetRequest = [SRGLetterboxController spriteSheetRequestForMediaComposition:mediaComposition withCompletionBlock:^(UIImage * _Nullable image, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                if (! error) {
+                    self.spriteSheetImage = image;
+                }
+            }];
+            if (spriteSheetRequest) {
+                [self.requestQueue addRequest:spriteSheetRequest resume:YES];
+            }
+            else {
+                self.spriteSheetImage = nil;
+            }
+        }
+#endif
         
         [self stop];
         self.socialCountViewURN = nil;
@@ -1519,6 +1692,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
+- (SRGBlockingReason)blockingReasonAtTime:(CMTime)time
+{
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id<SRGSegment> _Nullable segment, NSDictionary<NSString *,id> * _Nullable bindings) {
+        CMTimeRange segmentTimeRange = [segment.srg_markRange timeRangeForMediaPlayerController:self.mediaPlayerController];
+        return CMTimeRangeContainsTime(segmentTimeRange, time);
+    }];
+    SRGSegment *segment = (SRGSegment *)[self.mediaPlayerController.segments filteredArrayUsingPredicate:predicate].firstObject;
+    return [segment blockingReasonAtDate:NSDate.date];
+}
+
 #pragma mark Configuration
 
 - (void)reloadMediaConfiguration
@@ -1708,7 +1891,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key
 {
-    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]) {
+    if ([key isEqualToString:@keypath(SRGLetterboxController.new, playbackState)]
+            || [key isEqualToString:@keypath(SRGLetterboxController.new, playbackRate)]) {
         return NO;
     }
     else {

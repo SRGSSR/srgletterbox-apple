@@ -41,6 +41,8 @@
 {
     [super layoutContentView];
     
+    self.backgroundColor = UIColor.blackColor;
+    
     [self layoutImageBackgroundInView:self.contentView];
     [self creatDimmingViewInView:self.contentView];
     [self layoutMainLayoutInView:self.contentView];
