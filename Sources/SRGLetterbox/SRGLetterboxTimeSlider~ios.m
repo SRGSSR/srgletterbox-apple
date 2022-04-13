@@ -109,7 +109,7 @@ static void commonInit(SRGLetterboxTimeSlider *self);
     @weakify(self)
     self.periodicTimeObserver = [mediaPlayerController addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1., NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         @strongify(self)
-        [self updateLayoutForValue:self.slider.value interactive:NO];
+        [self updateLayoutForValue:self.slider.value interactive:self.slider.tracking];
     }];
 }
 
