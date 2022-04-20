@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/srgletterbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=85e5d0b0731a5ae53296ab78ef566c61e473f6e5
+CONFIGURATION_COMMIT_SHA1=8a13ff0fd2610217db1e02bd23a4738e05ceb0eb
 CONFIGURATION_FOLDER=Configuration
 
 .PHONY: all
