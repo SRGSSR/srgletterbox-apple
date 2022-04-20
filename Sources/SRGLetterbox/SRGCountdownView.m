@@ -158,7 +158,6 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 - (UILabel *)layoutTimeUnitLabelInView:(UIView *)view
 {
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     titleLabel.textColor = UIColor.whiteColor;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [view addSubview:titleLabel];
@@ -173,7 +172,6 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     self.heightConstraints = [NSArray array];
     
     UIStackView *mainStackView = [[UIStackView alloc] init];
-    mainStackView.translatesAutoresizingMaskIntoConstraints = NO;
     mainStackView.axis = UILayoutConstraintAxisHorizontal;
     mainStackView.alignment = UIStackViewAlignmentFill;
     mainStackView.distribution = UIStackViewDistributionFill;
@@ -181,6 +179,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     [view addSubview:mainStackView];
     self.mainStackView = mainStackView;
     
+    mainStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [mainStackView.topAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.topAnchor],
         [mainStackView.bottomAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
@@ -263,6 +262,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     daysTitleLabel.text = SRGLetterboxLocalizedString(@"Days", @"Short label for countdown display");
     self.daysTitleLabel = daysTitleLabel;
     
+    daysTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [daysTitleLabel.topAnchor constraintEqualToAnchor:daysTitleView.topAnchor],
         [daysTitleLabel.bottomAnchor constraintEqualToAnchor:daysTitleView.bottomAnchor],
@@ -333,6 +333,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     hoursTitleLabel.text = SRGLetterboxLocalizedString(@"Hours", @"Short label for countdown display");
     self.hoursTitleLabel = hoursTitleLabel;
     
+    hoursTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [hoursTitleLabel.topAnchor constraintEqualToAnchor:hoursTitleView.topAnchor],
         [hoursTitleLabel.bottomAnchor constraintEqualToAnchor:hoursTitleView.bottomAnchor],
@@ -402,6 +403,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     minutesTitleLabel.text = SRGLetterboxLocalizedString(@"Minutes", @"Short label for countdown display");
     self.minutesTitleLabel = minutesTitleLabel;
     
+    minutesTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [minutesTitleLabel.topAnchor constraintEqualToAnchor:minutesTitleView.topAnchor],
         [minutesTitleLabel.bottomAnchor constraintEqualToAnchor:minutesTitleView.bottomAnchor],
@@ -470,6 +472,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     secondsTitleLabel.text = SRGLetterboxLocalizedString(@"Seconds", @"Short label for countdown display");
     self.secondsTitleLabel = secondsTitleLabel;
     
+    secondsTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [secondsTitleLabel.topAnchor constraintEqualToAnchor:secondsTitleView.topAnchor],
         [secondsTitleLabel.bottomAnchor constraintEqualToAnchor:secondsTitleView.bottomAnchor],
@@ -487,7 +490,6 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 - (void)layoutMessageLabelInView:(UIView *)view
 {
     SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
-    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.text = SRGLetterboxLocalizedString(@"Playback will begin shortly", @"Message displayed to inform that playback should start soon.");
     messageLabel.textAlignment = NSTextAlignmentCenter;
     messageLabel.adjustsFontSizeToFitWidth = YES;
@@ -500,6 +502,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     [view addSubview:messageLabel];
     self.messageLabel = messageLabel;
     
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [messageLabel.centerXAnchor constraintEqualToAnchor:self.mainStackView.centerXAnchor],
         [messageLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.mainStackView.leadingAnchor constant:8.f],
@@ -511,7 +514,6 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 - (void)layoutRemainingTimeLabelInView:(UIView *)view
 {
     SRGPaddedLabel *remainingTimeLabel = [[SRGPaddedLabel alloc] init];
-    remainingTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     remainingTimeLabel.textAlignment = NSTextAlignmentCenter;
     remainingTimeLabel.adjustsFontSizeToFitWidth = YES;
     remainingTimeLabel.minimumScaleFactor = 0.6f;
@@ -530,6 +532,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     [view addSubview:remainingTimeLabel];
     self.remainingTimeLabel = remainingTimeLabel;
     
+    remainingTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [remainingTimeLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [remainingTimeLabel.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
@@ -541,10 +544,10 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 - (void)layoutAccessibilityFrameInView:(UIView *)view
 {
     UIView *accessibilityFrameView = [[UIView alloc] init];
-    accessibilityFrameView.translatesAutoresizingMaskIntoConstraints = NO;
     [view insertSubview:accessibilityFrameView atIndex:0];
     self.accessibilityFrameView = accessibilityFrameView;
     
+    accessibilityFrameView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [accessibilityFrameView.topAnchor constraintEqualToAnchor:self.secondsTopSpacerView.bottomAnchor],
         [accessibilityFrameView.bottomAnchor constraintEqualToAnchor:self.secondsBottomSpacerView.topAnchor],

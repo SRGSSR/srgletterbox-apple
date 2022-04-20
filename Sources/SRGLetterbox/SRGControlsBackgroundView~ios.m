@@ -33,12 +33,12 @@
     self.userInteractionEnabled = NO;
     
     UIView *dimmingView = [[UIView alloc] init];
-    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.35f];
     dimmingView.userInteractionEnabled = NO;
     [self.contentView addSubview:dimmingView];
     self.dimmingView = dimmingView;
     
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [dimmingView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
         [dimmingView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
@@ -71,13 +71,15 @@
     // Lazily add view when needed, mitigating associated costs
     if (self.controller.loading && ! self.loadingImageView) {
         UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [loadingImageView startAnimating];
         [self.contentView addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
-        [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
-                                                   [loadingImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor] ]];
+        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [loadingImageView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
+            [loadingImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor]
+        ]];
     }
 }
 

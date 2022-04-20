@@ -308,9 +308,16 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     slider.maximumTrackTintColor = [UIColor colorWithWhite:1.f alpha:0.3f];
     slider.bufferingTrackColor = [UIColor colorWithWhite:1.f alpha:0.5f];
     slider.resumingAfterSeek = YES;
-    slider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:slider];
     self.slider = slider;
+    
+    slider.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [slider.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [slider.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
+        [slider.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+        [slider.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
+    ]];
     
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     valueLabel.textAlignment = NSTextAlignmentCenter;
@@ -331,12 +338,12 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     self.thumbnailImageView = thumbnailImageView;
     
     UIImageView *blockingReasonImageView = [[UIImageView alloc] init];
-    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     blockingReasonImageView.alpha = 0.f;
     blockingReasonImageView.tintColor = UIColor.whiteColor;
     [self.contentView addSubview:blockingReasonImageView];
     self.blockingReasonImageView = blockingReasonImageView;
     
+    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:thumbnailImageView.centerXAnchor],
         [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:thumbnailImageView.centerYAnchor]

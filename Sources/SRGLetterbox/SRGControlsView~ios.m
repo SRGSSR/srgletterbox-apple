@@ -100,10 +100,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutUserInterfaceToggleActiveViewInView:(UIView *)view
 {
     UIView *userInterfaceToggleActiveView = [[UIView alloc] init];
-    userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:userInterfaceToggleActiveView];
     self.userInterfaceToggleActiveView = userInterfaceToggleActiveView;
     
+    userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [userInterfaceToggleActiveView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
@@ -117,10 +117,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutBottomControlsInView:(UIView *)view
 {
     UIStackView *bottomStackView = [[UIStackView alloc] init];
-    bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:bottomStackView];
     self.bottomStackView = bottomStackView;
     
+    bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [bottomStackView.topAnchor constraintEqualToAnchor:self.userInterfaceToggleActiveView.bottomAnchor],
         [[bottomStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:750],
@@ -188,12 +188,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [stackView addArrangedSubview:timeSliderWrapperView];
     
     SRGLetterboxTimeSlider *timeSlider = [[SRGLetterboxTimeSlider alloc] init];
-    timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     timeSlider.alpha = 0.f;
     timeSlider.delegate = self;
     [timeSliderWrapperView addSubview:timeSlider];
     self.timeSlider = timeSlider;
     
+    timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f],
         [timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f],
@@ -210,13 +210,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.durationLabelWrapperView = durationLabelWrapperView;
     
     UILabel *durationLabel = [[UILabel alloc] init];
-    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     durationLabel.textColor = UIColor.whiteColor;
     durationLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightRegular fixedSize:14.f];
     durationLabel.textAlignment = NSTextAlignmentCenter;
     [durationLabelWrapperView addSubview:durationLabel];
     self.durationLabel = durationLabel;
     
+    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [durationLabel.leadingAnchor constraintEqualToAnchor:durationLabelWrapperView.leadingAnchor constant:11.f],
         [durationLabel.trailingAnchor constraintEqualToAnchor:durationLabelWrapperView.trailingAnchor constant:-11.f],
@@ -232,10 +232,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.liveLabelWrapperView = liveLabelWrapperView;
     
     SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [liveLabelWrapperView addSubview:liveLabel];
     self.liveLabel = liveLabel;
     
+    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [liveLabel.leadingAnchor constraintEqualToAnchor:liveLabelWrapperView.leadingAnchor constant:11.f],
         [liveLabel.trailingAnchor constraintEqualToAnchor:liveLabelWrapperView.trailingAnchor constant:-11.f],
@@ -282,11 +282,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutPlaybackButtonInView:(UIView *)view
 {
     SRGLetterboxPlaybackButton *playbackButton = [[SRGLetterboxPlaybackButton alloc] init];
-    playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
     playbackButton.tintColor = UIColor.whiteColor;
     [view addSubview:playbackButton];
     self.playbackButton = playbackButton;
     
+    playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [playbackButton.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [playbackButton.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]
@@ -296,7 +296,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutBackwardSeekButtonInView:(UIView *)view
 {
     SRGControlButton *backwardSeekButton = [[SRGControlButton alloc] init];
-    backwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [backwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
     backwardSeekButton.tintColor = UIColor.whiteColor;
     backwardSeekButton.alpha = 0.f;
@@ -306,6 +305,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:backwardSeekButton];
     self.backwardSeekButton = backwardSeekButton;
     
+    backwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [backwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
         self.horizontalSpacingBackwardToPlaybackConstraint = [self.playbackButton.leadingAnchor constraintEqualToAnchor:backwardSeekButton.trailingAnchor],
@@ -315,7 +315,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutForwardSeekButtonInView:(UIView *)view
 {
     SRGControlButton *forwardSeekButton = [[SRGControlButton alloc] init];
-    forwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [forwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
     forwardSeekButton.tintColor = UIColor.whiteColor;
     forwardSeekButton.alpha = 0.f;
@@ -325,6 +324,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:forwardSeekButton];
     self.forwardSeekButton = forwardSeekButton;
     
+    forwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [forwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
         self.horizontalSpacingPlaybackToForwardConstraint = [forwardSeekButton.leadingAnchor constraintEqualToAnchor:self.playbackButton.trailingAnchor]
@@ -334,7 +334,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutStartOverButtonInView:(UIView *)view
 {
     SRGControlButton *startOverButton = [[SRGControlButton alloc] init];
-    startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     startOverButton.tintColor = UIColor.whiteColor;
     startOverButton.alpha = 0.f;
@@ -343,6 +342,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:startOverButton];
     self.startOverButton = startOverButton;
     
+    startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [startOverButton.centerYAnchor constraintEqualToAnchor:self.backwardSeekButton.centerYAnchor],
         self.horizontalSpacingStartOverToBackwardConstraint = [self.backwardSeekButton.leadingAnchor constraintEqualToAnchor:startOverButton.trailingAnchor]
@@ -352,7 +352,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutSkipToLiveButtonInView:(UIView *)view
 {
     SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
-    skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
     [skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     skipToLiveButton.tintColor = UIColor.whiteColor;
     skipToLiveButton.alpha = 0.f;
@@ -361,6 +360,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:skipToLiveButton];
     self.skipToLiveButton = skipToLiveButton;
     
+    skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.forwardSeekButton.centerYAnchor],
         self.horizontalSpacingForwardToSkipToLiveConstraint = [skipToLiveButton.leadingAnchor constraintEqualToAnchor:self.forwardSeekButton.trailingAnchor],
@@ -406,7 +406,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         // while its position is determined by a phantom button inserted in the bottom stack view.
         SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
         if (parentLetterboxView) {
-            SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] initWithFrame:CGRectZero];
+            SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] init];
             fullScreenButton.tintColor = UIColor.whiteColor;
             fullScreenButton.selected = parentLetterboxView.fullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
@@ -414,10 +414,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
             self.fullScreenButton = fullScreenButton;
             
             fullScreenButton.translatesAutoresizingMaskIntoConstraints = NO;
-            [NSLayoutConstraint activateConstraints:@[ [fullScreenButton.topAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.topAnchor],
-                                                       [fullScreenButton.bottomAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.bottomAnchor],
-                                                       [fullScreenButton.leftAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.leftAnchor],
-                                                       [fullScreenButton.rightAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.rightAnchor] ]];
+            [NSLayoutConstraint activateConstraints:@[
+                [fullScreenButton.topAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.topAnchor],
+                [fullScreenButton.bottomAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.bottomAnchor],
+                [fullScreenButton.leftAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.leftAnchor],
+                [fullScreenButton.rightAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.rightAnchor]
+            ]];
         }
     }
     else {

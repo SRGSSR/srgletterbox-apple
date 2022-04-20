@@ -107,9 +107,16 @@ static void commonInit(SRGImageButton *self);
 static void commonInit(SRGImageButton *self)
 {
     self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.imageView.adjustsImageWhenAncestorFocused = YES;
     [self addSubview:self.imageView];
+    
+    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.imageView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.imageView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [self.imageView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.imageView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
     
     self.userInteractionEnabled = YES;
 }

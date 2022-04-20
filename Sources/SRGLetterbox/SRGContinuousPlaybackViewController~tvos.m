@@ -157,10 +157,10 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 - (void)layoutBackgroundInView:(UIView *)view
 {
     UIImageView *backgroundImageView = [[UIImageView alloc] init];
-    backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:backgroundImageView];
     self.backgroundImageView = backgroundImageView;
     
+    backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [backgroundImageView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [backgroundImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -172,13 +172,13 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 - (void)layoutStackViewInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentLeading;
     stackView.distribution = UIStackViewDistributionFill;
     stackView.spacing = 20.f;
     [view addSubview:stackView];
     
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [stackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
         [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],
@@ -224,13 +224,13 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 - (void)layoutUpcomingStackViewInView:(UIView *)view
 {
     UIStackView *upcomingStackView = [[UIStackView alloc] init];
-    upcomingStackView.translatesAutoresizingMaskIntoConstraints = NO;
     upcomingStackView.axis = UILayoutConstraintAxisVertical;
     upcomingStackView.alignment = UIStackViewAlignmentLeading;
     upcomingStackView.distribution = UIStackViewDistributionFill;
     upcomingStackView.spacing = 20.f;
     [view addSubview:upcomingStackView];
     
+    upcomingStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [upcomingStackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:55.f],
         [upcomingStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-55.f],

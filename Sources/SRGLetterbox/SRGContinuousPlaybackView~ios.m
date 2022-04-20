@@ -63,11 +63,11 @@
 - (void)layoutImageBackgroundInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:imageView];
     self.imageView = imageView;
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [imageView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [imageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -79,10 +79,10 @@
 - (void)creatDimmingViewInView:(UIView *)view
 {
     UIView *dimmingView = [[UIView alloc] init];
-    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
     [view addSubview:dimmingView];
     
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [dimmingView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [dimmingView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -94,13 +94,13 @@
 - (void)layoutMainLayoutInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
     stackView.spacing = 2.f;
     [view addSubview:stackView];
     
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [stackView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
