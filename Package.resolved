@@ -59,8 +59,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/layout-contraints",
-          "revision": "c52e6462e21b6fbd8d472b7d5eef0ae9cc1bb22d",
+          "branch": "develop",
+          "revision": "9c2b353a7e952b8f9dc3d6c769a4b2b1c28ec6ab",
           "version": null
         }
       },
@@ -104,8 +104,8 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": "feature/layout-contraints",
-          "revision": "f8be513049944fc42ed50d2991e12db82bb83ca1",
+          "branch": "develop",
+          "revision": "5cd01de36fa684ef8c04a4410cdaaafb7074aeea",
           "version": null
         }
       },
@@ -122,8 +122,8 @@
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "feature/layout-contraints",
-          "revision": "b2fb7304079a6316a51eedd4f6aca6c72d90914f",
+          "branch": "develop",
+          "revision": "c215ad7235d28e43a04f9ab2f244fd67b8cc6cf7",
           "version": null
         }
       },
