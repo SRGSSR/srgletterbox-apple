@@ -59,10 +59,12 @@ NSString *LetterboxDemoServiceNameForURL(NSURL *URL)
     static dispatch_once_t s_onceToken;
     static NSArray<ServerSettings *> *s_serverSettings;
     dispatch_once(&s_onceToken, ^{
-        s_serverSettings = @[[[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", nil) URL:SRGIntegrationLayerProductionServiceURL()],
-                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", nil) URL:SRGIntegrationLayerStagingServiceURL()],
-                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", nil) URL:SRGIntegrationLayerTestServiceURL()],
-                             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", nil) URL:LetterboxDemoMMFServiceURL()]];
+        s_serverSettings = @[
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", nil) URL:SRGIntegrationLayerProductionServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", nil) URL:SRGIntegrationLayerStagingServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", nil) URL:SRGIntegrationLayerTestServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", nil) URL:LetterboxDemoMMFServiceURL()]
+        ];
     });
     return s_serverSettings;
 }
