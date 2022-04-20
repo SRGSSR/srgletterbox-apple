@@ -13,7 +13,7 @@ NSURL *LetterboxDemoMMFServiceURL(void)
 {
     NSString *serviceURLString = [NSBundle.mainBundle objectForInfoDictionaryKey:@"PlayMMFServiceURL"];
     NSURL *serviceURL = (serviceURLString.length > 0) ? [NSURL URLWithString:serviceURLString] : nil;
-    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com/integrationlayer"];
+    return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
 }
 
 NSURL *LetterboxDemoServiceURLForKey(NSString *key)
