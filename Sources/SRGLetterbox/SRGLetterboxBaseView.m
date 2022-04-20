@@ -67,10 +67,12 @@ static void commonInit(SRGLetterboxBaseView *self);
         [self addSubview:self.contentView];
         
         self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
-        [NSLayoutConstraint activateConstraints:@[ [self.contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                                   [self.contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                                                   [self.contentView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
-                                                   [self.contentView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [self.contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [self.contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+            [self.contentView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+            [self.contentView.rightAnchor constraintEqualToAnchor:self.rightAnchor]
+        ]];
         
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];

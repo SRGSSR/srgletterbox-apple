@@ -58,10 +58,12 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
     self.collectionView = collectionView;
     
     collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[ [collectionView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
-                                               [collectionView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
-                                               [collectionView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
-                                               [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight] ]];
+    [NSLayoutConstraint activateConstraints:@[
+        [collectionView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+        [collectionView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+        [collectionView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [collectionView.heightAnchor constraintEqualToConstant:SRGLetterboxTimelineViewDefaultHeight]
+    ]];
     
     Class cellClass = SRGLetterboxSubdivisionCell.class;
     [collectionView registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(SRGLetterboxSubdivisionCell.class)];

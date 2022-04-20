@@ -38,9 +38,9 @@ static const CGFloat kMargin = 8.f;
     self.contentView.backgroundColor = UIColor.srg_blueColor;
     
     UIView *notificationView = [[UIView alloc] init];
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:notificationView];
     
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [notificationView.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor],
         [notificationView.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor],
@@ -50,20 +50,20 @@ static const CGFloat kMargin = 8.f;
     
     UIImage *iconImage = [UIImage srg_letterboxImageNamed:@"notification"];
     UIImageView *iconImageView = [[UIImageView alloc] initWithImage:iconImage];
-    iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
     iconImageView.tintColor = UIColor.whiteColor;
     iconImageView.hidden = YES;
     [notificationView addSubview:iconImageView];
     self.iconImageView = iconImageView;
     
     UILabel *messageLabel = [[UILabel alloc] init];
-    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.numberOfLines = 2;
     [messageLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [notificationView addSubview:messageLabel];
     self.messageLabel = messageLabel;
         
+    iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [[iconImageView.widthAnchor constraintEqualToConstant:kImageLength] srgletterbox_withPriority:999],
         [iconImageView.heightAnchor constraintEqualToAnchor:iconImageView.widthAnchor],

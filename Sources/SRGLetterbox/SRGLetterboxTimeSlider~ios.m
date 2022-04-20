@@ -338,12 +338,12 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     self.thumbnailImageView = thumbnailImageView;
     
     UIImageView *blockingReasonImageView = [[UIImageView alloc] init];
-    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     blockingReasonImageView.alpha = 0.f;
     blockingReasonImageView.tintColor = UIColor.whiteColor;
     [self.contentView addSubview:blockingReasonImageView];
     self.blockingReasonImageView = blockingReasonImageView;
     
+    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:thumbnailImageView.centerXAnchor],
         [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:thumbnailImageView.centerYAnchor]

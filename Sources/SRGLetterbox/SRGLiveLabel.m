@@ -51,8 +51,7 @@ static void commonInit(SRGLiveLabel *self);
 static void commonInit(SRGLiveLabel *self)
 {
     // Unlike `UIView`, setting a corner radius AND a shadow on a `UILabel` does not work.
-    UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
-    label.translatesAutoresizingMaskIntoConstraints = NO;
+    UILabel *label = [[UILabel alloc] init];
     label.textColor = UIColor.whiteColor;
     [self addSubview:label];
     self.label = label;
@@ -65,6 +64,7 @@ static void commonInit(SRGLiveLabel *self)
     static CGFloat kMargin = 5.f;
 #endif
     
+    label.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [label.topAnchor constraintEqualToAnchor:self.topAnchor],
         [label.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],

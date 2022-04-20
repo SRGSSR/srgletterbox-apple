@@ -125,11 +125,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutTimelineViewInView:(UIView *)view
 {
     SRGLetterboxTimelineView *timelineView = [[SRGLetterboxTimelineView alloc] init];
-    timelineView.translatesAutoresizingMaskIntoConstraints = NO;
     timelineView.delegate = self;
     [view addSubview:timelineView];
     self.timelineView = timelineView;
     
+    timelineView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [timelineView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [timelineView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -142,22 +142,22 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutPlayerViewInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:imageView];
     self.imageView = imageView;
     
     UIView *playbackView = [[UIView alloc] init];
-    playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:playbackView];
     self.playbackView = playbackView;
     
+    playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [playbackView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [playbackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [playbackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [imageView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
         [imageView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
@@ -182,10 +182,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutControlsViewInView:(UIView *)view
 {
     SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
-    controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:controlsBackgroundView];
     self.controlsBackgroundView = controlsBackgroundView;
     
+    controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [controlsBackgroundView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [controlsBackgroundView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
@@ -193,11 +193,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
     
     SRGControlsView *controlsView = [[SRGControlsView alloc] init];
-    controlsView.translatesAutoresizingMaskIntoConstraints = NO;
     controlsView.delegate = self;
     [view addSubview:controlsView];
     self.controlsView = controlsView;
     
+    controlsView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [controlsView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [controlsView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
@@ -206,10 +206,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     SRGAccessibilityView *accessibilityView = [[SRGAccessibilityView alloc] init];
     accessibilityView.userInteractionEnabled = YES;
-    accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
     accessibilityView.accessibilityFrameView = controlsView;
     [view addSubview:accessibilityView];
     
+    accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [accessibilityView.centerXAnchor constraintEqualToAnchor:controlsView.centerXAnchor],
         [accessibilityView.centerYAnchor constraintEqualToAnchor:controlsView.centerYAnchor],
@@ -221,10 +221,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutNotificationViewInView:(UIView *)view
 {
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:notificationView];
     self.notificationView = notificationView;
     
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [notificationView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [notificationView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -239,10 +239,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutAvailabilityViewInView:(UIView *)view
 {
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
-    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:availabilityView];
     self.availabilityView = availabilityView;
     
+    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [availabilityView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [availabilityView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -254,11 +254,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutContinuousPlaybackViewInView:(UIView *)view
 {
     SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
-    continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     continuousPlaybackView.delegate = self;
     [view addSubview:continuousPlaybackView];
     self.continuousPlaybackView = continuousPlaybackView;
     
+    continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [continuousPlaybackView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [continuousPlaybackView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -270,10 +270,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutErrorViewInView:(UIView *)view
 {
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
-    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:errorView];
     self.errorView = errorView;
     
+    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [errorView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [errorView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -397,10 +397,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         
         // Force autolayout to ensure the layout is immediately correct
         mediaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
-        [NSLayoutConstraint activateConstraints:@[ [mediaPlayerView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
-                                                   [mediaPlayerView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
-                                                   [mediaPlayerView.leftAnchor constraintEqualToAnchor:self.playbackView.leftAnchor],
-                                                   [mediaPlayerView.rightAnchor constraintEqualToAnchor:self.playbackView.rightAnchor] ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [mediaPlayerView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+            [mediaPlayerView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+            [mediaPlayerView.leftAnchor constraintEqualToAnchor:self.playbackView.leftAnchor],
+            [mediaPlayerView.rightAnchor constraintEqualToAnchor:self.playbackView.rightAnchor]
+        ]];
         
         [self.playbackView layoutIfNeeded];
     }

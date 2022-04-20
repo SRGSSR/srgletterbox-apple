@@ -56,7 +56,6 @@
 - (void)layoutMainStackViewInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
@@ -75,6 +74,7 @@
     static const CGFloat kHorizontalMargin = 8.f;
 #endif
 
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [stackView.topAnchor constraintEqualToAnchor:view.topAnchor constant:kVerticalMargin],
         [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-kVerticalMargin],

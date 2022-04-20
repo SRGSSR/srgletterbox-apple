@@ -68,10 +68,10 @@
 - (void)layoutWrapperViewInView:(UIView *)view
 {
     UIView *wrapperView = [[UIView alloc] init];
-    wrapperView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:wrapperView];
     self.wrapperView = wrapperView;
     
+    wrapperView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [wrapperView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [wrapperView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -94,11 +94,11 @@
 - (void)layoutImageViewInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:imageView];
     self.imageView = imageView;
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [imageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [imageView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -112,10 +112,10 @@
     UIView *blockingOverlayView = [[UIView alloc] init];
     blockingOverlayView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
     blockingOverlayView.hidden = YES;
-    blockingOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:blockingOverlayView];
     self.blockingOverlayView = blockingOverlayView;
     
+    blockingOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [blockingOverlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [blockingOverlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -124,11 +124,11 @@
     ]];
     
     UIImageView *blockingReasonImageView = [[UIImageView alloc] init];
-    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     blockingReasonImageView.tintColor = UIColor.whiteColor;
     [blockingOverlayView addSubview:blockingReasonImageView];
     self.blockingReasonImageView = blockingReasonImageView;
     
+    blockingReasonImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [blockingReasonImageView.centerXAnchor constraintEqualToAnchor:blockingOverlayView.centerXAnchor],
         [blockingReasonImageView.centerYAnchor constraintEqualToAnchor:blockingOverlayView.centerYAnchor]
@@ -139,7 +139,6 @@
 {
     UIImage *media360Image = [UIImage srg_letterboxImageNamed:@"360_media"];
     UIImageView *media360ImageView = [[UIImageView alloc] initWithImage:media360Image];
-    media360ImageView.translatesAutoresizingMaskIntoConstraints = NO;
     media360ImageView.tintColor = UIColor.whiteColor;
     media360ImageView.layer.shadowOpacity = 0.3f;
     media360ImageView.layer.shadowRadius = 2.f;
@@ -147,6 +146,7 @@
     [view addSubview:media360ImageView];
     self.media360ImageView = media360ImageView;
     
+    media360ImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [media360ImageView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:5.f],
         [media360ImageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-5.f],
@@ -156,7 +156,6 @@
 - (void)layoutDurationLabelInView:(UIView *)view
 {
     SRGPaddedLabel *durationLabel = [[SRGPaddedLabel alloc] init];
-    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.85f];
     durationLabel.textColor = UIColor.whiteColor;
     durationLabel.textAlignment = NSTextAlignmentCenter;
@@ -166,6 +165,7 @@
     [view addSubview:durationLabel];
     self.durationLabel = durationLabel;
     
+    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [durationLabel.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-5.f],
         [durationLabel.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-5.f],
@@ -176,12 +176,12 @@
 - (void)layoutProgressViewInView:(UIView *)view
 {
     UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    progressView.translatesAutoresizingMaskIntoConstraints = NO;
     progressView.progressTintColor = UIColor.redColor;
     progressView.trackTintColor = [UIColor colorWithWhite:1.f alpha:0.6f];
     [view addSubview:progressView];
     self.progressView = progressView;
     
+    progressView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [progressView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [progressView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -193,12 +193,12 @@
 - (void)layoutDescriptionLayoutInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
     [view addSubview:stackView];
     
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [[stackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:6.f] srgletterbox_withPriority:999],
         [[stackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-6.f] srgletterbox_withPriority:999],
