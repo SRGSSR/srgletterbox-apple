@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxController.h"
+
 @import CoreMedia;
 @import SRGDataProviderModel;
 @import UIKit;
@@ -33,9 +35,14 @@ API_UNAVAILABLE(tvos)
 @interface SRGLetterboxSubdivisionCell : UICollectionViewCell
 
 /**
- *  The subdivision (segment or chapter) to display.
+ *  The subdivision (segment or chapter) to display and the controller responsible for playback.
  */
-@property (nonatomic, nullable) SRGSubdivision *subdivision;
+- (void)setSubdivision:(nullable SRGSubdivision *)subdivision controller:(nullable SRGLetterboxController *)controller;
+
+/**
+ *  The subdivision associated with the cell.
+ */
+@property (nonatomic, readonly, nullable) SRGSubdivision *subdivision;
 
 /**
  *  The progress value to display.

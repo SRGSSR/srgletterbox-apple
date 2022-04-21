@@ -491,18 +491,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = SRGLetterboxMetadataSubtitle(media);
     nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
-    CGFloat artworkDimension = 256.f * UIScreen.mainScreen.scale;
-    CGSize maximumSize = CGSizeMake(artworkDimension, artworkDimension);
+    SRGImageWidth width = (UIScreen.mainScreen.scale > 1.f) ? SRGImageWidth480 : SRGImageWidth960;
     
     // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
     // center updates might deadlock).
     @weakify(self) @weakify(controller)
-    UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:maximumSize completion:^{
+    UIImage *artworkImage = [self cachedArtworkImageForController:controller withWidth:width completion:^{
         @strongify(self) @strongify(controller)
         [self updateNowPlayingInformationWithController:controller];
     }];
     if (artworkImage) {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:maximumSize requestHandler:^UIImage * _Nonnull(CGSize size) {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(width, width) requestHandler:^UIImage * _Nonnull(CGSize size) {
             // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
             // the image we retrieved for this specific purpose.
             return artworkImage;
@@ -577,13 +576,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
 }
 
-- (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(CGSize)size
+- (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withWidth:(SRGImageWidth)width
 {
-    CGFloat smallestDimension = fmin(size.width, size.height);
     SRGMedia *media = controller.displayableMedia;
-    NSURL *artworkURL = SRGLetterboxArtworkImageURL(media, smallestDimension);
+    NSURL *artworkURL = SRGLetterboxArtworkImageURL(media.image, width, controller);
     if (! artworkURL) {
-        artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
+        artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
     }
     
     NSAssert(artworkURL != nil, @"An artwork URL must always be returned");
@@ -592,9 +590,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 // Return the best available image to display in the control center, performing an asynchronous update only when an image is not
 // readily available from the cache
-- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withSize:(CGSize)size completion:(void (^)(void))completion
+- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withWidth:(SRGImageWidth)width completion:(void (^)(void))completion
 {
-    NSURL *artworkURL = [self artworkURLForController:controller withSize:size];
+    NSURL *artworkURL = [self artworkURLForController:controller withWidth:width];
     if (! [artworkURL isEqual:self.cachedArtworkURL] || ! self.cachedArtworkImage) {
         // SRGLetterboxImageURL might return file URLs for overridden images
         if (artworkURL.fileURL) {
@@ -605,7 +603,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             return image;
         }
         else {
-            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:size];
+            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
             UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
             
             SRGLetterboxLogDebug(@"service", @"Artwork image update triggered");

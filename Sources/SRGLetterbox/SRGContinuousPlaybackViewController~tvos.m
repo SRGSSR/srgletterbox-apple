@@ -32,6 +32,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMedia *upcomingMedia;
 @property (nonatomic) NSDate *endDate;
+@property (nonatomic, weak) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) UIImageView *backgroundImageView;
 
@@ -54,12 +55,13 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 
 #pragma mark Object lifecycle
 
-- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate
+- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate controller:(SRGLetterboxController *)controller
 {
     if (self = [super init]) {
         self.media = media;
         self.upcomingMedia = upcomingMedia;
         self.endDate = endDate;
+        self.controller = controller;
     }
     return self;
 }
@@ -70,7 +72,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
-    return [self initWithMedia:SRGMedia.new upcomingMedia:SRGMedia.new endDate:NSDate.new];
+    return [self initWithMedia:SRGMedia.new upcomingMedia:SRGMedia.new endDate:NSDate.new controller:SRGLetterboxController.new];
 }
 
 #pragma clang diagnostic pop
@@ -330,7 +332,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     
     self.thumbnailButton.accessibilityLabel = self.media.title;
     self.thumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
-    [self.thumbnailButton.imageView srg_requestImageForObject:self.media withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.thumbnailButton.imageView srg_requestImage:self.media.image withSize:SRGImageSizeMedium controller:self.controller];
     
     self.upcomingTitleLabel.text = self.upcomingMedia.title;
     self.upcomingTitleLabel.isAccessibilityElement = NO;
@@ -342,7 +344,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
     self.upcomingSummaryLabel.isAccessibilityElement = NO;
     
     self.upcomingThumbnailButton.accessibilityHint = SRGLetterboxAccessibilityLocalizedString(@"Plays the content.", @"Segment or chapter cell hint");
-    [self.upcomingThumbnailButton.imageView srg_requestImageForObject:self.upcomingMedia withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.upcomingThumbnailButton.imageView srg_requestImage:self.upcomingMedia.image withSize:SRGImageSizeMedium controller:self.controller];
 }
 
 - (void)reloadTimeInformation

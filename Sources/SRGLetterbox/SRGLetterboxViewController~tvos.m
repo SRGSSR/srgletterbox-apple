@@ -27,6 +27,7 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 @import SRGAppearance;
+@import SRGDataProviderNetwork;
 @import SRGMediaPlayer;
 @import YYWebImage;
 
@@ -131,7 +132,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             if (upcomingMedia) {
                 SRGContinuousPlaybackViewController *continuousPlaybackViewController = [[SRGContinuousPlaybackViewController alloc] initWithMedia:controller.media
                                                                                                                                      upcomingMedia:upcomingMedia
-                                                                                                                                           endDate:controller.continuousPlaybackTransitionEndDate];
+                                                                                                                                           endDate:controller.continuousPlaybackTransitionEndDate
+                                                                                                                                        controller:controller];
                 continuousPlaybackViewController.delegate = self;
                 [self presentViewController:continuousPlaybackViewController animated:YES completion:nil];
             }
@@ -362,18 +364,22 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Image retrieval
 
-- (UIImage *)imageForMetadata:(id<SRGImageMetadata>)metadata withCompletion:(void (^)(void))completion
+- (UIImage *)imageFromImage:(SRGImage *)fromImage withCompletion:(void (^)(void))completion
 {
     NSParameterAssert(completion);
     
+    static const SRGImageSize kImageSize = SRGImageSizeMedium;
+    static const SRGImageVariant kImageVariant = SRGImageVariantDefault;
+    
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGFloat width = SRGWidthForImageScale(SRGImageScaleMedium);
-    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:width type:SRGImageTypeDefault];
-    NSString *key = [webImageManager cacheKeyForURL:imageURL];
-    UIImage *image = [webImageManager.cache getImageForKey:key];
-    if (image) {
-        return image;
+    NSURL *imageURL = [self.controller URLForImage:fromImage withSize:kImageSize scaling:kImageVariant];
+    if (imageURL) {
+        NSString *key = [webImageManager cacheKeyForURL:imageURL];
+        UIImage *image = [webImageManager.cache getImageForKey:key];
+        if (image) {
+            return image;
+        }
     }
     
     if (imageURL && ! self.imageOperations[imageURL]) {
@@ -388,6 +394,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         self.imageOperations[imageURL] = imageOperation;
     }
     
+    SRGImageWidth width = SRGRecommendedImageWidth(kImageSize, kImageVariant);
     return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
 }
 
@@ -395,12 +402,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:self.controller.displayableMedia.image withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 - (void)reloadPlaceholderImage
 {
-    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:nil withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 #pragma mark Layout
@@ -690,7 +697,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         descriptionItem.value = SRGLetterboxMetadataDescription(media);
         descriptionItem.extendedLanguageTag = @"und";
         
-        UIImage *image = [self imageForMetadata:media withCompletion:^{
+        UIImage *image = [self imageFromImage:media.image withCompletion:^{
             [playerViewController reloadData];
         }];
         
@@ -716,7 +723,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         titleItem.value = segment.title;
         titleItem.extendedLanguageTag = @"und";
         
-        UIImage *image = [self imageForMetadata:segment withCompletion:^{
+        UIImage *image = [self imageFromImage:segment.image withCompletion:^{
             [playerViewController reloadData];
         }];
         

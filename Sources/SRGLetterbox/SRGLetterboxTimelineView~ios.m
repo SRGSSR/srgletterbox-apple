@@ -319,7 +319,7 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(SRGLetterboxSubdivisionCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.delegate = self;
-    cell.subdivision = self.subdivisions[indexPath.row];
+    [cell setSubdivision:self.subdivisions[indexPath.row] controller:self.controller];
     [self updateAppearanceForCell:cell];
 }
 
