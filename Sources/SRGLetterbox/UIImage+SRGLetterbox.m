@@ -12,12 +12,21 @@
 
 @import SRGDataProviderNetwork;
 
-static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
+static NSURL *SRGLetterboxSupportedURL(NSURL *URL)
 {
+    if (! URL) {
+        return nil;
+    }
+    
     // Fix for invalid images, incorrect Kids program images, and incorrect images for sports (RTS)
     // See https://srfmmz.atlassian.net/browse/AIS-15672
-    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
-        && ! [URL.absoluteString containsString:@".html"];
+    if (! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
+        && ! [URL.absoluteString containsString:@".html"]) {
+        return URL;
+    }
+    else {
+        return nil;
+    }
 }
 
 NSString *SRGLetterboxFilePathForImagePlaceholder(void)
@@ -32,12 +41,13 @@ NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 NSURL *SRGLetterboxImageURL(SRGImage *image, SRGImageSize size, SRGLetterboxController *controller)
 {
     NSURL *URL = [controller URLForImage:image withSize:size scaling:SRGImageScalingDefault];
-    return SRGLetterboxIsValidURL(URL) ? URL : nil;
+    return SRGLetterboxSupportedURL(URL);
 }
 
 NSURL *SRGLetterboxArtworkImageURL(SRGImage *image, SRGImageWidth width, SRGLetterboxController *controller)
 {
-    return [controller URLForImage:image withWidth:width scaling:SRGImageScalingAspectFitBlackSquare];
+    NSURL *URL = [controller URLForImage:image withWidth:width scaling:SRGImageScalingAspectFitBlackSquare];
+    return SRGLetterboxSupportedURL(URL);
 }
 
 static CGFloat SRGImageAspectScaleFit(CGSize sourceSize, CGRect destRect)
