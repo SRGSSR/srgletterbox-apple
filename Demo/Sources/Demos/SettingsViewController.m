@@ -85,11 +85,11 @@ NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort = 10.;
 
 static void SettingServiceURLReset(void)
 {
-    BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset2"];
+    BOOL settingServiceURLReset = [NSUserDefaults.standardUserDefaults boolForKey:@"SettingServiceURLReset3"];
     if (! settingServiceURLReset) {
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingServiceURL];
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LetterboxDemoSettingUserLocation];
-        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset2"];
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"SettingServiceURLReset3"];
         [NSUserDefaults.standardUserDefaults synchronize];
     }
 }
