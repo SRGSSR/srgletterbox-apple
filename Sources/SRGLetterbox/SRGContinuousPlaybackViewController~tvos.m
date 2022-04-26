@@ -32,7 +32,7 @@ static NSString *SRGLocalizedUppercaseString(NSString *string)
 @property (nonatomic) SRGMedia *media;
 @property (nonatomic) SRGMedia *upcomingMedia;
 @property (nonatomic) NSDate *endDate;
-@property (nonatomic, weak) SRGLetterboxController *controller;
+@property (nonatomic) SRGLetterboxController *controller;
 
 @property (nonatomic, weak) UIImageView *backgroundImageView;
 
