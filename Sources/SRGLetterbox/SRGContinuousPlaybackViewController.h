@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxController.h"
+
 @import SRGDataProviderModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -41,7 +43,7 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 /**
  *  Instantiate with current and upcoming media information. The view displays a countdown ending at the specified date.
  */
-- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate;
+- (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate controller:(SRGLetterboxController *)controller;
 
 /**
  *  The delegate.

@@ -281,7 +281,7 @@
             self.subtitleLabel.text = nil;
         }
         
-        [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        [self.imageView srg_requestImage:upcomingMedia.image withSize:SRGImageSizeLarge controller:self.controller];
         
         NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
         float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;

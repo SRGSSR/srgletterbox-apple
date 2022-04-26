@@ -1595,6 +1595,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self.mediaPlayerController streamDateForTime:time];
 }
 
+#pragma mark Image retrieval
+
+- (NSURL *)URLForImage:(SRGImage *)image withWidth:(SRGImageWidth)width scaling:(SRGImageScaling)scaling
+{
+    return [self.dataProvider URLForImage:image withWidth:width scaling:scaling];
+}
+
+- (NSURL *)URLForImage:(SRGImage *)image withSize:(SRGImageSize)size scaling:(SRGImageScaling)scaling
+{
+    return [self.dataProvider URLForImage:image withSize:size scaling:scaling];
+}
+
 #pragma mark Diagnostics
 
 - (SRGDiagnosticReport *)startPlaybackDiagnosticReportForService:(NSString *)service withName:(NSString *)name options:(NSDictionary<SRGResourceLoaderOption, id> **)pOptions

@@ -414,7 +414,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 {
     [super metadataDidChange];
     
-    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:self.controller.displayableMedia.image withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 - (void)playbackDidFail
@@ -1033,7 +1033,8 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
     if (self.controller.playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        id<SRGMediaMetadata> mediaMetadata = subdivision ?: self.controller.displayableMedia;
+        [self.imageView srg_requestImage:mediaMetadata.image withSize:SRGImageSizeLarge controller:self.controller];
     }
 }
 

@@ -236,14 +236,14 @@
 
 #pragma mark Getters and setters
 
-- (void)setSubdivision:(SRGSubdivision *)subdivision
+- (void)setSubdivision:(SRGSubdivision *)subdivision controller:(SRGLetterboxController *)controller
 {
     _subdivision = subdivision;
     
     self.titleLabel.text = subdivision.title;
     self.titleLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     
-    [self.imageView srg_requestImageForObject:subdivision withScale:SRGImageScaleMedium type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:subdivision.image withSize:SRGImageSizeMedium controller:controller];
     
     self.durationLabel.font = [SRGFont fontWithStyle:SRGFontStyleCaption];
     self.durationLabel.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
