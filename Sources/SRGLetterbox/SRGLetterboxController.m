@@ -1636,8 +1636,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [report startTimeMeasurementForKey:@"duration"];
     
     if (pOptions) {
-        *pOptions = @{ SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
-                       SRGResourceLoaderOptionDiagnosticReportNameKey : name };
+        *pOptions = @{
+            SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
+            SRGResourceLoaderOptionDiagnosticReportNameKey : name
+        };
     }
     
     return report;
