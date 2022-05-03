@@ -962,7 +962,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
@@ -971,12 +970,14 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds)) {
-        [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
-        self.transientState = SRGLetterboxViewTransientStateSkippingBackward;
+        if ([self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil]) {
+            [self startTransientState:SRGLetterboxViewTransientStateSkippingBackward];
+        }
     }
     else {
-        [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
-        self.transientState = SRGLetterboxViewTransientStateSkippingForward;
+        if ([self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil]) {
+            [self startTransientState:SRGLetterboxViewTransientStateSkippingForward];
+        }
     }
     
     // Disable the tap gesture for a while after the skip gesture has been used (2 * the delay is a good value). This ensures
@@ -984,13 +985,19 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     // number of times.
     self.toggleUserInterfaceTapGestureDisabled = YES;
     
-    [self performSelector:@selector(completeTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
     [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
 }
 
 - (void)enableToggleUserInterfaceTapGesture
 {
     self.toggleUserInterfaceTapGestureDisabled = NO;
+}
+
+- (void)startTransientState:(SRGLetterboxViewTransientState)transientState
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
+    self.transientState = transientState;
+    [self performSelector:@selector(completeTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
 }
 
 - (void)completeTransientState
