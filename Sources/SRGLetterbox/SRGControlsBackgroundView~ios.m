@@ -11,6 +11,7 @@
 #import "SRGControlsBackgroundView.h"
 
 #import "UIImageView+SRGLetterbox.h"
+#import "UIView+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 
 @interface SRGControlsBackgroundView ()
@@ -53,8 +54,7 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
-    BOOL isDoubleTapSkipping = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward);
-    self.dimmingView.alpha = (! userInterfaceHidden || (self.controller.loading && ! isDoubleTapSkipping)) ? 1.f : 0.f;
+    self.dimmingView.alpha = ! userInterfaceHidden ? 1.f : 0.f;
     
     if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
@@ -63,6 +63,8 @@
     else {
         self.loadingImageView.alpha = 0.f;
     }
+    
+    [self.loadingImageView srg_letterboxSetShadowHidden:! userInterfaceHidden];
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
