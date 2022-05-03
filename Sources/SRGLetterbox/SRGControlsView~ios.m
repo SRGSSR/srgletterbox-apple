@@ -485,57 +485,58 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
-    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
+    BOOL hidden = userInterfaceHidden || blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate;
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
-        || playbackState == SRGMediaPlayerPlaybackStatePreparing
-        || playbackState == SRGMediaPlayerPlaybackStateEnded) {
+            || playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        self.playbackButton.alpha = ! hidden ? 1.f : 0.f;
+        self.durationLabel.alpha = 0.f;
         self.forwardSeekButton.alpha = 0.f;
         self.backwardSeekButton.alpha = 0.f;
-        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
-        
+        self.startOverButton.alpha = (! hidden && [self.controller canStartOver]) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = (! hidden && [self.controller canSkipToLive]) ? 1.f : 0.f;
         self.timeSlider.alpha = 0.f;
     }
     else {
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
         BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
         
-        self.forwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
+        self.playbackButton.alpha = (hidden || self.movingSlider || self.controller.loading) ? 0.f : 1.f;
+        self.durationLabel.alpha = ! hidden ? 1.f : 0.f;
+        
+        self.forwardSeekButton.alpha = ! hidden && ! self.movingSlider && canSeek ? 1.f : 0.f;
         self.forwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingForward) ? UIColor.redColor : UIColor.whiteColor;
         self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         
-        self.backwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
+        self.backwardSeekButton.alpha = ! hidden && ! self.movingSlider && canSeek ? 1.f : 0.f;
         self.backwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingBackward) ? UIColor.redColor : UIColor.whiteColor;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         
-        self.startOverButton.alpha = (! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
+        self.startOverButton.alpha = ! hidden && ! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0 ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
         BOOL canSkipToLive = [self.controller canSkipToLive];
-        self.skipToLiveButton.alpha = (! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive)) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = ! hidden && ! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
         self.skipToLiveButton.enabled = canSkipToLive;
         
-        self.timeSlider.alpha = canSeek ? 1.f : 0.f;
+        self.timeSlider.alpha = ! hidden && canSeek ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = (self.movingSlider || self.controller.loading) ? 0.f : 1.f;
-    
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
-    self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
+    self.fullScreenButton.alpha = ! hidden && (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
     self.fullScreenButton.selected = parentLetterboxView.fullScreen;
     
-    self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
+    self.pictureInPictureButton.alpha = ! hidden ? 1.f : 0.f;
+    self.playbackSettingsButton.alpha = ! hidden ? 1.f : 0.f;
+    self.airPlayButton.alpha = ! hidden ? 1.f : 0.f;
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
     [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
-    
-    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
-    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate && ! self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
@@ -616,6 +617,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         [self.bottomStackView setNeedsLayout];
         [self.bottomStackView layoutIfNeeded];
     }
+    
+    self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
 }
 
 #pragma mark UI
