@@ -507,12 +507,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.playbackButton.alpha = (hidden || self.movingSlider || self.controller.loading) ? 0.f : 1.f;
         self.durationLabel.alpha = ! hidden ? 1.f : 0.f;
         
-        self.forwardSeekButton.alpha = ! hidden && ! self.movingSlider && canSeek ? 1.f : 0.f;
-        self.forwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingForward) ? UIColor.redColor : UIColor.whiteColor;
+        self.forwardSeekButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateSkippingForward ? 1.f : 0.f; 
         self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         
-        self.backwardSeekButton.alpha = ! hidden && ! self.movingSlider && canSeek ? 1.f : 0.f;
-        self.backwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingBackward) ? UIColor.redColor : UIColor.whiteColor;
+        self.backwardSeekButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateSkippingBackward ? 1.f : 0.f;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         
         self.startOverButton.alpha = ! hidden && ! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0 ? 1.f : 0.f;
