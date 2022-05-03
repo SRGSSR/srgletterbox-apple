@@ -36,6 +36,12 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 
+typedef NS_CLOSED_ENUM(NSInteger, SRGLetterboxViewTransientState) {
+    SRGLetterboxViewTransientStateNone = 0,
+    SRGLetterboxViewTransientStateSkippingBackward,
+    SRGLetterboxViewTransientStateSkippingForward
+};
+
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
@@ -69,6 +75,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
+@property (nonatomic) SRGLetterboxViewTransientState transientState;
 
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
@@ -329,6 +336,8 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         [self showAirPlayNotificationMessageIfNeededAnimated:NO];
     }
     else {
+        self.transientState = SRGTransmissionNone;
+        
         [self stopInactivityTracker];
         [self dismissNotificationViewAnimated:NO];
         
@@ -711,6 +720,9 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     void (^animations)(void) = ^{
         additionalAnimations ? additionalAnimations() : nil;
         
+        self.layer.borderColor = self.transientState != SRGLetterboxViewTransientStateNone ? UIColor.redColor.CGColor : UIColor.clearColor.CGColor;
+        self.layer.borderWidth = 4.;
+        
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage width:CGRectGetWidth(self.frame)].height;
@@ -950,6 +962,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTransientState) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
@@ -959,9 +972,11 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds)) {
         [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+        self.transientState = SRGLetterboxViewTransientStateSkippingBackward;
     }
     else {
         [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+        self.transientState = SRGLetterboxViewTransientStateSkippingForward;
     }
     
     // Disable the tap gesture for a while after the skip gesture has been used (2 * the delay is a good value). This ensures
@@ -969,12 +984,19 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     // number of times.
     self.toggleUserInterfaceTapGestureDisabled = YES;
     
+    [self performSelector:@selector(resetTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
     [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
 }
 
 - (void)enableToggleUserInterfaceTapGesture
 {
     self.toggleUserInterfaceTapGestureDisabled = NO;
+}
+
+- (void)resetTransientState
+{
+    self.transientState = SRGLetterboxViewTransientStateNone;
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
