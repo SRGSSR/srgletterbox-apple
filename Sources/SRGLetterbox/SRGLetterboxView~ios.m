@@ -970,14 +970,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds)) {
-        if ([self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil]) {
-            [self startTransientState:SRGLetterboxViewTransientStateSkippingBackward];
-        }
+        [self skipWithInterval:-SRGLetterboxBackwardSkipInterval];
     }
     else {
-        if ([self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil]) {
-            [self startTransientState:SRGLetterboxViewTransientStateSkippingForward];
-        }
+        [self skipWithInterval:SRGLetterboxForwardSkipInterval];
     }
     
     // Disable the tap gesture for a while after the skip gesture has been used (2 * the delay is a good value). This ensures
@@ -991,6 +987,18 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (void)enableToggleUserInterfaceTapGesture
 {
     self.toggleUserInterfaceTapGestureDisabled = NO;
+}
+
+- (void)skipWithInterval:(NSTimeInterval)interval
+{
+    if (! [self.controller canSkipWithInterval:interval]) {
+        return;
+    }
+    
+    // The transient state must be set before the skip is triggered so that the user interface state is up-to-date
+    SRGLetterboxViewTransientState transientState = (interval >= 0) ? SRGLetterboxViewTransientStateDoubleTapSkippingForward : SRGLetterboxViewTransientStateDoubleTapSkippingBackward;
+    [self startTransientState:transientState];
+    [self.controller skipWithInterval:interval completionHandler:nil];
 }
 
 - (void)startTransientState:(SRGLetterboxViewTransientState)transientState

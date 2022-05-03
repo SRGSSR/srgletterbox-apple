@@ -13,9 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  Transient user interface states.
  */
 typedef NS_CLOSED_ENUM(NSInteger, SRGLetterboxViewTransientState) {
-    SRGLetterboxViewTransientStateNone = 0,             // Nominal behavior
-    SRGLetterboxViewTransientStateSkippingBackward,     // Skipping backward via double tap
-    SRGLetterboxViewTransientStateSkippingForward       // Skipping forward via double tap
+    SRGLetterboxViewTransientStateNone = 0,                      // Nominal behavior
+    SRGLetterboxViewTransientStateDoubleTapSkippingBackward,     // Skipping backward via double tap
+    SRGLetterboxViewTransientStateDoubleTapSkippingForward       // Skipping forward via double tap
 } API_UNAVAILABLE(tvos);
 
 /**

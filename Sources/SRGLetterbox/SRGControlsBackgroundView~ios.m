@@ -53,7 +53,8 @@
 {
     [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
-    self.dimmingView.alpha = (! userInterfaceHidden || self.controller.loading) ? 1.f : 0.f;
+    BOOL isDoubleTapSkipping = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward);
+    self.dimmingView.alpha = (! userInterfaceHidden || (self.controller.loading && ! isDoubleTapSkipping)) ? 1.f : 0.f;
     
     if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
