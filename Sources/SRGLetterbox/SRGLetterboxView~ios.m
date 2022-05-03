@@ -382,6 +382,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
+    [self resetTransientState];
     [self unregisterObservers];
     [self setNeedsLayoutAnimated:NO];
 }
@@ -675,6 +676,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
+    if (self.userInterfaceHidden != hidden) {
+        [self resetTransientState];
+    }
+    
     self.userInterfaceHidden = hidden;
     self.userInterfaceTogglable = togglable;
     
@@ -957,7 +962,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)skip:(UITapGestureRecognizer *)gestureRecognizer
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTransientState) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
@@ -979,7 +984,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     // number of times.
     self.toggleUserInterfaceTapGestureDisabled = YES;
     
-    [self performSelector:@selector(resetTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
+    [self performSelector:@selector(completeTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
     [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
 }
 
@@ -988,10 +993,16 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     self.toggleUserInterfaceTapGestureDisabled = NO;
 }
 
-- (void)resetTransientState
+- (void)completeTransientState
 {
     self.transientState = SRGLetterboxViewTransientStateNone;
     [self setNeedsLayoutAnimated:YES];
+}
+
+- (void)resetTransientState
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
+    self.transientState = SRGLetterboxViewTransientStateNone;
 }
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
