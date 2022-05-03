@@ -480,9 +480,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self refresh];
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
     self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
@@ -504,9 +504,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
         
         self.forwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
+        self.forwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingForward) ? UIColor.redColor : UIColor.whiteColor;
         self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
         
         self.backwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
+        self.backwardSeekButton.tintColor = (transientState == SRGLetterboxViewTransientStateSkippingBackward) ? UIColor.redColor : UIColor.whiteColor;
         self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
         
         self.startOverButton.alpha = (! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
@@ -528,9 +530,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
     self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate && ! self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;

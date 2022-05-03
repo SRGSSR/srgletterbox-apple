@@ -10,6 +10,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ *  Transient user interface states.
+ */
+typedef NS_CLOSED_ENUM(NSInteger, SRGLetterboxViewTransientState) {
+    SRGLetterboxViewTransientStateNone = 0,             // Nominal behavior
+    SRGLetterboxViewTransientStateSkippingBackward,     // Skipping backward via double tap
+    SRGLetterboxViewTransientStateSkippingForward       // Skipping forward via double tap
+} API_UNAVAILABLE(tvos);
+
+/**
  *  `SRGLetterboxBaseView` is an abstract base class for Letterbox-related views. It provides:
  *    - Automatic instantiation from a nib file bearing the class name.
  *    - Built-in support for content size category and VoiceOver changes.
@@ -71,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
  *              instead.
  */
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER API_UNAVAILABLE(tvos);
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState NS_REQUIRES_SUPER API_UNAVAILABLE(tvos);
 
 /**
  *  Method called when the parent Letterbox context view is required to perform a layout update. Subclasses can implement
@@ -80,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion Never call this method directly. If your subclass needs to ask for a layout, call `-setNeedsLayoutAnimated:`
  *              instead.
  */
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden NS_REQUIRES_SUPER API_UNAVAILABLE(tvos);
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState NS_REQUIRES_SUPER API_UNAVAILABLE(tvos);
 
 /**
  *  Call to trigger a layout update on the parent context.

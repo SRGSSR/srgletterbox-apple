@@ -49,9 +49,9 @@
 
 #pragma mark Overrides
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     self.dimmingView.alpha = (! userInterfaceHidden || self.controller.loading) ? 1.f : 0.f;
     
@@ -64,9 +64,9 @@
     }
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     // Lazily add view when needed, mitigating associated costs
     if (self.controller.loading && ! self.loadingImageView) {

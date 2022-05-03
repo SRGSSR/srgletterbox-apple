@@ -167,9 +167,9 @@
 
 #if TARGET_OS_IOS
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     NSError *error = self.controller.error;
     if (error) {
@@ -180,9 +180,9 @@
     }
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     self.imageView.hidden = NO;
     self.messageLabel.hidden = NO;

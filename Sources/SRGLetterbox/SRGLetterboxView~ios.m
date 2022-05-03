@@ -36,12 +36,6 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 
-typedef NS_CLOSED_ENUM(NSInteger, SRGLetterboxViewTransientState) {
-    SRGLetterboxViewTransientStateNone = 0,
-    SRGLetterboxViewTransientStateSkippingBackward,
-    SRGLetterboxViewTransientStateSkippingForward
-};
-
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
@@ -439,9 +433,9 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     [self setNeedsLayoutAnimated:YES];
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
 }
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
@@ -720,9 +714,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     void (^animations)(void) = ^{
         additionalAnimations ? additionalAnimations() : nil;
         
-        self.layer.borderColor = self.transientState != SRGLetterboxViewTransientStateNone ? UIColor.redColor.CGColor : UIColor.clearColor.CGColor;
-        self.layer.borderWidth = 4.;
-        
         userInterfaceHidden = [self updateMainLayout];
         CGFloat timelineHeight = [self updateTimelineLayoutForUserInterfaceHidden:userInterfaceHidden];
         CGFloat notificationHeight = [self.notificationView updateLayoutWithMessage:self.notificationMessage width:CGRectGetWidth(self.frame)].height;
@@ -751,7 +742,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         completion(YES);
     }
     
-    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
 }
 
 - (BOOL)updateMainLayout
@@ -794,7 +785,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
-    [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
@@ -802,27 +793,31 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     return userInterfaceHidden;
 }
 
-- (void)recursivelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)recursivelyUpdateLayoutInView:(UIView *)view
+               forUserInterfaceHidden:(BOOL)userInterfaceHidden
+                       transientState:(SRGLetterboxViewTransientState)transientState
 {
     if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
-        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
     
     for (UIView *subview in view.subviews) {
-        [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+        [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
 }
 
-- (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view
+                          forUserInterfaceHidden:(BOOL)userInterfaceHidden
+                                  transientState:(SRGLetterboxViewTransientState)transientState
 {
     if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
-        [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+        [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
     
     for (UIView *subview in view.subviews) {
-        [self recursivelyImmediatelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+        [self recursivelyImmediatelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
 }
 
