@@ -28,9 +28,9 @@
     [self setTitleColor:tintColor forState:UIControlStateNormal];    
 }
 
-- (void)setImageSet:(SRGImageSet)imageSet
+- (void)setVerticalOffset:(CGFloat)verticalOffset
 {
-    _imageSet = imageSet;
+    _verticalOffset = verticalOffset;
     
     [self setNeedsLayout];
 }
@@ -47,10 +47,9 @@
                                       CGRectGetWidth(imageFrame),
                                       CGRectGetHeight(imageFrame));
     
-    CGFloat yOffset = (self.imageSet == SRGImageSetLarge) ? 20.f : 15.f;
     CGRect titleFrame = self.titleLabel.frame;
     self.titleLabel.frame = CGRectMake((CGRectGetWidth(self.bounds) - CGRectGetWidth(titleFrame)) / 2.f,
-                                       CGRectGetHeight(self.bounds) - yOffset,
+                                       CGRectGetHeight(self.bounds) - self.verticalOffset,
                                        CGRectGetWidth(titleFrame),
                                        CGRectGetHeight(titleFrame));
 }

@@ -5,7 +5,6 @@
 //
 
 #import "SRGControlButton.h"
-#import "UIImage+SRGLetterbox.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SRGLabeledControlButton : SRGControlButton
 
 /**
- *  The image set associated with the button.
+ *  The vertical label offset.
  */
-@property (nonatomic) SRGImageSet imageSet;
+@property (nonatomic) CGFloat verticalOffset;
 
 @end
 

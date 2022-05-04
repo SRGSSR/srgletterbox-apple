@@ -297,7 +297,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGLabeledControlButton *backwardSkipButton = [[SRGLabeledControlButton alloc] init];
     [backwardSkipButton setTitle:@"10s" forState:UIControlStateNormal];
     [backwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
-    backwardSkipButton.titleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:20.f];
     backwardSkipButton.tintColor = UIColor.whiteColor;
     backwardSkipButton.alpha = 0.f;
     [backwardSkipButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
@@ -318,7 +317,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGLabeledControlButton *forwardSkipButton = [[SRGLabeledControlButton alloc] init];
     [forwardSkipButton setTitle:@"30s" forState:UIControlStateNormal];
     [forwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
-    forwardSkipButton.titleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:20.f];
     forwardSkipButton.tintColor = UIColor.whiteColor;
     forwardSkipButton.alpha = 0.f;
     [forwardSkipButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
@@ -573,8 +571,15 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     SRGImageSet imageSet = [self imageSet];
     self.playbackButton.imageSet = imageSet;
-    self.forwardSkipButton.imageSet = imageSet;
-    self.backwardSkipButton.imageSet = imageSet;
+    
+    CGFloat skipLabelFontSize = (imageSet == SRGImageSetLarge) ? 20.f : 16.f;
+    UIFont *skipLabelFont = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:skipLabelFontSize];
+    
+    self.backwardSkipButton.titleLabel.font = skipLabelFont;
+    self.backwardSkipButton.verticalOffset = skipLabelFontSize;
+    
+    self.forwardSkipButton.titleLabel.font = skipLabelFont;
+    self.forwardSkipButton.verticalOffset = skipLabelFontSize;
     
     [self.backwardSkipButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSkipButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
