@@ -283,12 +283,12 @@ static void commonInit(SRGLetterboxTimeSlider *self);
 
 - (void)timeSlider:(SRGTimeSlider *)slider accessibilityDecrementFromValue:(float)value time:(CMTime)time
 {
-    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+    [self.controller skipBackwardWithCompletionHandler:nil];
 }
 
 - (void)timeSlider:(SRGTimeSlider *)slider accessibilityIncrementFromValue:(float)value time:(CMTime)time
 {
-    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    [self.controller skipForwardWithCompletionHandler:nil];
 }
 
 #pragma mark Notifications

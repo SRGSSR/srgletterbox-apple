@@ -295,7 +295,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutBackwardSkipButtonInView:(UIView *)view
 {
     SRGLabeledControlButton *backwardSkipButton = [[SRGLabeledControlButton alloc] init];
-    [backwardSkipButton setTitle:@"10s" forState:UIControlStateNormal];
+    [backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
     [backwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
     backwardSkipButton.tintColor = UIColor.whiteColor;
     backwardSkipButton.alpha = 0.f;
@@ -315,7 +315,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutForwardSkipButtonInView:(UIView *)view
 {
     SRGLabeledControlButton *forwardSkipButton = [[SRGLabeledControlButton alloc] init];
-    [forwardSkipButton setTitle:@"30s" forState:UIControlStateNormal];
+    [forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
     [forwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
     forwardSkipButton.tintColor = UIColor.whiteColor;
     forwardSkipButton.alpha = 0.f;
