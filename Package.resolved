@@ -59,8 +59,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/improved-timezone-support",
-          "revision": "846648007aa7e06eda85e3d40bdfa38ab241093c",
+          "branch": "develop",
+          "revision": "89f7eb316a626473007914a02949dd988e197f14",
           "version": null
         }
       },
@@ -86,8 +86,8 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": "feature/improved-timezone-support",
-          "revision": "443d35ac783ebb4803b9691b93ede914eea84ca4",
+          "branch": "develop",
+          "revision": "a81ce02535fd6631c3fc4e3e5109f334cf6ef90e",
           "version": null
         }
       },
