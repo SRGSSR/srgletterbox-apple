@@ -500,7 +500,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
             || playbackState == SRGMediaPlayerPlaybackStatePreparing
             || playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        self.playbackButton.alpha = ! hidden ? 1.f : 0.f;
+        self.playbackButton.alpha = (! hidden && ! self.controller.isLoading) ? 1.f : 0.f;
         self.durationLabel.alpha = 0.f;
         self.forwardSkipButton.alpha = 0.f;
         self.backwardSkipButton.alpha = 0.f;
