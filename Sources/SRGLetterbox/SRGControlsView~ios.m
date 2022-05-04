@@ -295,7 +295,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutBackwardSkipButtonInView:(UIView *)view
 {
     SRGLabeledControlButton *backwardSkipButton = [[SRGLabeledControlButton alloc] init];
-    [backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
     [backwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
     backwardSkipButton.tintColor = UIColor.whiteColor;
     backwardSkipButton.alpha = 0.f;
@@ -315,7 +314,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutForwardSkipButtonInView:(UIView *)view
 {
     SRGLabeledControlButton *forwardSkipButton = [[SRGLabeledControlButton alloc] init];
-    [forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
     [forwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
     forwardSkipButton.tintColor = UIColor.whiteColor;
     forwardSkipButton.alpha = 0.f;
@@ -580,6 +578,26 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.forwardSkipButton.titleLabel.font = skipLabelFont;
     self.forwardSkipButton.verticalOffset = skipLabelFontSize;
+    
+    switch (transientState) {
+        case SRGLetterboxViewTransientStateNone: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+            
+        case SRGLetterboxViewTransientStateDoubleTapSkippingBackward: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@s", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+        
+        case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@s", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+    }
     
     [self.backwardSkipButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSkipButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];

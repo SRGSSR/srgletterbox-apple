@@ -69,7 +69,9 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
+
 @property (nonatomic) SRGLetterboxViewTransientState transientState;
+@property (nonatomic) NSInteger doubleTapSkipCount;
 
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
@@ -331,6 +333,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     }
     else {
         self.transientState = SRGTransmissionNone;
+        self.doubleTapSkipCount = 0;
         
         [self stopInactivityTracker];
         [self dismissNotificationViewAnimated:NO];
@@ -995,6 +998,13 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     // The transient state must be set before the skip is triggered so that the user interface state is up-to-date
     SRGLetterboxViewTransientState transientState = (interval >= 0) ? SRGLetterboxViewTransientStateDoubleTapSkippingForward : SRGLetterboxViewTransientStateDoubleTapSkippingBackward;
+    if (self.transientState == transientState) {
+        ++self.doubleTapSkipCount;
+    }
+    else {
+        self.doubleTapSkipCount = 1;
+    }
+    
     [self startTransientState:transientState];
     [self.controller skipWithInterval:interval completionHandler:nil];
 }
@@ -1009,6 +1019,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (void)completeTransientState
 {
     self.transientState = SRGLetterboxViewTransientStateNone;
+    self.doubleTapSkipCount = 0;
     [self setNeedsLayoutAnimated:YES];
 }
 
@@ -1016,6 +1027,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
     self.transientState = SRGLetterboxViewTransientStateNone;
+    self.doubleTapSkipCount = 0;
 }
 
 - (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
