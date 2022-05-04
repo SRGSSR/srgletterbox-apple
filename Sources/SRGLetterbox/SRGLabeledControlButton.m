@@ -8,7 +8,7 @@
 
 @implementation SRGLabeledControlButton
 
-#pragma mark Overrides
+#pragma mark Object lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -19,12 +19,23 @@
     return self;
 }
 
+#pragma mark Getters and setters
+
 - (void)setTintColor:(UIColor *)tintColor
 {
     [super setTintColor:tintColor];
     
     [self setTitleColor:tintColor forState:UIControlStateNormal];    
 }
+
+- (void)setImageSet:(SRGImageSet)imageSet
+{
+    _imageSet = imageSet;
+    
+    [self setNeedsLayout];
+}
+
+#pragma mark Overrides
 
 - (void)layoutSubviews
 {
@@ -36,9 +47,10 @@
                                       CGRectGetWidth(imageFrame),
                                       CGRectGetHeight(imageFrame));
     
+    CGFloat yOffset = (self.imageSet == SRGImageSetLarge) ? 20.f : 15.f;
     CGRect titleFrame = self.titleLabel.frame;
     self.titleLabel.frame = CGRectMake((CGRectGetWidth(self.bounds) - CGRectGetWidth(titleFrame)) / 2.f,
-                                       CGRectGetHeight(self.bounds) - CGRectGetHeight(titleFrame) + 4.f,
+                                       CGRectGetHeight(self.bounds) - yOffset,
                                        CGRectGetWidth(titleFrame),
                                        CGRectGetHeight(titleFrame));
 }

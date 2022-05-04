@@ -573,6 +573,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     SRGImageSet imageSet = [self imageSet];
     self.playbackButton.imageSet = imageSet;
+    self.forwardSkipButton.imageSet = imageSet;
+    self.backwardSkipButton.imageSet = imageSet;
     
     [self.backwardSkipButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.forwardSkipButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
