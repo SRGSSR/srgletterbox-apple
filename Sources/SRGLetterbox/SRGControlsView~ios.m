@@ -16,6 +16,7 @@
 #import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
+#import "SRGLabeledControlButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxService.h"
@@ -47,8 +48,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) UIView *userInterfaceToggleActiveView;
 
 @property (nonatomic, weak) SRGLetterboxPlaybackButton *playbackButton;
-@property (nonatomic, weak) SRGControlButton *backwardSkipButton;
-@property (nonatomic, weak) SRGControlButton *forwardSkipButton;
+@property (nonatomic, weak) SRGLabeledControlButton *backwardSkipButton;
+@property (nonatomic, weak) SRGLabeledControlButton *forwardSkipButton;
 @property (nonatomic, weak) SRGControlButton *startOverButton;
 @property (nonatomic, weak) SRGControlButton *skipToLiveButton;
 
@@ -271,8 +272,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutCenterControlsInView:(UIView *)view
 {
     [self layoutPlaybackButtonInView:view];
-    [self layoutbackwardSkipButtonInView:view];
-    [self layoutforwardSkipButtonInView:view];
+    [self layoutBackwardSkipButtonInView:view];
+    [self layoutForwardSkipButtonInView:view];
     [self layoutStartOverButtonInView:view];
     [self layoutSkipToLiveButtonInView:view];
 }
@@ -291,10 +292,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)layoutbackwardSkipButtonInView:(UIView *)view
+- (void)layoutBackwardSkipButtonInView:(UIView *)view
 {
-    SRGControlButton *backwardSkipButton = [[SRGControlButton alloc] init];
+    SRGLabeledControlButton *backwardSkipButton = [[SRGLabeledControlButton alloc] init];
+    [backwardSkipButton setTitle:@"10s" forState:UIControlStateNormal];
     [backwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
+    backwardSkipButton.titleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:20.f];
     backwardSkipButton.tintColor = UIColor.whiteColor;
     backwardSkipButton.alpha = 0.f;
     [backwardSkipButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
@@ -310,10 +313,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     ]];
 }
 
-- (void)layoutforwardSkipButtonInView:(UIView *)view
+- (void)layoutForwardSkipButtonInView:(UIView *)view
 {
-    SRGControlButton *forwardSkipButton = [[SRGControlButton alloc] init];
+    SRGLabeledControlButton *forwardSkipButton = [[SRGLabeledControlButton alloc] init];
+    [forwardSkipButton setTitle:@"30s" forState:UIControlStateNormal];
     [forwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
+    forwardSkipButton.titleLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:20.f];
     forwardSkipButton.tintColor = UIColor.whiteColor;
     forwardSkipButton.alpha = 0.f;
     [forwardSkipButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
