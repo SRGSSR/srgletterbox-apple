@@ -581,20 +581,20 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     switch (transientState) {
         case SRGLetterboxViewTransientStateNone: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
             break;
         }
             
         case SRGLetterboxViewTransientStateDoubleTapSkippingBackward: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@s", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
             break;
         }
         
         case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@s", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@s", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
             break;
         }
     }
