@@ -51,7 +51,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGLabeledControlButton *backwardSkipButton;
 @property (nonatomic, weak) SRGLabeledControlButton *forwardSkipButton;
 @property (nonatomic, weak) SRGControlButton *startOverButton;
-@property (nonatomic, weak) SRGControlButton *skipToLiveButton;
+@property (nonatomic, weak) SRGLabeledControlButton *skipToLiveButton;
 
 @property (nonatomic, weak) UIStackView *bottomStackView;
 @property (nonatomic, weak) SRGViewModeButton *viewModeButton;
@@ -350,7 +350,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)layoutSkipToLiveButtonInView:(UIView *)view
 {
-    SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
+    SRGLabeledControlButton *skipToLiveButton = [[SRGLabeledControlButton alloc] init];
+    [skipToLiveButton setTitle:SRGLetterboxLocalizedString(@"Live", "Short live label displayed in the skipt to live button").uppercaseString forState:UIControlStateNormal];
     [skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     skipToLiveButton.tintColor = UIColor.whiteColor;
     skipToLiveButton.alpha = 0.f;
@@ -578,6 +579,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.forwardSkipButton.titleLabel.font = skipLabelFont;
     self.forwardSkipButton.verticalOffset = skipLabelFontSize;
+    
+    self.skipToLiveButton.titleLabel.font = skipLabelFont;
+    self.skipToLiveButton.verticalOffset = skipLabelFontSize;
     
     switch (transientState) {
         case SRGLetterboxViewTransientStateNone: {
