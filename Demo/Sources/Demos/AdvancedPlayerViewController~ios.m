@@ -231,7 +231,7 @@
                                                         discoverabilityTitle:NSLocalizedString(@"Play / Pause", @"Play / Pause keyboard shortcut label")];
     [keyCommands addObject:togglePlayPauseCommand];
     
-    if ([self.letterboxController canSkipWithInterval:SRGLetterboxForwardSkipInterval]) {
+    if ([self.letterboxController canSkipForward]) {
         UIKeyCommand *skipForwardCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
                                                                modifierFlags:0
                                                                       action:@selector(skipForward:)
