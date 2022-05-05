@@ -13,6 +13,10 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        // Trick to avoid incorrect truncation when Bold text has been enabled in system settings
+        // See https://developer.apple.com/forums/thread/125492
+        self.titleLabel.lineBreakMode = NSLineBreakByClipping;
+        
         [self setTitleColor:[UIColor colorWithWhite:0.5f alpha:1.f] forState:UIControlStateHighlighted];
         [self setTitleColor:[UIColor colorWithWhite:0.8f alpha:0.75f] forState:UIControlStateDisabled];
     }
