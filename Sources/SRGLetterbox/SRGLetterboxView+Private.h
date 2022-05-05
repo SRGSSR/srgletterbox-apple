@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxBaseView+Subclassing.h"
 #import "SRGLetterboxView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -39,6 +40,11 @@ typedef NS_ENUM(NSInteger, SRGLetterboxViewBehavior) {
  *  remain reachable.
  */
 @property (nonatomic, readonly, getter=isMinimal) BOOL minimal;
+
+/**
+ *  The current view transient state.
+ */
+@property (nonatomic, readonly) SRGLetterboxViewTransientState transientState;
 
 /**
  *  The current number of double taps registered for skipping.

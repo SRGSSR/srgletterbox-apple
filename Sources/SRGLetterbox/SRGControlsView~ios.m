@@ -742,11 +742,17 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)skipBackward:(id)sender
 {
+    if (self.parentLetterboxView.transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward) {
+        return;
+    }
     [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
 }
 
 - (void)skipForward:(id)sender
 {
+    if (self.parentLetterboxView.transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward) {
+        return;
+    }
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
 }
 
