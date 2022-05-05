@@ -66,10 +66,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 @property (nonatomic, weak) SRGControlWrapperView *liveLabelWrapperView;
 
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingStartOverToPlaybackConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingSkipBackwardToPlaybackConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToSkipForwardConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingStartOverToSkipBackwardConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToSkipToLiveConstraint;
 
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
 
@@ -307,7 +307,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     backwardSkipButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [backwardSkipButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
-        self.horizontalSpacingSkipBackwardToPlaybackConstraint = [self.playbackButton.leadingAnchor constraintEqualToAnchor:backwardSkipButton.trailingAnchor],
+        self.horizontalSpacingSkipBackwardToPlaybackConstraint = [backwardSkipButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor],
     ]];
 }
 
@@ -326,7 +326,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     forwardSkipButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [forwardSkipButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
-        self.horizontalSpacingPlaybackToSkipForwardConstraint = [forwardSkipButton.leadingAnchor constraintEqualToAnchor:self.playbackButton.trailingAnchor]
+        self.horizontalSpacingPlaybackToSkipForwardConstraint = [forwardSkipButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor]
     ]];
 }
 
@@ -343,8 +343,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [startOverButton.centerYAnchor constraintEqualToAnchor:self.backwardSkipButton.centerYAnchor],
-        self.horizontalSpacingStartOverToSkipBackwardConstraint = [self.backwardSkipButton.leadingAnchor constraintEqualToAnchor:startOverButton.trailingAnchor]
+        [startOverButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingStartOverToPlaybackConstraint = [startOverButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor]
     ]];
 }
 
@@ -362,8 +362,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.forwardSkipButton.centerYAnchor],
-        self.horizontalSpacingForwardToSkipToLiveConstraint = [skipToLiveButton.leadingAnchor constraintEqualToAnchor:self.forwardSkipButton.trailingAnchor],
+        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingPlaybackToSkipToLiveConstraint = [skipToLiveButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor],
     ]];
 }
 
@@ -542,13 +542,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.airPlayButton.alpha = ! hidden ? 1.f : 0.f;
     
     static const CGFloat kDoubleTapSkippingOffset = 20.f;
-    CGFloat horizontalSpacing = ([self imageSet] == SRGImageSetNormal) ? 16.f : 36.f;
+    CGFloat distanceToCenter = ([self imageSet] == SRGImageSetNormal) ? 64.f : 100.f;
     CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? kDoubleTapSkippingOffset : 0.f);
     CGFloat forwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? kDoubleTapSkippingOffset : 0.f);
-    self.horizontalSpacingSkipBackwardToPlaybackConstraint.constant = horizontalSpacing + backwardOffset;
-    self.horizontalSpacingPlaybackToSkipForwardConstraint.constant = horizontalSpacing + forwardOffset;
-    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing - forwardOffset;
-    self.horizontalSpacingStartOverToSkipBackwardConstraint.constant = horizontalSpacing - backwardOffset;
+    self.horizontalSpacingStartOverToPlaybackConstraint.constant = - 2 * distanceToCenter;
+    self.horizontalSpacingSkipBackwardToPlaybackConstraint.constant = -distanceToCenter - backwardOffset;
+    self.horizontalSpacingPlaybackToSkipForwardConstraint.constant = distanceToCenter + forwardOffset;
+    self.horizontalSpacingPlaybackToSkipToLiveConstraint.constant = 2 * distanceToCenter;
     
     [self.backwardSkipButton srg_letterboxSetShadowHidden:! userInterfaceHidden];
     self.backwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingBackward);
