@@ -571,7 +571,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGImageSet imageSet = [self imageSet];
     self.playbackButton.imageSet = imageSet;
     
-    CGFloat skipLabelFontSize = (imageSet == SRGImageSetLarge) ? 20.f : 16.f;
+    CGFloat skipLabelFontSize = (imageSet == SRGImageSetLarge) ? 18.f : 14.f;
     UIFont *skipLabelFont = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:skipLabelFontSize];
     
     self.backwardSkipButton.titleLabel.font = skipLabelFont;
