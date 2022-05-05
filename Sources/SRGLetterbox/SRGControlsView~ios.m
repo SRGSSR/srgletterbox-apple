@@ -541,10 +541,14 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.playbackSettingsButton.alpha = ! hidden ? 1.f : 0.f;
     self.airPlayButton.alpha = ! hidden ? 1.f : 0.f;
     
-    static const CGFloat kDoubleTapSkippingOffset = 20.f;
-    CGFloat distanceToCenter = ([self imageSet] == SRGImageSetNormal) ? 64.f : 100.f;
-    CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? kDoubleTapSkippingOffset : 0.f);
-    CGFloat forwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? kDoubleTapSkippingOffset : 0.f);
+    BOOL isLarge = ([self imageSet] == SRGImageSetLarge);
+    
+    CGFloat distanceToCenter = isLarge ? 100.f : 64.f;
+    CGFloat doubleTapOffset = isLarge ? 20.f : 10.f;
+    
+    CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? doubleTapOffset : 0.f);
+    CGFloat forwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? doubleTapOffset : 0.f);
+    
     self.horizontalSpacingStartOverToPlaybackConstraint.constant = - 2 * distanceToCenter;
     self.horizontalSpacingSkipBackwardToPlaybackConstraint.constant = -distanceToCenter - backwardOffset;
     self.horizontalSpacingPlaybackToSkipForwardConstraint.constant = distanceToCenter + forwardOffset;
