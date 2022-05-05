@@ -113,8 +113,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     self.contentView.backgroundColor = UIColor.blackColor;
     self.contentView.accessibilityIgnoresInvertColors = YES;
     
-    // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
-    // to detect other interactions earlier
+    // Detect all touches on the player view. Other gesture recognizers can be added to detect other interactions.
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
                                                                                                             action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
