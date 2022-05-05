@@ -983,6 +983,8 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     self.toggleUserInterfaceTapGestureDisabled = YES;
     [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
+    
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)enableToggleUserInterfaceTapGesture
