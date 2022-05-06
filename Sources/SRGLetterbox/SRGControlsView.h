@@ -85,6 +85,11 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic) SRGMediaPlayerUserInterfaceStyle userInterfaceStyle;
 
 /**
+ *  The radius in which forward and backward skip controls are located.
+ */
+@property (nonatomic, readonly) CGFloat skipControlsRadius;
+
+/**
  *  The time corresponding to the current slider position.
  *
  *  @discussion While dragging, this property may not reflect the value current time property of the asset being played.

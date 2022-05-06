@@ -27,6 +27,12 @@
 #import "UIImage+SRGLetterbox.h"
 #import "UIView+SRGLetterbox.h"
 
+static const CGFloat kNormalIconDimension = 48.f;
+static const CGFloat kLargeIconDimension = 64.f;
+
+static const CGFloat kDistanceToCenterNormalUnit = 64.f;
+static const CGFloat kDistanceToCenterLargeUnit = 100.f;
+
 @import libextobjc;
 @import MAKVONotificationCenter;
 @import SRGAppearance;
@@ -402,6 +408,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     return (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
 }
 
+- (CGFloat)skipControlsRadius
+{
+    return self.imageSet == SRGImageSetLarge ? kDistanceToCenterLargeUnit + kLargeIconDimension / 2.f : kDistanceToCenterNormalUnit + kNormalIconDimension / 2.f;
+}
+
 #pragma mark Overrides
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -542,9 +553,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.playbackSettingsButton.alpha = ! hidden ? 1.f : 0.f;
     self.airPlayButton.alpha = ! hidden ? 1.f : 0.f;
     
-    BOOL isLarge = ([self imageSet] == SRGImageSetLarge);
+    BOOL isLarge = (self.imageSet == SRGImageSetLarge);
     
-    CGFloat distanceToCenter = isLarge ? 100.f : 64.f;
+    CGFloat distanceToCenter = isLarge ? kDistanceToCenterLargeUnit : kDistanceToCenterNormalUnit;
     CGFloat doubleTapOffset = isLarge ? 20.f : 10.f;
     
     CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? doubleTapOffset : 0.f);
@@ -556,10 +567,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.horizontalSpacingPlaybackToSkipToLiveConstraint.constant = 2 * distanceToCenter;
     
     [self.backwardSkipButton srg_letterboxSetShadowHidden:! userInterfaceHidden];
-    self.backwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingBackward);
-    
     [self.forwardSkipButton srg_letterboxSetShadowHidden:! userInterfaceHidden];
-    self.forwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingForward);
 }
 
 - (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
@@ -573,7 +581,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
                                  || streamType != SRGStreamTypeOnDemand);
     self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
-    SRGImageSet imageSet = [self imageSet];
+    SRGImageSet imageSet = self.imageSet;
     self.playbackButton.imageSet = imageSet;
     
     CGFloat skipLabelFontSize = (imageSet == SRGImageSetLarge) ? 18.f : 14.f;
@@ -581,11 +589,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.backwardSkipButton.titleLabel.font = skipLabelFont;
     self.backwardSkipButton.verticalOffset = skipLabelFontSize;
-    self.backwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingBackward);
     
     self.forwardSkipButton.titleLabel.font = skipLabelFont;
     self.forwardSkipButton.verticalOffset = skipLabelFontSize;
-    self.forwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingForward);
     
     self.skipToLiveButton.titleLabel.font = skipLabelFont;
     self.skipToLiveButton.verticalOffset = skipLabelFontSize;

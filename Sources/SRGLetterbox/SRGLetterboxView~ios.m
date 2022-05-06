@@ -969,11 +969,13 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         return;
     }
     
+    // Avoid conflicts between skip buttons and gestures in the center area
+    CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
     CGPoint location = [gestureRecognizer locationInView:self];
-    if (location.x < CGRectGetMidX(self.bounds)) {
+    if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
         [self skipWithInterval:-SRGLetterboxBackwardSkipInterval];
     }
-    else {
+    else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
         [self skipWithInterval:SRGLetterboxForwardSkipInterval];
     }
     
