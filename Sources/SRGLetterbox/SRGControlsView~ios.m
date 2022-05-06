@@ -581,9 +581,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     self.backwardSkipButton.titleLabel.font = skipLabelFont;
     self.backwardSkipButton.verticalOffset = skipLabelFontSize;
+    self.backwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingBackward);
     
     self.forwardSkipButton.titleLabel.font = skipLabelFont;
     self.forwardSkipButton.verticalOffset = skipLabelFontSize;
+    self.forwardSkipButton.userInteractionEnabled = (transientState != SRGLetterboxViewTransientStateDoubleTapSkippingForward);
     
     self.skipToLiveButton.titleLabel.font = skipLabelFont;
     self.skipToLiveButton.verticalOffset = skipLabelFontSize;
@@ -742,17 +744,11 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)skipBackward:(id)sender
 {
-    if (self.parentLetterboxView.transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward) {
-        return;
-    }
     [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
 }
 
 - (void)skipForward:(id)sender
 {
-    if (self.parentLetterboxView.transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward) {
-        return;
-    }
     [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
 }
 
