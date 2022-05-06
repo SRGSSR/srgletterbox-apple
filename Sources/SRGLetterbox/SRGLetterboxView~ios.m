@@ -740,7 +740,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     if (animated) {
         [self layoutIfNeeded];
-        [UIView animateWithDuration:0.15 animations:^{
+        [UIView animateWithDuration:0.2 animations:^{
             animations();
             [self layoutIfNeeded];
         } completion:completion];
