@@ -351,7 +351,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutSkipToLiveButtonInView:(UIView *)view
 {
     SRGLabeledControlButton *skipToLiveButton = [[SRGLabeledControlButton alloc] init];
-    [skipToLiveButton setTitle:SRGLetterboxLocalizedString(@"Live", "Short live label displayed in the skipt to live button").uppercaseString forState:UIControlStateNormal];
+    [skipToLiveButton setTitle:SRGLetterboxLocalizedString(@"Live", "Short live label displayed in the skip to live button").uppercaseString forState:UIControlStateNormal];
     [skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     skipToLiveButton.tintColor = UIColor.whiteColor;
     skipToLiveButton.alpha = 0.f;

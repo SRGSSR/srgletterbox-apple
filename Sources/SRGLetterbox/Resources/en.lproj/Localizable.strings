@@ -21,6 +21,7 @@
 "Image credit: %@" = "Image credit: %@";
 
 /* Short label identifying a livestream. Display in uppercase.
+   Short live label displayed in the skip to live button
    Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live */
 "Live" = "Live";
 
