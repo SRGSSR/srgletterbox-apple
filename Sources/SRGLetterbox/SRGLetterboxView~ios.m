@@ -977,12 +977,12 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         [self skipWithInterval:SRGLetterboxForwardSkipInterval];
     }
     
-    // Disable the tap gesture for a while after the skip gesture has been used (2 * the delay is a good value). This ensures
+    // Disable the tap gesture for a while after the skip gesture has been used (3 * the delay is a good value). This ensures
     // that fast double taps keep the user interface in its current state, no matter whether the user tapped an even or odd
     // number of times.
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
     self.toggleUserInterfaceTapGestureDisabled = YES;
-    [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:2 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
+    [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:3 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
     
     [self setNeedsLayoutAnimated:YES];
 }
