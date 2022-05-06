@@ -7,6 +7,7 @@
 #import "SRGLetterboxBaseView.h"
 
 #import "SRGLetterboxView+Private.h"
+#import "SRGLetterboxBaseView+Subclassing.h"
 
 static void commonInit(SRGLetterboxBaseView *self);
 
@@ -107,10 +108,10 @@ static void commonInit(SRGLetterboxBaseView *self);
 - (void)voiceOverStatusDidChange
 {}
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {}
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {}
 
 #pragma mark Notifications

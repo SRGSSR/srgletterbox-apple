@@ -231,7 +231,7 @@
                                                         discoverabilityTitle:NSLocalizedString(@"Play / Pause", @"Play / Pause keyboard shortcut label")];
     [keyCommands addObject:togglePlayPauseCommand];
     
-    if ([self.letterboxController canSkipWithInterval:SRGLetterboxForwardSkipInterval]) {
+    if ([self.letterboxController canSkipForward]) {
         UIKeyCommand *skipForwardCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
                                                                modifierFlags:0
                                                                       action:@selector(skipForward:)
@@ -242,7 +242,7 @@
         [keyCommands addObject:skipForwardCommand];
     }
     
-    if ([self.letterboxController canSkipWithInterval:-SRGLetterboxBackwardSkipInterval]) {
+    if ([self.letterboxController canSkipBackward]) {
         UIKeyCommand *skipBackwardCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
                                                                 modifierFlags:0
                                                                        action:@selector(skipBackward:)
@@ -263,12 +263,12 @@
 
 - (void)skipForward:(UIKeyCommand *)command
 {
-    [self.letterboxController skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    [self.letterboxController skipForwardWithCompletionHandler:nil];
 }
 
 - (void)skipBackward:(UIKeyCommand *)command
 {
-    [self.letterboxController skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+    [self.letterboxController skipBackwardWithCompletionHandler:nil];
 }
 
 #pragma mark Data

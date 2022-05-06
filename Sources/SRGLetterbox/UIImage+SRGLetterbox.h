@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Available image sets.
  */
 typedef NS_ENUM(NSInteger, SRGImageSet) {
-    SRGImageSetNormal,
+    SRGImageSetNormal = 0,
     SRGImageSetLarge
 };
 

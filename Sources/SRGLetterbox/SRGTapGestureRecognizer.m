@@ -39,11 +39,17 @@ static void commonInit(SRGTapGestureRecognizer *self);
 {
     [super touchesBegan:touches withEvent:event];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.tapDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (self.state != UIGestureRecognizerStateRecognized) {
-            self.state = UIGestureRecognizerStateFailed;
-        }
-    });
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(failIfNotRecognized) object:nil];
+    [self performSelector:@selector(failIfNotRecognized) withObject:nil afterDelay:self.tapDelay inModes:@[ NSRunLoopCommonModes ]];
+}
+
+#pragma mark Helpers
+
+- (void)failIfNotRecognized
+{
+    if (self.state != UIGestureRecognizerStateRecognized) {
+        self.state = UIGestureRecognizerStateFailed;
+    }
 }
 
 @end

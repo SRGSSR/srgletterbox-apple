@@ -592,9 +592,9 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
 
 #if TARGET_OS_IOS
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     [self refresh];
 }

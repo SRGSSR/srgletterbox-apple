@@ -250,16 +250,16 @@
     [self updateLayout];
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     self.alpha = (self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     [self updateLayout];
 }

@@ -1510,6 +1510,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self canSkipFromTime:[self seekStartTime] withInterval:interval];
 }
 
+- (BOOL)canSkipBackward
+{
+    return [self canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+}
+
+- (BOOL)canSkipForward
+{
+    return [self canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+}
+
 - (BOOL)canStartOver
 {
     SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
@@ -1548,6 +1558,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL))completionHandler
 {
     return [self skipFromTime:[self seekStartTime] withInterval:interval completionHandler:completionHandler];
+}
+
+- (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    return [self skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:completionHandler];
+}
+
+- (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    return [self skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler

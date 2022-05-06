@@ -22,11 +22,6 @@ API_UNAVAILABLE(tvos)
 @protocol SRGControlsViewDelegate <NSObject>
 
 /**
- *  Method called when the user did tap on the controls view.
- */
-- (void)controlsViewDidTap:(SRGControlsView *)controlsView;
-
-/**
  *  Implement to return `YES` iff the full screen button must be shown.
  *
  *  @discussion If no delegate has been defined, the default behavior is `NO`.
