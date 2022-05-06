@@ -491,17 +491,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = SRGLetterboxMetadataSubtitle(media);
     nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
-    SRGImageWidth width = (UIScreen.mainScreen.scale > 1.f) ? SRGImageWidth480 : SRGImageWidth960;
+    static const SRGImageWidth kWidth = SRGImageWidth480;
     
     // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
     // center updates might deadlock).
     @weakify(self) @weakify(controller)
-    UIImage *artworkImage = [self cachedArtworkImageForController:controller withWidth:width completion:^{
+    UIImage *artworkImage = [self cachedArtworkImageForController:controller withWidth:kWidth completion:^{
         @strongify(self) @strongify(controller)
         [self updateNowPlayingInformationWithController:controller];
     }];
     if (artworkImage) {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(width, width) requestHandler:^UIImage * _Nonnull(CGSize size) {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(kWidth, kWidth) requestHandler:^UIImage * _Nonnull(CGSize size) {
             // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
             // the image we retrieved for this specific purpose.
             return artworkImage;
