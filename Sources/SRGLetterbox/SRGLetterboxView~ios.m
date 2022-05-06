@@ -179,6 +179,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skip:)];
     skipDoubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    skipDoubleTapGestureRecognizer.delaysTouchesEnded = NO;
     skipDoubleTapGestureRecognizer.tapDelay = kDoubleTapDelay;
     [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
     self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
