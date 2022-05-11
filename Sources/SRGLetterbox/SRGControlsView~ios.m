@@ -556,7 +556,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     BOOL isLarge = (self.imageSet == SRGImageSetLarge);
     
     CGFloat distanceToCenter = isLarge ? kDistanceToCenterLargeUnit : kDistanceToCenterNormalUnit;
-    CGFloat doubleTapOffset = isLarge ? 20.f : 10.f;
+    CGFloat doubleTapOffset = isLarge ? 30.f : 15.f;
     
     CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? doubleTapOffset : 0.f);
     CGFloat forwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? doubleTapOffset : 0.f);
