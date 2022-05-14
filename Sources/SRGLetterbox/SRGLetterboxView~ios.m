@@ -747,6 +747,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         completion(YES);
     }
     
+    self.controlsView.userInteractionEnabled = (self.transientState == SRGLetterboxViewTransientStateNone);
     [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
 }
 
