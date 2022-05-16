@@ -332,12 +332,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     
     MPSkipIntervalCommand *skipForwardIntervalCommand = commandCenter.skipForwardCommand;
     skipForwardIntervalCommand.enabled = NO;
-    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxForwardSkipInterval)];
+    skipForwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxSkipInterval)];
     [skipForwardIntervalCommand srg_addUniqueTarget:self action:@selector(skipForward:)];
     
     MPSkipIntervalCommand *skipBackwardIntervalCommand = commandCenter.skipBackwardCommand;
     skipBackwardIntervalCommand.enabled = NO;
-    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxBackwardSkipInterval)];
+    skipBackwardIntervalCommand.preferredIntervals = @[@(SRGLetterboxSkipInterval)];
     [skipBackwardIntervalCommand srg_addUniqueTarget:self action:@selector(skipBackward:)];
     
     MPRemoteCommand *previousTrackCommand = commandCenter.previousTrackCommand;

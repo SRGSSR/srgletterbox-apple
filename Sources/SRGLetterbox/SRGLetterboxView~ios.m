@@ -39,8 +39,6 @@
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
-static const NSTimeInterval kDoubleTapDelay = 0.25;
-
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -59,11 +57,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 @property (nonatomic, weak) NSLayoutConstraint *notificationHeightConstraint;
 
 @property (nonatomic, weak) SRGActivityGestureRecognizer *activityGestureRecognizer;
-@property (nonatomic, weak) UITapGestureRecognizer *toggleUserInterfaceTapGestureRecognizer;
-@property (nonatomic, weak) SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer;
+@property (nonatomic, weak) UITapGestureRecognizer *singleTapGestureRecognizer;
+@property (nonatomic, weak) SRGTapGestureRecognizer *doubleTapGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
-@property (nonatomic) BOOL toggleUserInterfaceTapGestureDisabled;
 
 @property (nonatomic, copy) NSString *notificationMessage;
 
@@ -172,17 +169,17 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
     ]];
     
-    UITapGestureRecognizer *toggleUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
-    toggleUserInterfaceTapGestureRecognizer.delegate = self;
-    [self addGestureRecognizer:toggleUserInterfaceTapGestureRecognizer];
-    self.toggleUserInterfaceTapGestureRecognizer = toggleUserInterfaceTapGestureRecognizer;
+    UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    singleTapGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:singleTapGestureRecognizer];
+    self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
-    SRGTapGestureRecognizer *skipDoubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skip:)];
-    skipDoubleTapGestureRecognizer.numberOfTapsRequired = 2;
-    skipDoubleTapGestureRecognizer.delaysTouchesEnded = NO;
-    skipDoubleTapGestureRecognizer.tapDelay = kDoubleTapDelay;
-    [self addGestureRecognizer:skipDoubleTapGestureRecognizer];
-    self.skipDoubleTapGestureRecognizer = skipDoubleTapGestureRecognizer;
+    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skipFromGestureRecognizer:)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    doubleTapGestureRecognizer.delaysTouchesEnded = NO;
+    doubleTapGestureRecognizer.tapDelay = 0.25;
+    [self addGestureRecognizer:doubleTapGestureRecognizer];
+    self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
     
     UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
@@ -740,7 +737,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     if (animated) {
         [self layoutIfNeeded];
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.2 delay:0. options:UIViewAnimationOptionAllowUserInteraction animations:^{
             animations();
             [self layoutIfNeeded];
         } completion:completion];
@@ -749,6 +746,10 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
         animations();
         completion(YES);
     }
+    
+    SRGMediaPlayerPlaybackState playbackState = self.controller.mediaPlayerController.playbackState;
+    self.doubleTapGestureRecognizer.enabled = (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    self.controlsView.userInteractionEnabled = (self.transientState == SRGLetterboxViewTransientStateNone);
     
     [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
 }
@@ -954,16 +955,23 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     [self restartInactivityTracker];
 }
 
-- (void)toggleUserInterface:(UITapGestureRecognizer *)gestureRecognizer
+- (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
-    if (self.toggleUserInterfaceTapGestureDisabled) {
-        return;
+    switch (self.transientState) {
+        case SRGLetterboxViewTransientStateDoubleTapSkippingBackward:
+        case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
+            [self skipFromGestureRecognizer:gestureRecognizer];
+            break;
+        }
+            
+        default: {
+            [self setTogglableUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
+            break;
+        }
     }
-    
-    [self setTogglableUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
 }
 
-- (void)skip:(UITapGestureRecognizer *)gestureRecognizer
+- (void)skipFromGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
@@ -973,25 +981,11 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
-        [self skipWithInterval:-SRGLetterboxBackwardSkipInterval];
+        [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
     else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
-        [self skipWithInterval:SRGLetterboxForwardSkipInterval];
+        [self skipWithInterval:SRGLetterboxSkipInterval];
     }
-    
-    // Disable the tap gesture for a while after the skip gesture has been used (3 * the delay is a good value). This ensures
-    // that fast double taps keep the user interface in its current state, no matter whether the user tapped an even or odd
-    // number of times.
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableToggleUserInterfaceTapGesture) object:nil];
-    self.toggleUserInterfaceTapGestureDisabled = YES;
-    [self performSelector:@selector(enableToggleUserInterfaceTapGesture) withObject:nil afterDelay:3 * kDoubleTapDelay inModes:@[ NSRunLoopCommonModes ]];
-    
-    [self setNeedsLayoutAnimated:YES];
-}
-
-- (void)enableToggleUserInterfaceTapGesture
-{
-    self.toggleUserInterfaceTapGestureDisabled = NO;
 }
 
 - (void)skipWithInterval:(NSTimeInterval)interval
@@ -1011,6 +1005,9 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
     
     [self startTransientState:transientState];
     [self.controller skipWithInterval:interval completionHandler:nil];
+    
+    // Update the UI immediately to display the updated skip interval
+    [self setNeedsLayoutAnimated:YES];
 }
 
 - (void)startTransientState:(SRGLetterboxViewTransientState)transientState
@@ -1061,7 +1058,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)toggleFullScreen:(id)sender
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
@@ -1112,7 +1109,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
@@ -1168,13 +1165,13 @@ static const NSTimeInterval kDoubleTapDelay = 0.25;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return gestureRecognizer == self.activityGestureRecognizer
-        || (gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer && otherGestureRecognizer == self.skipDoubleTapGestureRecognizer);
+        || (gestureRecognizer == self.singleTapGestureRecognizer && otherGestureRecognizer == self.doubleTapGestureRecognizer);
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (gestureRecognizer == self.toggleUserInterfaceTapGestureRecognizer) {
-        return otherGestureRecognizer == self.skipDoubleTapGestureRecognizer;
+    if (gestureRecognizer == self.singleTapGestureRecognizer) {
+        return otherGestureRecognizer == self.doubleTapGestureRecognizer;
     }
     else {
         return NO;

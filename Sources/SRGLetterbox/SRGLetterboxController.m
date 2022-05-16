@@ -1512,12 +1512,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)canSkipBackward
 {
-    return [self canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+    return [self canSkipWithInterval:-SRGLetterboxSkipInterval];
 }
 
 - (BOOL)canSkipForward
 {
-    return [self canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+    return [self canSkipWithInterval:SRGLetterboxSkipInterval];
 }
 
 - (BOOL)canStartOver
@@ -1562,12 +1562,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:completionHandler];
+    return [self skipWithInterval:-SRGLetterboxSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:completionHandler];
+    return [self skipWithInterval:SRGLetterboxSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -1686,11 +1686,21 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
-    if (interval <= 0) {
-        return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
-    }
-    else {
-        return CMTIME_COMPARE_INLINE(CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)), <=, CMTimeRangeGetEnd(mediaPlayerController.timeRange));
+    switch (streamType) {
+        case SRGMediaPlayerStreamTypeOnDemand: {
+            return CMTIME_COMPARE_INLINE(CMTimeAbsoluteValue(CMTimeSubtract(CMTimeRangeGetEnd(mediaPlayerController.timeRange), time)), >=, CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC));
+            break;
+        }
+        
+        case SRGMediaPlayerStreamTypeDVR: {
+            return CMTIME_COMPARE_INLINE(CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)), <=, CMTimeRangeGetEnd(mediaPlayerController.timeRange));
+            break;
+        }
+            
+        default: {
+            return NO;
+            break;
+        }
     }
 }
 
