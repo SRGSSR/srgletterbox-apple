@@ -650,7 +650,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Skip forward with `backwardSkipInterval`.
+ *  Skip forward with `SRGLetterboxSkipInterval`.
  *
  *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
  *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
@@ -660,7 +660,7 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
- *  Same as `-skipBackwardWithCompletionHandler:`, but with `forwardSkipInterval`.
+ *  Same as `-skipBackwardWithCompletionHandler:`, but with `SRGLetterboxSkipInterval`.
  */
 - (BOOL)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
