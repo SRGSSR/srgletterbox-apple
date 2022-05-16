@@ -1058,7 +1058,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (void)toggleFullScreen:(id)sender
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
@@ -1109,7 +1109,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
