@@ -306,7 +306,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     backwardSkipButton.alpha = 0.f;
     [backwardSkipButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
     backwardSkipButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ backward", @"Seek backward button label with a custom time range"),
-                                             [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
+                                             [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxSkipInterval]];
     [view addSubview:backwardSkipButton];
     self.backwardSkipButton = backwardSkipButton;
     
@@ -325,7 +325,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     forwardSkipButton.alpha = 0.f;
     [forwardSkipButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
     forwardSkipButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
-                                            [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
+                                            [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxSkipInterval]];
     [view addSubview:forwardSkipButton];
     self.forwardSkipButton = forwardSkipButton;
     
@@ -530,10 +530,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.durationLabel.alpha = ! hidden ? 1.f : 0.f;
         
         self.forwardSkipButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? 1.f : 0.f;
-        self.forwardSkipButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        self.forwardSkipButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxSkipInterval];
         
         self.backwardSkipButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? 1.f : 0.f;
-        self.backwardSkipButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+        self.backwardSkipButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxSkipInterval];
         
         self.startOverButton.alpha = ! hidden && ! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0 ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
@@ -598,20 +598,20 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     switch (transientState) {
         case SRGLetterboxViewTransientStateNone: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
             break;
         }
             
         case SRGLetterboxViewTransientStateDoubleTapSkippingBackward: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
             break;
         }
         
         case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
-            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxBackwardSkipInterval)] forState:UIControlStateNormal];
-            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxForwardSkipInterval)] forState:UIControlStateNormal];
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
             break;
         }
     }
@@ -750,12 +750,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)skipBackward:(id)sender
 {
-    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+    [self.controller skipWithInterval:-SRGLetterboxSkipInterval completionHandler:nil];
 }
 
 - (void)skipForward:(id)sender
 {
-    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    [self.controller skipWithInterval:SRGLetterboxSkipInterval completionHandler:nil];
 }
 
 - (void)startOver:(id)sender

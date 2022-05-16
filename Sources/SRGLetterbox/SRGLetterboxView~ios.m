@@ -978,10 +978,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
     CGPoint location = [gestureRecognizer locationInView:self];
     if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
-        [self skipWithInterval:-SRGLetterboxBackwardSkipInterval];
+        [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
     else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
-        [self skipWithInterval:SRGLetterboxForwardSkipInterval];
+        [self skipWithInterval:SRGLetterboxSkipInterval];
     }
 }
 

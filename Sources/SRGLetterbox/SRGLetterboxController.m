@@ -1512,12 +1512,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)canSkipBackward
 {
-    return [self canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+    return [self canSkipWithInterval:-SRGLetterboxSkipInterval];
 }
 
 - (BOOL)canSkipForward
 {
-    return [self canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+    return [self canSkipWithInterval:SRGLetterboxSkipInterval];
 }
 
 - (BOOL)canStartOver
@@ -1562,12 +1562,12 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:completionHandler];
+    return [self skipWithInterval:-SRGLetterboxSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
 {
-    return [self skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:completionHandler];
+    return [self skipWithInterval:SRGLetterboxSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler

@@ -102,10 +102,9 @@ static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
 static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Standard skip intervals.
+ *  Standard skip interval.
  */
-static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
-static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+static const NSTimeInterval SRGLetterboxSkipInterval = 10.;
 
 /**
  *  Special interval used to disable continuous playback.
@@ -616,12 +615,12 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)canSkipWithInterval:(NSTimeInterval)interval;
 
 /**
- *  Return `YES` iff the player can skip backward with `SRGLetterboxBackwardSkipInterval`.
+ *  Return `YES` iff the player can skip backward with `SRGLetterboxSkipInterval`.
  */
 - (BOOL)canSkipBackward;
 
 /**
- *  Return `YES` iff the player can skip forward with `SRGLetterboxForwardSkipInterval`.
+ *  Return `YES` iff the player can skip forward with `SRGLetterboxSkipInterval`.
  */
 - (BOOL)canSkipForward;
 
