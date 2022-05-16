@@ -56,7 +56,7 @@
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipWithInterval:-15.]);
-    XCTAssertFalse([self.controller canSkipWithInterval:15.]);
+    XCTAssertTrue([self.controller canSkipWithInterval:15.]);
     
     // Seek far enough from the media end
     [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
@@ -83,7 +83,7 @@
     [self waitForExpectationsWithTimeout:30. handler:nil];
     
     XCTAssertTrue([self.controller canSkipWithInterval:-15.]);
-    XCTAssertFalse([self.controller canSkipWithInterval:15.]);
+    XCTAssertTrue([self.controller canSkipWithInterval:15.]);
 }
 
 - (void)testLivestreamSkips
