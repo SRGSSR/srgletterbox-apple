@@ -1688,6 +1688,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
     switch (streamType) {
         case SRGMediaPlayerStreamTypeOnDemand: {
+            // Allow skipping to a position after the time range end, but only once, i.e. when skipping from a position within the time range.
+            // Since SRG Media Player has to seek a bit before the desired position to avoid issues when seeking to the end of a time range
+            // (0.1 second offset), we must introduce a similar tolerance when checking if the position is after the time range end or not.
             return CMTIME_COMPARE_INLINE(CMTimeAbsoluteValue(CMTimeSubtract(CMTimeRangeGetEnd(mediaPlayerController.timeRange), time)), >=, CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC));
             break;
         }
