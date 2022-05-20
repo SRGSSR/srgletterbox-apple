@@ -1510,6 +1510,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self canSkipFromTime:[self seekStartTime] withInterval:interval];
 }
 
+- (BOOL)canSkipBackward
+{
+    return [self canSkipWithInterval:-SRGLetterboxSkipInterval];
+}
+
+- (BOOL)canSkipForward
+{
+    return [self canSkipWithInterval:SRGLetterboxSkipInterval];
+}
+
 - (BOOL)canStartOver
 {
     SRGMediaPlayerController *mediaPlayerController = self.mediaPlayerController;
@@ -1548,6 +1558,16 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(void (^)(BOOL))completionHandler
 {
     return [self skipFromTime:[self seekStartTime] withInterval:interval completionHandler:completionHandler];
+}
+
+- (BOOL)skipBackwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    return [self skipWithInterval:-SRGLetterboxSkipInterval completionHandler:completionHandler];
+}
+
+- (BOOL)skipForwardWithCompletionHandler:(void (^)(BOOL finished))completionHandler
+{
+    return [self skipWithInterval:SRGLetterboxSkipInterval completionHandler:completionHandler];
 }
 
 - (BOOL)startOverWithCompletionHandler:(void (^)(BOOL finished))completionHandler
@@ -1595,6 +1615,18 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     return [self.mediaPlayerController streamDateForTime:time];
 }
 
+#pragma mark Image retrieval
+
+- (NSURL *)URLForImage:(SRGImage *)image withWidth:(SRGImageWidth)width scaling:(SRGImageScaling)scaling
+{
+    return [self.dataProvider URLForImage:image withWidth:width scaling:scaling];
+}
+
+- (NSURL *)URLForImage:(SRGImage *)image withSize:(SRGImageSize)size scaling:(SRGImageScaling)scaling
+{
+    return [self.dataProvider URLForImage:image withSize:size scaling:scaling];
+}
+
 #pragma mark Diagnostics
 
 - (SRGDiagnosticReport *)startPlaybackDiagnosticReportForService:(NSString *)service withName:(NSString *)name options:(NSDictionary<SRGResourceLoaderOption, id> **)pOptions
@@ -1624,8 +1656,10 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     [report startTimeMeasurementForKey:@"duration"];
     
     if (pOptions) {
-        *pOptions = @{ SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
-                       SRGResourceLoaderOptionDiagnosticReportNameKey : name };
+        *pOptions = @{
+            SRGResourceLoaderOptionDiagnosticServiceNameKey : service,
+            SRGResourceLoaderOptionDiagnosticReportNameKey : name
+        };
     }
     
     return report;
@@ -1652,11 +1686,24 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
     
     SRGMediaPlayerStreamType streamType = mediaPlayerController.streamType;
-    if (interval <= 0) {
-        return (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
-    }
-    else {
-        return CMTIME_COMPARE_INLINE(CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)), <=, CMTimeRangeGetEnd(mediaPlayerController.timeRange));
+    switch (streamType) {
+        case SRGMediaPlayerStreamTypeOnDemand: {
+            // Allow skipping to a position after the time range end, but only once, i.e. when skipping from a position within the time range.
+            // Since SRG Media Player has to seek a bit before the desired position to avoid issues when seeking to the end of a time range
+            // (0.1 second offset), we must introduce a similar tolerance when checking if the position is after the time range end or not.
+            return CMTIME_COMPARE_INLINE(CMTimeAbsoluteValue(CMTimeSubtract(CMTimeRangeGetEnd(mediaPlayerController.timeRange), time)), >=, CMTimeMakeWithSeconds(0.1, NSEC_PER_SEC));
+            break;
+        }
+        
+        case SRGMediaPlayerStreamTypeDVR: {
+            return CMTIME_COMPARE_INLINE(CMTimeAdd(time, CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)), <=, CMTimeRangeGetEnd(mediaPlayerController.timeRange));
+            break;
+        }
+            
+        default: {
+            return NO;
+            break;
+        }
     }
 }
 

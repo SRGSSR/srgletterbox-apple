@@ -11,6 +11,7 @@
 #import "SRGControlsBackgroundView.h"
 
 #import "UIImageView+SRGLetterbox.h"
+#import "UIView+SRGLetterbox.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 
 @interface SRGControlsBackgroundView ()
@@ -33,12 +34,12 @@
     self.userInteractionEnabled = NO;
     
     UIView *dimmingView = [[UIView alloc] init];
-    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.35f];
     dimmingView.userInteractionEnabled = NO;
     [self.contentView addSubview:dimmingView];
     self.dimmingView = dimmingView;
     
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [dimmingView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
         [dimmingView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
@@ -49,11 +50,11 @@
 
 #pragma mark Overrides
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
-    self.dimmingView.alpha = (! userInterfaceHidden || self.controller.loading) ? 1.f : 0.f;
+    self.dimmingView.alpha = ! userInterfaceHidden ? 1.f : 0.f;
     
     if (self.controller.loading) {
         self.loadingImageView.alpha = 1.f;
@@ -62,22 +63,26 @@
     else {
         self.loadingImageView.alpha = 0.f;
     }
+    
+    [self.loadingImageView srg_letterboxSetShadowHidden:! userInterfaceHidden];
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     // Lazily add view when needed, mitigating associated costs
     if (self.controller.loading && ! self.loadingImageView) {
         UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [loadingImageView startAnimating];
         [self.contentView addSubview:loadingImageView];
         self.loadingImageView = loadingImageView;
         
-        [NSLayoutConstraint activateConstraints:@[ [loadingImageView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
-                                                   [loadingImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor] ]];
+        loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [loadingImageView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
+            [loadingImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor]
+        ]];
     }
 }
 

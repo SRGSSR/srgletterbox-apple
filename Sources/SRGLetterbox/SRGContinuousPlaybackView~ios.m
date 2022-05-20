@@ -63,11 +63,11 @@
 - (void)layoutImageBackgroundInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:imageView];
     self.imageView = imageView;
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [imageView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [imageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -79,10 +79,10 @@
 - (void)creatDimmingViewInView:(UIView *)view
 {
     UIView *dimmingView = [[UIView alloc] init];
-    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     dimmingView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
     [view addSubview:dimmingView];
     
+    dimmingView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [dimmingView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [dimmingView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -94,13 +94,13 @@
 - (void)layoutMainLayoutInView:(UIView *)view
 {
     UIStackView *stackView = [[UIStackView alloc] init];
-    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     stackView.axis = UILayoutConstraintAxisVertical;
     stackView.alignment = UIStackViewAlignmentFill;
     stackView.distribution = UIStackViewDistributionFill;
     stackView.spacing = 2.f;
     [view addSubview:stackView];
     
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [stackView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [stackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -250,16 +250,16 @@
     [self updateLayout];
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     self.alpha = (self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     [self updateLayout];
 }
@@ -281,7 +281,7 @@
             self.subtitleLabel.text = nil;
         }
         
-        [self.imageView srg_requestImageForObject:upcomingMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        [self.imageView srg_requestImage:upcomingMedia.image withSize:SRGImageSizeLarge controller:self.controller];
         
         NSTimeInterval duration = [self.controller.continuousPlaybackTransitionEndDate timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate];
         float progress = (duration != 0) ? ([NSDate.date timeIntervalSinceDate:self.controller.continuousPlaybackTransitionStartDate]) / duration : 1.f;

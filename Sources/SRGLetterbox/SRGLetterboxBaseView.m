@@ -7,6 +7,7 @@
 #import "SRGLetterboxBaseView.h"
 
 #import "SRGLetterboxView+Private.h"
+#import "SRGLetterboxBaseView+Subclassing.h"
 
 static void commonInit(SRGLetterboxBaseView *self);
 
@@ -67,10 +68,12 @@ static void commonInit(SRGLetterboxBaseView *self);
         [self addSubview:self.contentView];
         
         self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
-        [NSLayoutConstraint activateConstraints:@[ [self.contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                                                   [self.contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                                                   [self.contentView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
-                                                   [self.contentView.rightAnchor constraintEqualToAnchor:self.rightAnchor] ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [self.contentView.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [self.contentView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+            [self.contentView.leftAnchor constraintEqualToAnchor:self.leftAnchor],
+            [self.contentView.rightAnchor constraintEqualToAnchor:self.rightAnchor]
+        ]];
         
         [self contentSizeCategoryDidChange];
         [self voiceOverStatusDidChange];
@@ -105,10 +108,10 @@ static void commonInit(SRGLetterboxBaseView *self);
 - (void)voiceOverStatusDidChange
 {}
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {}
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {}
 
 #pragma mark Notifications

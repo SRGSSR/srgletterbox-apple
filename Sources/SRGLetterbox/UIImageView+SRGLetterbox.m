@@ -56,15 +56,15 @@
 
 #pragma mark Standard image loading
 
-- (void)srg_requestImageForObject:(id<SRGImage>)object
-                        withScale:(SRGImageScale)scale
-                             type:(SRGImageType)type
-            unavailabilityHandler:(void (^)(void))unavailabilityHandler
+- (void)srg_requestImage:(SRGImage *)image
+                withSize:(SRGImageSize)size
+              controller:(SRGLetterboxController *)controller
+   unavailabilityHandler:(void (^)(void))unavailabilityHandler
 {
-    CGFloat width = SRGWidthForImageScale(scale);
+    SRGImageWidth width = SRGRecommendedImageWidth(size, SRGImageVariantDefault);
     UIImage *placeholderImage = [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
     
-    NSURL *URL = SRGLetterboxImageURL(object, width, type);
+    NSURL *URL = SRGLetterboxImageURL(image, size, controller);
     if (! URL) {
         if (unavailabilityHandler) {
             unavailabilityHandler();
@@ -104,11 +104,11 @@
     }
 }
 
-- (void)srg_requestImageForObject:(id<SRGImage>)object
-                        withScale:(SRGImageScale)scale
-                             type:(SRGImageType)type
+- (void)srg_requestImage:(SRGImage *)image
+                withSize:(SRGImageSize)size
+              controller:(SRGLetterboxController *)controller
 {
-    [self srg_requestImageForObject:object withScale:scale type:type unavailabilityHandler:nil];
+    [self srg_requestImage:image withSize:size controller:controller unavailabilityHandler:nil];
 }
 
 - (void)srg_resetImage

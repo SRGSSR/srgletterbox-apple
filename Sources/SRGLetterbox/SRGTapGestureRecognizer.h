@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXPORT const NSTimeInterval SRGTapGestureRecognizerDelay;
 
 /**
- *  Custom tap gesture recognizer with customizable delay between taps.
+ *  Custom tap gesture recognizer with customizable delay between taps. Mostly useful when the default
+ *  `UITapGestureRecognizer` does not fail fast enough.
  */
 @interface SRGTapGestureRecognizer : UITapGestureRecognizer
 

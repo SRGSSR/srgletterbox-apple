@@ -4,25 +4,18 @@
 //  License information is available from the LICENSE file.
 //
 
+#import "SRGLetterboxController.h"
+
 @import SRGDataProviderModel;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Available image scales.
- */
-typedef NS_ENUM(NSInteger, SRGImageScale) {
-    SRGImageScaleSmall,
-    SRGImageScaleMedium,
-    SRGImageScaleLarge
-};
-
-/**
  *  Available image sets.
  */
 typedef NS_ENUM(NSInteger, SRGImageSet) {
-    SRGImageSetNormal,
+    SRGImageSetNormal = 0,
     SRGImageSetLarge
 };
 
@@ -32,19 +25,15 @@ typedef NS_ENUM(NSInteger, SRGImageSet) {
 OBJC_EXPORT NSString *SRGLetterboxFilePathForImagePlaceholder(void);
 
 /**
- *  Return the image URL for an object and width, `nil` if the image URL is not found or invalid.
+ *  Return the image URL for an image and size, retrieved on behalf of the provided controller.
  */
-OBJC_EXPORT NSURL * _Nullable SRGLetterboxImageURL(id<SRGImage> _Nullable object, CGFloat width, SRGImageType type);
+OBJC_EXPORT NSURL * _Nullable SRGLetterboxImageURL(SRGImage * _Nullable image, SRGImageSize size, SRGLetterboxController * _Nullable controller);
 
 /**
- *  Return the (square) artwork image URL for an object, with a given dimension.
+ *  Return the (square) artwork image URL for an object with the specified width, retrieved on behalf of the provided
+ *  controller.
  */
-OBJC_EXPORT NSURL * _Nullable SRGLetterboxArtworkImageURL(id<SRGImage> _Nullable object, CGFloat dimension);
-
-/**
- *  Return the recommended width for a given image scale.
- */
-OBJC_EXPORT CGFloat SRGWidthForImageScale(SRGImageScale imageScale);
+OBJC_EXPORT NSURL * _Nullable SRGLetterboxArtworkImageURL(SRGImage * _Nullable image, SRGImageWidth width, SRGLetterboxController * _Nullable controller);
 
 /**
  *  Standard images from Letterbox bundle.

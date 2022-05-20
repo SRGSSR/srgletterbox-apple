@@ -7,14 +7,26 @@
 #import "UIImage+SRGLetterbox.h"
 
 #import "NSError+SRGLetterbox.h"
+#import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxError.h"
 
-static BOOL SRGLetterboxIsValidURL(NSURL * _Nullable URL)
+@import SRGDataProviderNetwork;
+
+static NSURL *SRGLetterboxSupportedURL(NSURL *URL)
 {
+    if (! URL) {
+        return nil;
+    }
+    
     // Fix for invalid images, incorrect Kids program images, and incorrect images for sports (RTS)
     // See https://srfmmz.atlassian.net/browse/AIS-15672
-    return URL && ! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
-    && ! [URL.absoluteString containsString:@".html"];
+    if (! [URL.absoluteString containsString:@"NOT_SPECIFIED.jpg"] && ! [URL.absoluteString containsString:@"rts.ch/video/jeunesse"]
+        && ! [URL.absoluteString containsString:@".html"]) {
+        return URL;
+    }
+    else {
+        return nil;
+    }
 }
 
 NSString *SRGLetterboxFilePathForImagePlaceholder(void)
@@ -26,62 +38,16 @@ NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 #endif
 }
 
-NSURL *SRGLetterboxImageURL(id<SRGImage> object, CGFloat width, SRGImageType type)
+NSURL *SRGLetterboxImageURL(SRGImage *image, SRGImageSize size, SRGLetterboxController *controller)
 {
-    if (! object) {
-        return nil;
-    }
-    
-    NSURL *URL = [object imageURLForDimension:SRGImageDimensionWidth withValue:width type:type];
-    if (! SRGLetterboxIsValidURL(URL)) {
-        return nil;
-    }
-    
-    return URL;
+    NSURL *URL = [controller URLForImage:image withSize:size scaling:SRGImageScalingDefault];
+    return SRGLetterboxSupportedURL(URL);
 }
 
-NSURL *SRGLetterboxArtworkImageURL(id<SRGImage> object, CGFloat dimension)
+NSURL *SRGLetterboxArtworkImageURL(SRGImage *image, SRGImageWidth width, SRGLetterboxController *controller)
 {
-    NSURL *imageURL = SRGLetterboxImageURL(object, dimension, SRGImageTypeDefault);
-    if (! imageURL) {
-        return nil;
-    }
-    
-    NSString *squareArtworkURLString = [NSString stringWithFormat:@"https://il.srgssr.ch/integrationlayer/2.0/image-scale-one-to-one/%@/scale/width/%.0f", imageURL.absoluteString, dimension];
-    return [NSURL URLWithString:squareArtworkURLString];
-}
-
-CGFloat SRGWidthForImageScale(SRGImageScale imageScale)
-{
-    static NSDictionary *s_widths;
-    static dispatch_once_t s_onceToken;
-    dispatch_once(&s_onceToken, ^{
-#if TARGET_OS_TV
-        s_widths = @{
-            @(SRGImageScaleSmall) : @400.f,
-            @(SRGImageScaleMedium) : @800.f,
-            @(SRGImageScaleLarge) : @1920.f
-        };
-#else
-        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-            s_widths = @{
-                @(SRGImageScaleSmall) : @200.f,
-                @(SRGImageScaleMedium) : @350.f,
-                @(SRGImageScaleLarge) : @500.f
-            };
-        }
-        else {
-            s_widths = @{
-                @(SRGImageScaleSmall) : @200.f,
-                @(SRGImageScaleMedium) : @500.f,
-                @(SRGImageScaleLarge) : @1000.f
-            };
-        }
-#endif
-    });
-    
-    // Use 2x maximum as scale. Sufficient for a good result without having to load very large images
-    return [s_widths[@(imageScale)] floatValue] * fminf(UIScreen.mainScreen.scale, 2.f);
+    NSURL *URL = [controller URLForImage:image withWidth:width scaling:SRGImageScalingAspectFitBlackSquare];
+    return SRGLetterboxSupportedURL(URL);
 }
 
 static CGFloat SRGImageAspectScaleFit(CGSize sourceSize, CGRect destRect)
@@ -215,11 +181,7 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
 
 + (UIImage *)srg_letterboxSkipToLiveImageInSet:(SRGImageSet)imageSet
 {
-    // TODO: Localization catalogs can be used for image localization, but for iOS 12 and above. Here we can preserve iOS 9
-    //       compatibility with a simple trick, as we have a single FR resource at the moment.
-    //       See https://developer.apple.com/videos/play/wwdc2018/404/
-    NSString *imageName = [NSBundle.mainBundle.preferredLocalizations.firstObject isEqualToString:@"fr"] ? @"back_live_fr" : @"back_live";
-    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:imageName] : [UIImage srg_letterboxImageNamed:[imageName stringByAppendingString:@"-large"]];
+    return (imageSet == SRGImageSetNormal) ? [UIImage srg_letterboxImageNamed:@"back_live"] : [UIImage srg_letterboxImageNamed:@"back_live-large"];
 }
 
 + (UIImage *)srg_letterboxImageForError:(NSError *)error

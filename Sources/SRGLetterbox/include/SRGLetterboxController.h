@@ -102,10 +102,9 @@ static const NSTimeInterval SRGLetterboxDefaultUpdateInterval = 30.;
 static const NSTimeInterval SRGLetterboxMinimumUpdateInterval = 10.;
 
 /**
- *  Standard skip intervals.
+ *  Standard skip interval.
  */
-static const NSTimeInterval SRGLetterboxBackwardSkipInterval = 10.;
-static const NSTimeInterval SRGLetterboxForwardSkipInterval = 30.;
+static const NSTimeInterval SRGLetterboxSkipInterval = 10.;
 
 /**
  *  Special interval used to disable continuous playback.
@@ -616,6 +615,16 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
 - (BOOL)canSkipWithInterval:(NSTimeInterval)interval;
 
 /**
+ *  Return `YES` iff the player can skip backward with `SRGLetterboxSkipInterval`.
+ */
+- (BOOL)canSkipBackward;
+
+/**
+ *  Return `YES` iff the player can skip forward with `SRGLetterboxSkipInterval`.
+ */
+- (BOOL)canSkipForward;
+
+/**
  *  Return `YES` iff the current program can be started over.
  *
  *  @discussion Returns `NO` for on-demand streams or if the program start is not reachable anymore.
@@ -639,6 +648,21 @@ static const NSTimeInterval SRGLetterboxContinuousPlaybackDisabled = DBL_MAX;
  *  @return `YES` iff skipping is possible.
  */
 - (BOOL)skipWithInterval:(NSTimeInterval)interval completionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Skip forward with `SRGLetterboxSkipInterval`.
+ *
+ *  @param completionHandler The completion handler called once skipping finishes. The block will only be called when
+ *                           skipping is possible, and with `finished` set to `YES` iff skipping was not interrupted.
+ *
+ *  @return `YES` iff skipping is possible.
+ */
+- (BOOL)skipBackwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
+
+/**
+ *  Same as `-skipBackwardWithCompletionHandler:`, but with `SRGLetterboxSkipInterval`.
+ */
+- (BOOL)skipForwardWithCompletionHandler:(nullable void (^)(BOOL finished))completionHandler;
 
 /**
  *  Start the current program over.

@@ -16,16 +16,6 @@
 
 @implementation SRGAccessibilityView
 
-#pragma mark Layout
-
-- (void)layoutContentView
-{
-    [super layoutContentView];
-    
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUserInterface:)];
-    [self.contentView addGestureRecognizer:tapGestureRecognizer];
-}
-
 #pragma mark Accessibility
 
 - (BOOL)isAccessibilityElement
@@ -63,13 +53,6 @@
 {
     CGRect frame = UIAccessibilityConvertFrameToScreenCoordinates(self.bounds, self);
     return CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
-}
-
-#pragma mark Actions
-
-- (void)toggleUserInterface:(id)sender
-{
-    [self.parentLetterboxView setTogglableUserInterfaceHidden:! self.parentLetterboxView.userInterfaceHidden animated:YES];
 }
 
 @end

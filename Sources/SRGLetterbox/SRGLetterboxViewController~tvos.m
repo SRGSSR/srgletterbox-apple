@@ -27,6 +27,7 @@
 @import libextobjc;
 @import MAKVONotificationCenter;
 @import SRGAppearance;
+@import SRGDataProviderNetwork;
 @import SRGMediaPlayer;
 @import YYWebImage;
 
@@ -131,7 +132,8 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
             if (upcomingMedia) {
                 SRGContinuousPlaybackViewController *continuousPlaybackViewController = [[SRGContinuousPlaybackViewController alloc] initWithMedia:controller.media
                                                                                                                                      upcomingMedia:upcomingMedia
-                                                                                                                                           endDate:controller.continuousPlaybackTransitionEndDate];
+                                                                                                                                           endDate:controller.continuousPlaybackTransitionEndDate
+                                                                                                                                        controller:controller];
                 continuousPlaybackViewController.delegate = self;
                 [self presentViewController:continuousPlaybackViewController animated:YES completion:nil];
             }
@@ -242,11 +244,11 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 - (void)layoutPlayerViewInView:(UIView *)view
 {
     UIView *playerView = self.playerViewController.view;
-    playerView.translatesAutoresizingMaskIntoConstraints = NO;
     playerView.backgroundColor = UIColor.clearColor;
     [view addSubview:playerView];
     [self addChildViewController:self.playerViewController];
     
+    playerView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [playerView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [playerView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -254,12 +256,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         [playerView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:playerView.bounds];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    UIImageView *imageView = [[UIImageView alloc] init];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view insertSubview:imageView belowSubview:playerView];
     self.imageView = imageView;
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [imageView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [imageView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -271,7 +273,6 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 - (void)layoutNotificationViewInView:(UIView *)view
 {
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     notificationView.alpha = 0.f;
     notificationView.layer.cornerRadius = 3.f;
     notificationView.layer.shadowOpacity = 0.5f;
@@ -279,6 +280,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     [view insertSubview:notificationView aboveSubview:self.playerViewController.view];
     self.notificationView = notificationView;
     
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [notificationView.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [notificationView.topAnchor constraintEqualToAnchor:view.topAnchor constant:20.f],
@@ -295,13 +297,13 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     loadingIndicatorView.alpha = 0.f;
     
     UIImageView *loadingImageView = [UIImageView srg_loadingImageViewWithTintColor:UIColor.whiteColor];
-    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
     loadingImageView.alpha = 0.f;
     loadingImageView.userInteractionEnabled = NO;
     [loadingImageView startAnimating];
     [view insertSubview:loadingImageView aboveSubview:playerView];
     self.loadingImageView = loadingImageView;
     
+    loadingImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [loadingImageView.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [loadingImageView.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]
@@ -311,12 +313,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 - (void)loadErrorViewInView:(UIView *)view
 {
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
-    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     errorView.controller = self.controller;
     errorView.userInteractionEnabled = NO;
     [view insertSubview:errorView aboveSubview:self.playerViewController.view];
     self.errorView = errorView;
     
+    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [errorView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [errorView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -328,12 +330,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 - (void)loadAvailabilityViewInView:(UIView *)view
 {
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
-    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     availabilityView.controller = self.controller;
     availabilityView.userInteractionEnabled = NO;
     [view insertSubview:availabilityView aboveSubview:self.playerViewController.view];
     self.availabilityView = availabilityView;
     
+    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [availabilityView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [availabilityView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
@@ -346,13 +348,13 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 {
     UIView *contentOverlayView = self.playerViewController.contentOverlayView;
     SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     liveLabel.layer.shadowRadius = 5.f;
     liveLabel.layer.shadowOpacity = 0.5f;
     liveLabel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
     [contentOverlayView addSubview:liveLabel];
     self.liveLabel = liveLabel;
     
+    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [liveLabel.trailingAnchor constraintEqualToAnchor:contentOverlayView.trailingAnchor constant:-100.f],
         [liveLabel.topAnchor constraintEqualToAnchor:contentOverlayView.topAnchor constant:50.f],
@@ -362,18 +364,22 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 #pragma mark Image retrieval
 
-- (UIImage *)imageForMetadata:(id<SRGImageMetadata>)metadata withCompletion:(void (^)(void))completion
+- (UIImage *)imageFromImage:(SRGImage *)fromImage withCompletion:(void (^)(void))completion
 {
     NSParameterAssert(completion);
     
+    static const SRGImageSize kImageSize = SRGImageSizeMedium;
+    static const SRGImageVariant kImageVariant = SRGImageVariantDefault;
+    
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    CGFloat width = SRGWidthForImageScale(SRGImageScaleMedium);
-    NSURL *imageURL = [metadata imageURLForDimension:SRGImageDimensionWidth withValue:width type:SRGImageTypeDefault];
-    NSString *key = [webImageManager cacheKeyForURL:imageURL];
-    UIImage *image = [webImageManager.cache getImageForKey:key];
-    if (image) {
-        return image;
+    NSURL *imageURL = [self.controller URLForImage:fromImage withSize:kImageSize scaling:kImageVariant];
+    if (imageURL) {
+        NSString *key = [webImageManager cacheKeyForURL:imageURL];
+        UIImage *image = [webImageManager.cache getImageForKey:key];
+        if (image) {
+            return image;
+        }
     }
     
     if (imageURL && ! self.imageOperations[imageURL]) {
@@ -388,6 +394,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         self.imageOperations[imageURL] = imageOperation;
     }
     
+    SRGImageWidth width = SRGRecommendedImageWidth(kImageSize, kImageVariant);
     return [UIImage srg_vectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
 }
 
@@ -395,12 +402,12 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 - (void)reloadImage
 {
-    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:self.controller.displayableMedia.image withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 - (void)reloadPlaceholderImage
 {
-    [self.imageView srg_requestImageForObject:nil withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:nil withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 #pragma mark Layout
@@ -690,7 +697,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         descriptionItem.value = SRGLetterboxMetadataDescription(media);
         descriptionItem.extendedLanguageTag = @"und";
         
-        UIImage *image = [self imageForMetadata:media withCompletion:^{
+        UIImage *image = [self imageFromImage:media.image withCompletion:^{
             [playerViewController reloadData];
         }];
         
@@ -716,7 +723,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
         titleItem.value = segment.title;
         titleItem.extendedLanguageTag = @"und";
         
-        UIImage *image = [self imageForMetadata:segment withCompletion:^{
+        UIImage *image = [self imageFromImage:segment.image withCompletion:^{
             [playerViewController reloadData];
         }];
         

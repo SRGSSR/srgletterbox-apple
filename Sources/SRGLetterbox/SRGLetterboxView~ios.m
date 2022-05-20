@@ -56,8 +56,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 @property (nonatomic, weak) NSLayoutConstraint *timelineToSelfBottomConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *notificationHeightConstraint;
 
-@property (nonatomic, weak) UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer;
-@property (nonatomic, weak) SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer;
+@property (nonatomic, weak) SRGActivityGestureRecognizer *activityGestureRecognizer;
+@property (nonatomic, weak) UITapGestureRecognizer *singleTapGestureRecognizer;
+@property (nonatomic, weak) SRGTapGestureRecognizer *doubleTapGestureRecognizer;
 
 @property (nonatomic) NSTimer *inactivityTimer;
 
@@ -65,6 +66,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 @property (nonatomic, getter=isUserInterfaceHidden) BOOL userInterfaceHidden;
 @property (nonatomic, getter=isUserInterfaceTogglable) BOOL userInterfaceTogglable;
+
+@property (nonatomic) SRGLetterboxViewTransientState transientState;
+@property (nonatomic) NSInteger doubleTapSkipCount;
 
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
 @property (nonatomic, getter=isFullScreenAnimationRunning) BOOL fullScreenAnimationRunning;
@@ -106,12 +110,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     self.contentView.backgroundColor = UIColor.blackColor;
     self.contentView.accessibilityIgnoresInvertColors = YES;
     
-    // Detect all touches on the player view. Other gesture recognizers can be added directly in the storyboard
-    // to detect other interactions earlier
+    // Detect all touches on the player view. Other gesture recognizers can be added to detect other interactions.
     SRGActivityGestureRecognizer *activityGestureRecognizer = [[SRGActivityGestureRecognizer alloc] initWithTarget:self
                                                                                                             action:@selector(resetInactivity:)];
     activityGestureRecognizer.delegate = self;
     [self.contentView addGestureRecognizer:activityGestureRecognizer];
+    self.activityGestureRecognizer = activityGestureRecognizer;
     
     [self layoutTimelineViewInView:self.contentView];
     [self layoutPlayerViewInView:self.contentView];
@@ -125,11 +129,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutTimelineViewInView:(UIView *)view
 {
     SRGLetterboxTimelineView *timelineView = [[SRGLetterboxTimelineView alloc] init];
-    timelineView.translatesAutoresizingMaskIntoConstraints = NO;
     timelineView.delegate = self;
     [view addSubview:timelineView];
     self.timelineView = timelineView;
     
+    timelineView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [timelineView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [timelineView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -142,22 +146,22 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutPlayerViewInView:(UIView *)view
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [view addSubview:imageView];
     self.imageView = imageView;
     
     UIView *playbackView = [[UIView alloc] init];
-    playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:playbackView];
     self.playbackView = playbackView;
     
+    playbackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [playbackView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [playbackView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [playbackView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
     ]];
     
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [imageView.topAnchor constraintEqualToAnchor:playbackView.topAnchor],
         [imageView.bottomAnchor constraintEqualToAnchor:playbackView.bottomAnchor],
@@ -165,27 +169,29 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [imageView.trailingAnchor constraintEqualToAnchor:playbackView.trailingAnchor]
     ]];
     
-    UITapGestureRecognizer *showUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showUserInterface:)];
-    showUserInterfaceTapGestureRecognizer.delegate = self;
-    [playbackView addGestureRecognizer:showUserInterfaceTapGestureRecognizer];
-    self.showUserInterfaceTapGestureRecognizer = showUserInterfaceTapGestureRecognizer;
+    UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    singleTapGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:singleTapGestureRecognizer];
+    self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
-    SRGTapGestureRecognizer *videoGravityTapChangeGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(changeVideoGravity:)];
-    videoGravityTapChangeGestureRecognizer.numberOfTapsRequired = 2;
-    videoGravityTapChangeGestureRecognizer.tapDelay = 0.3;
-    videoGravityTapChangeGestureRecognizer.delegate = self;
-    videoGravityTapChangeGestureRecognizer.enabled = NO;
-    [playbackView addGestureRecognizer:videoGravityTapChangeGestureRecognizer];
-    self.videoGravityTapChangeGestureRecognizer = videoGravityTapChangeGestureRecognizer;
+    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skipFromGestureRecognizer:)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    doubleTapGestureRecognizer.delaysTouchesEnded = NO;
+    doubleTapGestureRecognizer.tapDelay = 0.25;
+    [self addGestureRecognizer:doubleTapGestureRecognizer];
+    self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
+    
+    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
 }
 
 - (void)layoutControlsViewInView:(UIView *)view
 {
     SRGControlsBackgroundView *controlsBackgroundView = [[SRGControlsBackgroundView alloc] init];
-    controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:controlsBackgroundView];
     self.controlsBackgroundView = controlsBackgroundView;
     
+    controlsBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [controlsBackgroundView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [controlsBackgroundView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
@@ -193,11 +199,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     ]];
     
     SRGControlsView *controlsView = [[SRGControlsView alloc] init];
-    controlsView.translatesAutoresizingMaskIntoConstraints = NO;
     controlsView.delegate = self;
     [view addSubview:controlsView];
     self.controlsView = controlsView;
     
+    controlsView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints: @[
         [controlsView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [controlsView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
@@ -206,10 +212,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     SRGAccessibilityView *accessibilityView = [[SRGAccessibilityView alloc] init];
     accessibilityView.userInteractionEnabled = YES;
-    accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
     accessibilityView.accessibilityFrameView = controlsView;
     [view addSubview:accessibilityView];
     
+    accessibilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [accessibilityView.centerXAnchor constraintEqualToAnchor:controlsView.centerXAnchor],
         [accessibilityView.centerYAnchor constraintEqualToAnchor:controlsView.centerYAnchor],
@@ -221,10 +227,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutNotificationViewInView:(UIView *)view
 {
     SRGNotificationView *notificationView = [[SRGNotificationView alloc] init];
-    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:notificationView];
     self.notificationView = notificationView;
     
+    notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [notificationView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [notificationView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
@@ -239,10 +245,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutAvailabilityViewInView:(UIView *)view
 {
     SRGAvailabilityView *availabilityView = [[SRGAvailabilityView alloc] init];
-    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:availabilityView];
     self.availabilityView = availabilityView;
     
+    availabilityView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [availabilityView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [availabilityView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -254,11 +260,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutContinuousPlaybackViewInView:(UIView *)view
 {
     SRGContinuousPlaybackView *continuousPlaybackView = [[SRGContinuousPlaybackView alloc] init];
-    continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     continuousPlaybackView.delegate = self;
     [view addSubview:continuousPlaybackView];
     self.continuousPlaybackView = continuousPlaybackView;
     
+    continuousPlaybackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [continuousPlaybackView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [continuousPlaybackView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -270,10 +276,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)layoutErrorViewInView:(UIView *)view
 {
     SRGErrorView *errorView = [[SRGErrorView alloc] init];
-    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:errorView];
     self.errorView = errorView;
     
+    errorView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [errorView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
         [errorView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
@@ -323,6 +329,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [self showAirPlayNotificationMessageIfNeededAnimated:NO];
     }
     else {
+        self.transientState = SRGTransmissionNone;
+        self.doubleTapSkipCount = 0;
+        
         [self stopInactivityTracker];
         [self dismissNotificationViewAnimated:NO];
         
@@ -373,6 +382,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     // cleaned up when the controller changes.
     self.notificationMessage = nil;
     
+    [self resetTransientState];
     [self unregisterObservers];
     [self setNeedsLayoutAnimated:NO];
 }
@@ -397,10 +407,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         
         // Force autolayout to ensure the layout is immediately correct
         mediaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
-        [NSLayoutConstraint activateConstraints:@[ [mediaPlayerView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
-                                                   [mediaPlayerView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
-                                                   [mediaPlayerView.leftAnchor constraintEqualToAnchor:self.playbackView.leftAnchor],
-                                                   [mediaPlayerView.rightAnchor constraintEqualToAnchor:self.playbackView.rightAnchor] ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [mediaPlayerView.topAnchor constraintEqualToAnchor:self.playbackView.topAnchor],
+            [mediaPlayerView.bottomAnchor constraintEqualToAnchor:self.playbackView.bottomAnchor],
+            [mediaPlayerView.leftAnchor constraintEqualToAnchor:self.playbackView.leftAnchor],
+            [mediaPlayerView.rightAnchor constraintEqualToAnchor:self.playbackView.rightAnchor]
+        ]];
         
         [self.playbackView layoutIfNeeded];
     }
@@ -412,7 +424,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 {
     [super metadataDidChange];
     
-    [self.imageView srg_requestImageForObject:self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+    [self.imageView srg_requestImage:self.controller.displayableMedia.image withSize:SRGImageSizeLarge controller:self.controller];
 }
 
 - (void)playbackDidFail
@@ -422,12 +434,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self setNeedsLayoutAnimated:YES];
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    BOOL isFrameFullScreen = CGRectEqualToRect(self.window.bounds, self.frame);
-    self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
 }
 
 - (void)setNeedsLayoutAnimated:(BOOL)animated
@@ -462,9 +471,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self.delegate letterboxView:self toggleFullScreen:fullScreen animated:animated withCompletionHandler:^(BOOL finished) {
         if (finished) {
             self->_fullScreen = fullScreen;
-            
-            BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-            self.videoGravityTapChangeGestureRecognizer.enabled = self.fullScreen || isFrameFullScreen;
             [self setNeedsLayoutAnimated:animated];
         }
         self.fullScreenAnimationRunning = NO;
@@ -670,6 +676,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (void)setUserInterfaceHidden:(BOOL)hidden animated:(BOOL)animated togglable:(BOOL)togglable
 {
+    if (self.userInterfaceHidden != hidden) {
+        [self resetTransientState];
+    }
+    
     self.userInterfaceHidden = hidden;
     self.userInterfaceTogglable = togglable;
     
@@ -727,7 +737,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     if (animated) {
         [self layoutIfNeeded];
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.2 delay:0. options:UIViewAnimationOptionAllowUserInteraction animations:^{
             animations();
             [self layoutIfNeeded];
         } completion:completion];
@@ -737,7 +747,11 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         completion(YES);
     }
     
-    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    SRGMediaPlayerPlaybackState playbackState = self.controller.mediaPlayerController.playbackState;
+    self.doubleTapGestureRecognizer.enabled = (playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
+    self.controlsView.userInteractionEnabled = (self.transientState == SRGLetterboxViewTransientStateNone);
+    
+    [self recursivelyImmediatelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
 }
 
 - (BOOL)updateMainLayout
@@ -780,7 +794,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
-    [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden];
+    [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
     
     self.imageView.alpha = playerViewVisible ? 0.f : 1.f;
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
@@ -788,27 +802,31 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     return userInterfaceHidden;
 }
 
-- (void)recursivelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)recursivelyUpdateLayoutInView:(UIView *)view
+               forUserInterfaceHidden:(BOOL)userInterfaceHidden
+                       transientState:(SRGLetterboxViewTransientState)transientState
 {
     if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
-        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+        [baseView updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
     
     for (UIView *subview in view.subviews) {
-        [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+        [self recursivelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
 }
 
-- (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view forUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)recursivelyImmediatelyUpdateLayoutInView:(UIView *)view
+                          forUserInterfaceHidden:(BOOL)userInterfaceHidden
+                                  transientState:(SRGLetterboxViewTransientState)transientState
 {
     if ([view isKindOfClass:SRGLetterboxBaseView.class]) {
         SRGLetterboxBaseView *baseView = (SRGLetterboxBaseView *)view;
-        [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+        [baseView immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
     
     for (UIView *subview in view.subviews) {
-        [self recursivelyImmediatelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden];
+        [self recursivelyImmediatelyUpdateLayoutInView:subview forUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     }
 }
 
@@ -846,6 +864,23 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 {
     self.animations = animations;
     self.completion = completion;
+}
+
+- (BOOL)isFullScreenButtonHidden
+{
+    if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
+        return YES;
+    }
+    
+    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
+        return YES;
+    }
+    
+    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
+        return NO;
+    }
+    
+    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
 }
 
 #pragma mark Timer management
@@ -890,7 +925,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self setNeedsLayoutAnimated:animated];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, notificationMessage);
     
-    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5.];
+    [self performSelector:@selector(dismissNotificationViewAutomatically) withObject:nil afterDelay:5. inModes:@[ NSRunLoopCommonModes ]];
 }
 
 - (void)dismissNotificationViewAutomatically
@@ -915,36 +950,115 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark Gesture recognizers
 
-- (void)resetInactivity:(UIGestureRecognizer *)gestureRecognizer
+- (void)resetInactivity:(SRGActivityGestureRecognizer *)gestureRecognizer
 {
     [self restartInactivityTracker];
 }
 
-- (void)showUserInterface:(UIGestureRecognizer *)gestureRecognizer
+- (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
-    [self setTogglableUserInterfaceHidden:NO animated:YES];
+    switch (self.transientState) {
+        case SRGLetterboxViewTransientStateDoubleTapSkippingBackward:
+        case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
+            [self skipFromGestureRecognizer:gestureRecognizer];
+            break;
+        }
+            
+        default: {
+            [self setTogglableUserInterfaceHidden:! self.userInterfaceHidden animated:YES];
+            break;
+        }
+    }
 }
 
-- (void)changeVideoGravity:(UIGestureRecognizer *)gestureRecognizer
+- (void)skipFromGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
-    @weakify(self)
-    [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
-        @strongify(self)
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-        if ([playerLayer.videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]) {
-            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
+        return;
+    }
+    
+    // Avoid conflicts between skip buttons and gestures in the center area
+    CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
+    CGPoint location = [gestureRecognizer locationInView:self];
+    if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
+        [self skipWithInterval:-SRGLetterboxSkipInterval];
+    }
+    else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
+        [self skipWithInterval:SRGLetterboxSkipInterval];
+    }
+}
+
+- (void)skipWithInterval:(NSTimeInterval)interval
+{
+    if (! [self.controller canSkipWithInterval:interval]) {
+        return;
+    }
+    
+    // The transient state must be set before the skip is triggered so that the user interface state is up-to-date
+    SRGLetterboxViewTransientState transientState = (interval >= 0) ? SRGLetterboxViewTransientStateDoubleTapSkippingForward : SRGLetterboxViewTransientStateDoubleTapSkippingBackward;
+    if (self.transientState == transientState) {
+        ++self.doubleTapSkipCount;
+    }
+    else {
+        self.doubleTapSkipCount = 1;
+    }
+    
+    [self startTransientState:transientState];
+    [self.controller skipWithInterval:interval completionHandler:nil];
+    
+    // Update the UI immediately to display the updated skip interval
+    [self setNeedsLayoutAnimated:YES];
+}
+
+- (void)startTransientState:(SRGLetterboxViewTransientState)transientState
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
+    self.transientState = transientState;
+    [self performSelector:@selector(completeTransientState) withObject:nil afterDelay:1. inModes:@[ NSRunLoopCommonModes ]];
+}
+
+- (void)completeTransientState
+{
+    self.transientState = SRGLetterboxViewTransientStateNone;
+    self.doubleTapSkipCount = 0;
+    [self setNeedsLayoutAnimated:YES];
+}
+
+- (void)resetTransientState
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(completeTransientState) object:nil];
+    self.transientState = SRGLetterboxViewTransientStateNone;
+    self.doubleTapSkipCount = 0;
+}
+
+- (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        BOOL isZooming = (gestureRecognizer.scale > 1.f);
+        
+        if (self.isFullScreen) {
+            AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+            AVLayerVideoGravity videoGravity = isZooming ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
+            if (playerLayer && playerLayer.videoGravity != videoGravity) {
+                [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+                    playerLayer.videoGravity = videoGravity;
+                }];
+            }
+            else if (! isZooming && ! [self isFullScreenButtonHidden]) {
+                [self setFullScreen:NO animated:YES];
+            }
         }
-        else {
-            playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        else if (isZooming && ! [self isFullScreenButtonHidden]) {
+            [self setFullScreen:YES animated:YES];
         }
-    }];
+    }
 }
 
 #pragma mark Actions
 
 - (void)toggleFullScreen:(id)sender
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
@@ -988,30 +1102,14 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark SRGControlsViewDelegate protocol
 
-- (void)controlsViewDidTap:(SRGControlsView *)controlsView
-{
-    // Defer execution to avoid conflicts with the activity gesture
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setTogglableUserInterfaceHidden:YES animated:YES];
-    });
-}
-
 - (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
-    if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
-        return YES;
-    }
-    
-    if (! [self.delegate respondsToSelector:@selector(letterboxViewShouldDisplayFullScreenToggleButton:)]) {
-        return NO;
-    }
-    
-    return ! [self.delegate letterboxViewShouldDisplayFullScreenToggleButton:self];
+    return [self isFullScreenButtonHidden];
 }
 
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView
 {
-    [self setFullScreen:!self.isFullScreen animated:YES];
+    [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
@@ -1031,7 +1129,8 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     // Provide immediate updates during seeks only, otherwise rely on usual image updates (`-metadataDidChange:`)
     if (self.controller.playbackState == SRGMediaPlayerPlaybackStateSeeking) {
-        [self.imageView srg_requestImageForObject:subdivision ?: self.controller.displayableMedia withScale:SRGImageScaleLarge type:SRGImageTypeDefault];
+        id<SRGMediaMetadata> mediaMetadata = subdivision ?: self.controller.displayableMedia;
+        [self.imageView srg_requestImage:mediaMetadata.image withSize:SRGImageSizeLarge controller:self.controller];
     }
 }
 
@@ -1065,13 +1164,14 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return gestureRecognizer == self.activityGestureRecognizer
+        || (gestureRecognizer == self.singleTapGestureRecognizer && otherGestureRecognizer == self.doubleTapGestureRecognizer);
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if (gestureRecognizer == self.videoGravityTapChangeGestureRecognizer) {
-        return [otherGestureRecognizer isKindOfClass:SRGActivityGestureRecognizer.class] || otherGestureRecognizer == self.showUserInterfaceTapGestureRecognizer;
+    if (gestureRecognizer == self.singleTapGestureRecognizer) {
+        return otherGestureRecognizer == self.doubleTapGestureRecognizer;
     }
     else {
         return NO;

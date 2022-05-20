@@ -85,6 +85,16 @@ OBJC_EXPORT NSString * const SRGLetterboxSocialCountViewWillIncreaseNotification
  */
 @property (nonatomic, readonly, nullable) SRGMedia *displayableMedia;
 
+/**
+ *  Return the URL for an image having a given width and scaled by applying the specified behavior.
+ */
+- (nullable NSURL *)URLForImage:(nullable SRGImage *)image withWidth:(SRGImageWidth)width scaling:(SRGImageScaling)scaling;
+
+/**
+ *  Return the URL for an image having a given semantic size and scaled by applying the specified behavior.
+ */
+- (nullable NSURL *)URLForImage:(nullable SRGImage *)image withSize:(SRGImageSize)size scaling:(SRGImageScaling)scaling;
+
 @end
 
 NS_ASSUME_NONNULL_END

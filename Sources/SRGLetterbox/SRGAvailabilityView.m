@@ -34,7 +34,6 @@
     self.contentView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
         
     SRGPaddedLabel *messageLabel = [[SRGPaddedLabel alloc] init];
-    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     messageLabel.textColor = UIColor.whiteColor;
     messageLabel.textAlignment = NSTextAlignmentCenter;
     messageLabel.adjustsFontSizeToFitWidth = YES;
@@ -53,6 +52,7 @@
     [self.contentView addSubview:messageLabel];
     self.messageLabel = messageLabel;
     
+    messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [messageLabel.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
         [messageLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.contentView.leadingAnchor constant:8.f],
@@ -80,17 +80,17 @@
 
 #if TARGET_OS_IOS
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     NSError *error = self.controller.error;
     self.alpha = ([error.domain isEqualToString:SRGLetterboxErrorDomain] && error.code == SRGLetterboxErrorCodeNotAvailable) ? 1.f : 0.f;
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     [self updateLayout];
 }
@@ -116,11 +116,11 @@
         
         // Lazily add heavy countdown view when required
         if (! self.countdownView.superview) {
-            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:self.contentView.bounds];
-            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
+            SRGCountdownView *countdownView = [[SRGCountdownView alloc] initWithTargetDate:targetDate frame:CGRectZero];
             [self.contentView addSubview:countdownView];
             self.countdownView = countdownView;
             
+            countdownView.translatesAutoresizingMaskIntoConstraints = NO;
             [NSLayoutConstraint activateConstraints:@[ [countdownView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
                                                        [countdownView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
                                                        [countdownView.leftAnchor constraintEqualToAnchor:self.contentView.leftAnchor],

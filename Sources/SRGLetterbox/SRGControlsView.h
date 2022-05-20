@@ -22,11 +22,6 @@ API_UNAVAILABLE(tvos)
 @protocol SRGControlsViewDelegate <NSObject>
 
 /**
- *  Method called when the user did tap on the controls view.
- */
-- (void)controlsViewDidTap:(SRGControlsView *)controlsView;
-
-/**
  *  Implement to return `YES` iff the full screen button must be shown.
  *
  *  @discussion If no delegate has been defined, the default behavior is `NO`.
@@ -88,6 +83,11 @@ API_UNAVAILABLE(tvos)
  *  @discussion Style changes might be applied at a later time.
  */
 @property (nonatomic) SRGMediaPlayerUserInterfaceStyle userInterfaceStyle;
+
+/**
+ *  The radius in which forward and backward skip controls are located.
+ */
+@property (nonatomic, readonly) CGFloat skipControlsRadius;
 
 /**
  *  The time corresponding to the current slider position.

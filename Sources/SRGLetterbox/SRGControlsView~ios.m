@@ -16,6 +16,7 @@
 #import "SRGControlButton.h"
 #import "SRGControlWrapperView.h"
 #import "SRGFullScreenButton.h"
+#import "SRGLabeledControlButton.h"
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxService.h"
@@ -24,6 +25,13 @@
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
 #import "UIImage+SRGLetterbox.h"
+#import "UIView+SRGLetterbox.h"
+
+static const CGFloat kNormalIconDimension = 48.f;
+static const CGFloat kLargeIconDimension = 64.f;
+
+static const CGFloat kDistanceToCenterNormalUnit = 64.f;
+static const CGFloat kDistanceToCenterLargeUnit = 100.f;
 
 @import libextobjc;
 @import MAKVONotificationCenter;
@@ -46,10 +54,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) UIView *userInterfaceToggleActiveView;
 
 @property (nonatomic, weak) SRGLetterboxPlaybackButton *playbackButton;
-@property (nonatomic, weak) SRGControlButton *backwardSeekButton;
-@property (nonatomic, weak) SRGControlButton *forwardSeekButton;
+@property (nonatomic, weak) SRGLabeledControlButton *backwardSkipButton;
+@property (nonatomic, weak) SRGLabeledControlButton *forwardSkipButton;
 @property (nonatomic, weak) SRGControlButton *startOverButton;
-@property (nonatomic, weak) SRGControlButton *skipToLiveButton;
+@property (nonatomic, weak) SRGLabeledControlButton *skipToLiveButton;
 
 @property (nonatomic, weak) UIStackView *bottomStackView;
 @property (nonatomic, weak) SRGViewModeButton *viewModeButton;
@@ -64,10 +72,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 @property (nonatomic, weak) SRGLiveLabel *liveLabel;
 @property (nonatomic, weak) SRGControlWrapperView *liveLabelWrapperView;
 
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingBackwardToPlaybackConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToForwardConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingForwardToSkipToLiveConstraint;
-@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingStartOverToBackwardConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingStartOverToPlaybackConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingSkipBackwardToPlaybackConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToSkipForwardConstraint;
+@property (nonatomic, weak) NSLayoutConstraint *horizontalSpacingPlaybackToSkipToLiveConstraint;
 
 @property (nonatomic, weak) SRGFullScreenButton *fullScreenButton;
 
@@ -100,27 +108,24 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutUserInterfaceToggleActiveViewInView:(UIView *)view
 {
     UIView *userInterfaceToggleActiveView = [[UIView alloc] init];
-    userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:userInterfaceToggleActiveView];
     self.userInterfaceToggleActiveView = userInterfaceToggleActiveView;
     
+    userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [userInterfaceToggleActiveView.topAnchor constraintEqualToAnchor:view.topAnchor],
         [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
         [userInterfaceToggleActiveView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
     ]];
-    
-    UITapGestureRecognizer *hideUserInterfaceTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideUserInterface:)];
-    [userInterfaceToggleActiveView addGestureRecognizer:hideUserInterfaceTapGestureRecognizer];
 }
 
 - (void)layoutBottomControlsInView:(UIView *)view
 {
     UIStackView *bottomStackView = [[UIStackView alloc] init];
-    bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:bottomStackView];
     self.bottomStackView = bottomStackView;
     
+    bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [bottomStackView.topAnchor constraintEqualToAnchor:self.userInterfaceToggleActiveView.bottomAnchor],
         [[bottomStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:750],
@@ -188,12 +193,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [stackView addArrangedSubview:timeSliderWrapperView];
     
     SRGLetterboxTimeSlider *timeSlider = [[SRGLetterboxTimeSlider alloc] init];
-    timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     timeSlider.alpha = 0.f;
     timeSlider.delegate = self;
     [timeSliderWrapperView addSubview:timeSlider];
     self.timeSlider = timeSlider;
     
+    timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f],
         [timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f],
@@ -210,13 +215,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.durationLabelWrapperView = durationLabelWrapperView;
     
     UILabel *durationLabel = [[UILabel alloc] init];
-    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     durationLabel.textColor = UIColor.whiteColor;
     durationLabel.font = [SRGFont fontWithFamily:SRGFontFamilyText weight:SRGFontWeightRegular fixedSize:14.f];
     durationLabel.textAlignment = NSTextAlignmentCenter;
     [durationLabelWrapperView addSubview:durationLabel];
     self.durationLabel = durationLabel;
     
+    durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [durationLabel.leadingAnchor constraintEqualToAnchor:durationLabelWrapperView.leadingAnchor constant:11.f],
         [durationLabel.trailingAnchor constraintEqualToAnchor:durationLabelWrapperView.trailingAnchor constant:-11.f],
@@ -232,10 +237,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.liveLabelWrapperView = liveLabelWrapperView;
     
     SRGLiveLabel *liveLabel = [[SRGLiveLabel alloc] init];
-    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [liveLabelWrapperView addSubview:liveLabel];
     self.liveLabel = liveLabel;
     
+    liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [liveLabel.leadingAnchor constraintEqualToAnchor:liveLabelWrapperView.leadingAnchor constant:11.f],
         [liveLabel.trailingAnchor constraintEqualToAnchor:liveLabelWrapperView.trailingAnchor constant:-11.f],
@@ -273,8 +278,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutCenterControlsInView:(UIView *)view
 {
     [self layoutPlaybackButtonInView:view];
-    [self layoutBackwardSeekButtonInView:view];
-    [self layoutForwardSeekButtonInView:view];
+    [self layoutBackwardSkipButtonInView:view];
+    [self layoutForwardSkipButtonInView:view];
     [self layoutStartOverButtonInView:view];
     [self layoutSkipToLiveButtonInView:view];
 }
@@ -282,59 +287,58 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)layoutPlaybackButtonInView:(UIView *)view
 {
     SRGLetterboxPlaybackButton *playbackButton = [[SRGLetterboxPlaybackButton alloc] init];
-    playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
     playbackButton.tintColor = UIColor.whiteColor;
     [view addSubview:playbackButton];
     self.playbackButton = playbackButton;
     
+    playbackButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [playbackButton.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [playbackButton.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]
     ]];
 }
 
-- (void)layoutBackwardSeekButtonInView:(UIView *)view
+- (void)layoutBackwardSkipButtonInView:(UIView *)view
 {
-    SRGControlButton *backwardSeekButton = [[SRGControlButton alloc] init];
-    backwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [backwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
-    backwardSeekButton.tintColor = UIColor.whiteColor;
-    backwardSeekButton.alpha = 0.f;
-    [backwardSeekButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
-    backwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ backward", @"Seek backward button label with a custom time range"),
-                                             [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxBackwardSkipInterval]];
-    [view addSubview:backwardSeekButton];
-    self.backwardSeekButton = backwardSeekButton;
+    SRGLabeledControlButton *backwardSkipButton = [[SRGLabeledControlButton alloc] init];
+    [backwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"backward"] forState:UIControlStateNormal];
+    backwardSkipButton.tintColor = UIColor.whiteColor;
+    backwardSkipButton.alpha = 0.f;
+    [backwardSkipButton addTarget:self action:@selector(skipBackward:) forControlEvents:UIControlEventTouchUpInside];
+    backwardSkipButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ backward", @"Seek backward button label with a custom time range"),
+                                             [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxSkipInterval]];
+    [view addSubview:backwardSkipButton];
+    self.backwardSkipButton = backwardSkipButton;
     
+    backwardSkipButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [backwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
-        self.horizontalSpacingBackwardToPlaybackConstraint = [self.playbackButton.leadingAnchor constraintEqualToAnchor:backwardSeekButton.trailingAnchor],
+        [backwardSkipButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingSkipBackwardToPlaybackConstraint = [backwardSkipButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor],
     ]];
 }
 
-- (void)layoutForwardSeekButtonInView:(UIView *)view
+- (void)layoutForwardSkipButtonInView:(UIView *)view
 {
-    SRGControlButton *forwardSeekButton = [[SRGControlButton alloc] init];
-    forwardSeekButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [forwardSeekButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
-    forwardSeekButton.tintColor = UIColor.whiteColor;
-    forwardSeekButton.alpha = 0.f;
-    [forwardSeekButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
-    forwardSeekButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
-                                            [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxForwardSkipInterval]];
-    [view addSubview:forwardSeekButton];
-    self.forwardSeekButton = forwardSeekButton;
+    SRGLabeledControlButton *forwardSkipButton = [[SRGLabeledControlButton alloc] init];
+    [forwardSkipButton setImage:[UIImage srg_letterboxImageNamed:@"forward"] forState:UIControlStateNormal];
+    forwardSkipButton.tintColor = UIColor.whiteColor;
+    forwardSkipButton.alpha = 0.f;
+    [forwardSkipButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
+    forwardSkipButton.accessibilityLabel = [NSString stringWithFormat:SRGLetterboxAccessibilityLocalizedString(@"%@ forward", @"Seek forward button label with a custom time range"),
+                                            [SRGControlsViewSkipIntervalAccessibilityFormatter() stringFromTimeInterval:SRGLetterboxSkipInterval]];
+    [view addSubview:forwardSkipButton];
+    self.forwardSkipButton = forwardSkipButton;
     
+    forwardSkipButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [forwardSeekButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
-        self.horizontalSpacingPlaybackToForwardConstraint = [forwardSeekButton.leadingAnchor constraintEqualToAnchor:self.playbackButton.trailingAnchor]
+        [forwardSkipButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingPlaybackToSkipForwardConstraint = [forwardSkipButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor]
     ]];
 }
 
 - (void)layoutStartOverButtonInView:(UIView *)view
 {
     SRGControlButton *startOverButton = [[SRGControlButton alloc] init];
-    startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     startOverButton.tintColor = UIColor.whiteColor;
     startOverButton.alpha = 0.f;
@@ -343,16 +347,17 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:startOverButton];
     self.startOverButton = startOverButton;
     
+    startOverButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [startOverButton.centerYAnchor constraintEqualToAnchor:self.backwardSeekButton.centerYAnchor],
-        self.horizontalSpacingStartOverToBackwardConstraint = [self.backwardSeekButton.leadingAnchor constraintEqualToAnchor:startOverButton.trailingAnchor]
+        [startOverButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingStartOverToPlaybackConstraint = [startOverButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor]
     ]];
 }
 
 - (void)layoutSkipToLiveButtonInView:(UIView *)view
 {
-    SRGControlButton *skipToLiveButton = [[SRGControlButton alloc] init];
-    skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
+    SRGLabeledControlButton *skipToLiveButton = [[SRGLabeledControlButton alloc] init];
+    [skipToLiveButton setTitle:SRGLetterboxLocalizedString(@"Live", "Short live label displayed in the skip to live button").uppercaseString forState:UIControlStateNormal];
     [skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:SRGImageSetNormal] forState:UIControlStateNormal];
     skipToLiveButton.tintColor = UIColor.whiteColor;
     skipToLiveButton.alpha = 0.f;
@@ -361,9 +366,10 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [view addSubview:skipToLiveButton];
     self.skipToLiveButton = skipToLiveButton;
     
+    skipToLiveButton.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.forwardSeekButton.centerYAnchor],
-        self.horizontalSpacingForwardToSkipToLiveConstraint = [skipToLiveButton.leadingAnchor constraintEqualToAnchor:self.forwardSeekButton.trailingAnchor],
+        [skipToLiveButton.centerYAnchor constraintEqualToAnchor:self.playbackButton.centerYAnchor],
+        self.horizontalSpacingPlaybackToSkipToLiveConstraint = [skipToLiveButton.centerXAnchor constraintEqualToAnchor:self.playbackButton.centerXAnchor],
     ]];
 }
 
@@ -395,6 +401,18 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     return self.timeSlider.live;
 }
 
+- (SRGImageSet)imageSet
+{
+    // The reference frame for controls is given by the available width (as occupied by the bottom stack view) as
+    // well as the whole parent Letterbox height. Critical size is aligned on iPhone Plus devices in landscape.
+    return (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
+}
+
+- (CGFloat)skipControlsRadius
+{
+    return self.imageSet == SRGImageSetLarge ? kDistanceToCenterLargeUnit + kLargeIconDimension / 2.f : kDistanceToCenterNormalUnit + kNormalIconDimension / 2.f;
+}
+
 #pragma mark Overrides
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -406,7 +424,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         // while its position is determined by a phantom button inserted in the bottom stack view.
         SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
         if (parentLetterboxView) {
-            SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] initWithFrame:CGRectZero];
+            SRGFullScreenButton *fullScreenButton = [[SRGFullScreenButton alloc] init];
             fullScreenButton.tintColor = UIColor.whiteColor;
             fullScreenButton.selected = parentLetterboxView.fullScreen;
             [fullScreenButton addTarget:self action:@selector(toggleFullScreen:) forControlEvents:UIControlEventTouchUpInside];
@@ -414,10 +432,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
             self.fullScreenButton = fullScreenButton;
             
             fullScreenButton.translatesAutoresizingMaskIntoConstraints = NO;
-            [NSLayoutConstraint activateConstraints:@[ [fullScreenButton.topAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.topAnchor],
-                                                       [fullScreenButton.bottomAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.bottomAnchor],
-                                                       [fullScreenButton.leftAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.leftAnchor],
-                                                       [fullScreenButton.rightAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.rightAnchor] ]];
+            [NSLayoutConstraint activateConstraints:@[
+                [fullScreenButton.topAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.topAnchor],
+                [fullScreenButton.bottomAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.bottomAnchor],
+                [fullScreenButton.leftAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.leftAnchor],
+                [fullScreenButton.rightAnchor constraintEqualToAnchor:self.fullScreenPhantomButton.rightAnchor]
+            ]];
         }
     }
     else {
@@ -481,60 +501,78 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self refresh];
 }
 
-- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)updateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden];
+    [super updateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
-    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate) ? 1.f : 0.f;
+    BOOL hidden = userInterfaceHidden || blockingReason == SRGBlockingReasonStartDate || blockingReason == SRGBlockingReasonEndDate;
+    self.alpha = (hidden && transientState == SRGLetterboxViewTransientStateNone) ? 0.f : 1.f;
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     if (playbackState == SRGMediaPlayerPlaybackStateIdle
-        || playbackState == SRGMediaPlayerPlaybackStatePreparing
-        || playbackState == SRGMediaPlayerPlaybackStateEnded) {
-        self.forwardSeekButton.alpha = 0.f;
-        self.backwardSeekButton.alpha = 0.f;
-        self.startOverButton.alpha = [self.controller canStartOver] ? 1.f : 0.f;
-        self.skipToLiveButton.alpha = [self.controller canSkipToLive] ? 1.f : 0.f;
-        
+            || playbackState == SRGMediaPlayerPlaybackStatePreparing
+            || playbackState == SRGMediaPlayerPlaybackStateEnded) {
+        self.playbackButton.alpha = (! hidden && ! self.controller.isLoading) ? 1.f : 0.f;
+        self.durationLabel.alpha = 0.f;
+        self.forwardSkipButton.alpha = 0.f;
+        self.backwardSkipButton.alpha = 0.f;
+        self.startOverButton.alpha = (! hidden && [self.controller canStartOver]) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = (! hidden && [self.controller canSkipToLive]) ? 1.f : 0.f;
         self.timeSlider.alpha = 0.f;
     }
     else {
         SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
         BOOL canSeek = (streamType == SRGMediaPlayerStreamTypeOnDemand || streamType == SRGMediaPlayerStreamTypeDVR);
         
-        self.forwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
-        self.forwardSeekButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxForwardSkipInterval];
+        self.playbackButton.alpha = (hidden || self.movingSlider || self.controller.loading) ? 0.f : 1.f;
+        self.durationLabel.alpha = ! hidden ? 1.f : 0.f;
         
-        self.backwardSeekButton.alpha = (! self.movingSlider && canSeek) ? 1.f : 0.f;
-        self.backwardSeekButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxBackwardSkipInterval];
+        self.forwardSkipButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? 1.f : 0.f;
+        self.forwardSkipButton.enabled = [self.controller canSkipWithInterval:SRGLetterboxSkipInterval];
         
-        self.startOverButton.alpha = (! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0) ? 1.f : 0.f;
+        self.backwardSkipButton.alpha = (! hidden && ! self.movingSlider && canSeek) || transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? 1.f : 0.f;
+        self.backwardSkipButton.enabled = [self.controller canSkipWithInterval:-SRGLetterboxSkipInterval];
+        
+        self.startOverButton.alpha = ! hidden && ! self.movingSlider && streamType == SRGMediaPlayerStreamTypeDVR && self.controller.mediaComposition.mainChapter.segments != 0 ? 1.f : 0.f;
         self.startOverButton.enabled = [self.controller canStartOver];
         
         BOOL canSkipToLive = [self.controller canSkipToLive];
-        self.skipToLiveButton.alpha = (! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive)) ? 1.f : 0.f;
+        self.skipToLiveButton.alpha = ! hidden && ! self.movingSlider && (streamType == SRGMediaPlayerStreamTypeDVR || canSkipToLive) ? 1.f : 0.f;
         self.skipToLiveButton.enabled = canSkipToLive;
         
-        self.timeSlider.alpha = canSeek ? 1.f : 0.f;
+        self.timeSlider.alpha = ! hidden && canSeek ? 1.f : 0.f;
     }
     
-    self.playbackButton.alpha = (self.movingSlider || self.controller.loading) ? 0.f : 1.f;
-    
     SRGLetterboxView *parentLetterboxView = self.parentLetterboxView;
-    self.fullScreenButton.alpha = (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
+    self.fullScreenButton.alpha = ! hidden && (parentLetterboxView.minimal || ! userInterfaceHidden) ? 1.f : 0.f;
     self.fullScreenButton.selected = parentLetterboxView.fullScreen;
     
-    self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
+    self.pictureInPictureButton.alpha = ! hidden ? 1.f : 0.f;
+    self.playbackSettingsButton.alpha = ! hidden ? 1.f : 0.f;
+    self.airPlayButton.alpha = ! hidden ? 1.f : 0.f;
+    
+    BOOL isLarge = (self.imageSet == SRGImageSetLarge);
+    
+    CGFloat distanceToCenter = isLarge ? kDistanceToCenterLargeUnit : kDistanceToCenterNormalUnit;
+    CGFloat doubleTapOffset = isLarge ? 30.f : 15.f;
+    
+    CGFloat backwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingBackward ? doubleTapOffset : 0.f);
+    CGFloat forwardOffset = (transientState == SRGLetterboxViewTransientStateDoubleTapSkippingForward ? doubleTapOffset : 0.f);
+    
+    self.horizontalSpacingStartOverToPlaybackConstraint.constant = - 2 * distanceToCenter;
+    self.horizontalSpacingSkipBackwardToPlaybackConstraint.constant = -distanceToCenter - backwardOffset;
+    self.horizontalSpacingPlaybackToSkipForwardConstraint.constant = distanceToCenter + forwardOffset;
+    self.horizontalSpacingPlaybackToSkipToLiveConstraint.constant = 2 * distanceToCenter;
+    
+    [self.backwardSkipButton srg_letterboxSetShadowHidden:! userInterfaceHidden];
+    [self.forwardSkipButton srg_letterboxSetShadowHidden:! userInterfaceHidden];
 }
 
-- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden
+- (void)immediatelyUpdateLayoutForUserInterfaceHidden:(BOOL)userInterfaceHidden transientState:(SRGLetterboxViewTransientState)transientState
 {
-    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden];
-    
-    SRGBlockingReason blockingReason = [self.controller.media blockingReasonAtDate:NSDate.date];
-    self.alpha = (! userInterfaceHidden && blockingReason != SRGBlockingReasonStartDate && blockingReason != SRGBlockingReasonEndDate && ! self.controller.continuousPlaybackUpcomingMedia) ? 1.f : 0.f;
+    [super immediatelyUpdateLayoutForUserInterfaceHidden:userInterfaceHidden transientState:transientState];
     
     // General playback controls
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
@@ -543,20 +581,43 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
                                  || streamType != SRGStreamTypeOnDemand);
     self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
-    // The reference frame for controls is given by the available width (as occupied by the bottom stack view) as
-    // well as the whole parent Letterbox height. Critical size is aligned on iPhone Plus devices in landscape.
-    SRGImageSet imageSet = (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
-    CGFloat horizontalSpacing = (imageSet == SRGImageSetNormal) ? 16.f : 36.f;
-    
-    self.horizontalSpacingBackwardToPlaybackConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingPlaybackToForwardConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingForwardToSkipToLiveConstraint.constant = horizontalSpacing;
-    self.horizontalSpacingStartOverToBackwardConstraint.constant = horizontalSpacing;
-    
+    SRGImageSet imageSet = self.imageSet;
     self.playbackButton.imageSet = imageSet;
     
-    [self.backwardSeekButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
-    [self.forwardSeekButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
+    CGFloat skipLabelFontSize = (imageSet == SRGImageSetLarge) ? 18.f : 14.f;
+    UIFont *skipLabelFont = [SRGFont fontWithFamily:SRGFontFamilyText weight:UIFontWeightHeavy fixedSize:skipLabelFontSize];
+    
+    self.backwardSkipButton.titleLabel.font = skipLabelFont;
+    self.backwardSkipButton.verticalOffset = skipLabelFontSize;
+    
+    self.forwardSkipButton.titleLabel.font = skipLabelFont;
+    self.forwardSkipButton.verticalOffset = skipLabelFontSize;
+    
+    self.skipToLiveButton.titleLabel.font = skipLabelFont;
+    self.skipToLiveButton.verticalOffset = skipLabelFontSize;
+    
+    switch (transientState) {
+        case SRGLetterboxViewTransientStateNone: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+            
+        case SRGLetterboxViewTransientStateDoubleTapSkippingBackward: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"-%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+        
+        case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
+            [self.backwardSkipButton setTitle:[NSString stringWithFormat:@"%@S", @(SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            [self.forwardSkipButton setTitle:[NSString stringWithFormat:@"+%@S", @(self.parentLetterboxView.doubleTapSkipCount * SRGLetterboxSkipInterval)] forState:UIControlStateNormal];
+            break;
+        }
+    }
+    
+    [self.backwardSkipButton setImage:[UIImage srg_letterboxSeekBackwardImageInSet:imageSet] forState:UIControlStateNormal];
+    [self.forwardSkipButton setImage:[UIImage srg_letterboxSeekForwardImageInSet:imageSet] forState:UIControlStateNormal];
     [self.startOverButton setImage:[UIImage srg_letterboxStartOverImageInSet:imageSet] forState:UIControlStateNormal];
     [self.skipToLiveButton setImage:[UIImage srg_letterboxSkipToLiveImageInSet:imageSet] forState:UIControlStateNormal];
     
@@ -564,8 +625,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     self.fullScreenPhantomButton.hidden = [self.delegate controlsViewShouldHideFullScreenButton:self];
     
     // Responsiveness
-    self.backwardSeekButton.hidden = NO;
-    self.forwardSeekButton.hidden = NO;
+    self.backwardSkipButton.hidden = NO;
+    self.forwardSkipButton.hidden = NO;
     self.startOverButton.hidden = NO;
     self.skipToLiveButton.hidden = NO;
     self.timeSlider.hidden = NO;
@@ -581,8 +642,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.durationLabelWrapperView.alwaysHidden = YES;
     }
     if (height < 120.f) {
-        self.backwardSeekButton.hidden = YES;
-        self.forwardSeekButton.hidden = YES;
+        self.backwardSkipButton.hidden = YES;
+        self.forwardSkipButton.hidden = YES;
         self.startOverButton.hidden = YES;
         self.skipToLiveButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
@@ -601,8 +662,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         self.timeSlider.hidden = YES;
     }
     if (width < 214.f) {
-        self.backwardSeekButton.hidden = YES;
-        self.forwardSeekButton.hidden = YES;
+        self.backwardSkipButton.hidden = YES;
+        self.forwardSkipButton.hidden = YES;
         self.viewModeButton.alwaysHidden = YES;
         self.pictureInPictureButton.alwaysHidden = YES;
         self.liveLabelWrapperView.alwaysHidden = YES;
@@ -615,6 +676,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         [self.bottomStackView setNeedsLayout];
         [self.bottomStackView layoutIfNeeded];
     }
+    
+    self.airPlayButton.alwaysHidden = (SRGLetterboxService.sharedService.controller != self.controller);
 }
 
 #pragma mark UI
@@ -687,12 +750,12 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 - (void)skipBackward:(id)sender
 {
-    [self.controller skipWithInterval:-SRGLetterboxBackwardSkipInterval completionHandler:nil];
+    [self.controller skipWithInterval:-SRGLetterboxSkipInterval completionHandler:nil];
 }
 
 - (void)skipForward:(id)sender
 {
-    [self.controller skipWithInterval:SRGLetterboxForwardSkipInterval completionHandler:nil];
+    [self.controller skipWithInterval:SRGLetterboxSkipInterval completionHandler:nil];
 }
 
 - (void)startOver:(id)sender
@@ -703,11 +766,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)skipToLive:(id)sender
 {
     [self.controller skipToLiveWithCompletionHandler:nil];
-}
-
-- (void)hideUserInterface:(id)sender
-{
-    [self.delegate controlsViewDidTap:self];
 }
 
 - (void)toggleFullScreen:(id)sender
