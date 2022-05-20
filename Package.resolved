@@ -59,9 +59,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "b1bd6f8be7dd0f91a36b5fccc7cbe343b02213c0",
-          "version": null
+          "branch": null,
+          "revision": "5df56e21e23ffab0e7c8f374f440d6800227e985",
+          "version": "7.6.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "cfd2b130277502b1355863ac4a105fd9922be752",
-          "version": "5.0.0"
+          "revision": "8fb77eac6855c4b2765e15b597665b951893f3f2",
+          "version": "5.1.0"
         }
       },
       {
@@ -86,9 +86,9 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "03d91dd7cf3a4986722b1c4050e05372c12da3fb",
-          "version": null
+          "branch": null,
+          "revision": "cf802c734d42a5a40200ad21015524093b12f7bf",
+          "version": "14.0.0"
         }
       },
       {
@@ -104,9 +104,9 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "5cd01de36fa684ef8c04a4410cdaaafb7074aeea",
-          "version": null
+          "branch": null,
+          "revision": "8b852be038b73b552d5f9b6d499536b70401d0bf",
+          "version": "3.2.3"
         }
       },
       {
@@ -122,9 +122,9 @@
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "develop",
-          "revision": "95f56ad0ac518cbc5231b9762bad9421a5b66d47",
-          "version": null
+          "branch": null,
+          "revision": "b0a28e88281b358b94d1ec6de8c5d65e3712c4cb",
+          "version": "7.0.1"
         }
       },
       {
