@@ -1112,6 +1112,13 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
+- (void)controlsView:(SRGControlsView *)controlsView didTogglePlayPause:(BOOL)paused
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didTogglePlayPause:)]) {
+        [self.delegate letterboxView:self didTogglePlayPause:paused];
+    }
+}
+
 - (void)controlsView:(SRGControlsView *)controlsView isMovingSliderToTime:(CMTime)time date:(NSDate *)date withValue:(float)value interactive:(BOOL)interactive
 {
     SRGSubdivision *subdivision = [self.controller displayableSubdivisionAtTime:time];

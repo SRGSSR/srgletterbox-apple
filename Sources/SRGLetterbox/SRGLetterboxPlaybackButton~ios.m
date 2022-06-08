@@ -107,6 +107,9 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 - (void)togglePlayPause:(id)sender
 {
     [self.controller togglePlayPause];
+    
+    BOOL paused = (self.controller.playbackState == SRGMediaPlayerPlaybackStatePaused);
+    [self.delegate playbackButton:self didTogglePlayPause:paused];
 }
 
 #pragma mark Accessibility
