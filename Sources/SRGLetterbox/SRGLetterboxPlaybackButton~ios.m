@@ -108,7 +108,8 @@ static void commonInit(SRGLetterboxPlaybackButton *self);
 {
     [self.controller togglePlayPause];
     
-    BOOL paused = (self.controller.playbackState == SRGMediaPlayerPlaybackStatePaused);
+    // Covers both cases of a paused or stopped player
+    BOOL paused = (self.controller.mediaPlayerController.player.rate == 0.f);
     [self.delegate playbackButton:self didTogglePlayPause:paused];
 }
 
