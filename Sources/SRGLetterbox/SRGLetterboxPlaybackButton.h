@@ -40,9 +40,9 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic) SRGImageSet imageSet;
 
 /**
- *  The playback button delegate.
+ *  The button delegate.
  */
-@property (nonatomic, weak) id<SRGLetterboxPlaybackButtonDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGLetterboxPlaybackButtonDelegate> delegate;
 
 @end
 

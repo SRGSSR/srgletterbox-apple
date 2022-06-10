@@ -205,7 +205,7 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLetterboxView : SRGLetterboxControllerView <UIGestureRecognizerDelegate>
 
 /**
- *  View optional delegate.
+ *  The view delegate.
  */
 @property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxViewDelegate> delegate;
 

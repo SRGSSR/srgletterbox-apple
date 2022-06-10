@@ -79,7 +79,7 @@ API_UNAVAILABLE(tvos)
 @interface SRGControlsView : SRGLetterboxControllerView <SRGLetterboxPlaybackButtonDelegate, SRGLetterboxTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
 
 /**
- *  View optional delegate.
+ *  The view delegate.
  */
 @property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
