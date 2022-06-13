@@ -81,7 +81,7 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 /**
  *  The view controller delegate.
  */
-@property (nonatomic, weak) id<SRGLetterboxViewControllerDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGLetterboxViewControllerDelegate> delegate;
 
 @end
 

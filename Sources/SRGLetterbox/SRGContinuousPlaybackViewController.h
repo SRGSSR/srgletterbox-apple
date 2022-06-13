@@ -46,9 +46,9 @@ API_AVAILABLE(tvos(9.0)) API_UNAVAILABLE(ios)
 - (instancetype)initWithMedia:(SRGMedia *)media upcomingMedia:(SRGMedia *)upcomingMedia endDate:(NSDate *)endDate controller:(SRGLetterboxController *)controller;
 
 /**
- *  The delegate.
+ *  The view controller delegate.
  */
-@property (nonatomic, weak) id<SRGContinuousPlaybackViewControllerDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRGContinuousPlaybackViewControllerDelegate> delegate;
 
 @end
 

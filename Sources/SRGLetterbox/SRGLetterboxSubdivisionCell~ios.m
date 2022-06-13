@@ -358,9 +358,7 @@
 - (void)longPress:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        if (self.delegate) {
-            [self.delegate letterboxSubdivisionCellDidLongPress:self];
-        }
+        [self.delegate letterboxSubdivisionCellDidLongPress:self];
     }
 }
 

@@ -5,6 +5,7 @@
 //
 
 #import "SRGLetterboxControllerView.h"
+#import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
 
 @import SRGMediaPlayer;
@@ -32,6 +33,12 @@ API_UNAVAILABLE(tvos)
  *  Method called when the user toggles full screen using the dedicated button.
  */
 - (void)controlsViewDidToggleFullScreen:(SRGControlsView *)controlsView;
+
+/**
+ *  Method called when the user interactively toggles play / pause, with `paused` set to `YES` if the user
+ *  paused playback.
+ */
+- (void)controlsView:(SRGControlsView *)controlsView didTogglePlayPause:(BOOL)paused;
 
 /**
  *  Method called when the time slider moved, either interactively or during normal playback.
@@ -69,10 +76,10 @@ API_UNAVAILABLE(tvos)
  *  View displaying controls.
  */
 API_UNAVAILABLE(tvos)
-@interface SRGControlsView : SRGLetterboxControllerView <SRGLetterboxTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
+@interface SRGControlsView : SRGLetterboxControllerView <SRGLetterboxPlaybackButtonDelegate, SRGLetterboxTimeSliderDelegate, SRGPlaybackSettingsButtonDelegate>
 
 /**
- *  View optional delegate.
+ *  The view delegate.
  */
 @property (nonatomic, weak, nullable) id<SRGControlsViewDelegate> delegate;
 
