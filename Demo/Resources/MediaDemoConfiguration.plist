@@ -108,7 +108,7 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>RTS Info DVR</string>
+					<string>RTS Info LIVE</string>
 					<key>urn</key>
 					<string>urn:rts:video:1967124</string>
 				</dict>
@@ -154,30 +154,30 @@
 			<key>name</key>
 			<string>Scheduled livestreams</string>
 			<key>summary</key>
-			<string>Simulated scheduled livestreams, like those supplied by SwissTXT for sports events.</string>
+			<string>Simulated scheduled livestreams, like those supplied by SwissTXT for sports events and LSVE for events.</string>
 			<key>medias</key>
 			<array>
 				<dict>
 					<key>name</key>
-					<string>SwissTXT Full DVR</string>
+					<string>LiveCenter Full DVR</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_fulldvr</string>
+					<string>urn:rts:video:_couleur3_fulldvr</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>SwissTXT Limited DVR</string>
+					<string>LiveCenter Limited DVR</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_liveonly_limiteddvr</string>
+					<string>urn:rts:video:_couleur3_liveonly_limiteddvr</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>SwissTXT Live Only</string>
+					<string>LiveCenter Live Only</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_liveonly_delay</string>
+					<string>urn:rts:video:_couleur3_liveonly_delay</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -185,7 +185,7 @@
 					<key>name</key>
 					<string>Scheduled livestream (100 days transition)</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay_100DAYS_</string>
+					<string>urn:rts:video:_couleur3_delay_100DAYS_</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -193,7 +193,7 @@
 					<key>name</key>
 					<string>Scheduled livestream</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay</string>
+					<string>urn:rts:video:_couleur3_delay</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -201,7 +201,7 @@
 					<key>name</key>
 					<string>Scheduled livestream (1 day transition)</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay_1DAY_</string>
+					<string>urn:rts:video:_couleur3_delay_1DAY_</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -209,7 +209,7 @@
 					<key>name</key>
 					<string>Scheduled livestream (1 hour transition)</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay_1HOUR_</string>
+					<string>urn:rts:video:_couleur3_delay_1HOUR_</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -217,7 +217,7 @@
 					<key>name</key>
 					<string>Scheduled livestream (start)</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay_START_</string>
+					<string>urn:rts:video:_couleur3_delay_START_</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -225,7 +225,7 @@
 					<key>name</key>
 					<string>Scheduled livestream (soon expired)</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_delay_SOON_EXPIRED_</string>
+					<string>urn:rts:video:_couleur3_delay_SOON_EXPIRED_</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -233,7 +233,7 @@
 					<key>name</key>
 					<string>Scheduled livestream with server cache</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_cacheddelay</string>
+					<string>urn:rts:video:_couleur3_cacheddelay</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -241,7 +241,7 @@
 					<key>name</key>
 					<string>Scheduled livestream never playable</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_never</string>
+					<string>urn:rts:video:_couleur3_never</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -249,7 +249,7 @@
 					<key>name</key>
 					<string>SwissTXT Full DVR with start date change</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_fulldvrstartdate</string>
+					<string>urn:rts:video:_couleur3_fulldvrstartdate</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -278,7 +278,7 @@
 					<key>name</key>
 					<string>Temporary geoblocking</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_geoblocked</string>
+					<string>urn:rts:video:_couleur3_geoblocked</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -286,7 +286,7 @@
 					<key>name</key>
 					<string>Temporary live-only restriction</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_killswitch</string>
+					<string>urn:rts:video:_couleur3_killswitch</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
@@ -294,7 +294,7 @@
 					<key>name</key>
 					<string>Temporarily not found</string>
 					<key>urn</key>
-					<string>urn:rts:video:_rts_info_notfound</string>
+					<string>urn:rts:video:_couleur3_notfound</string>
 					<key>service</key>
 					<string>mmf</string>
 				</dict>
