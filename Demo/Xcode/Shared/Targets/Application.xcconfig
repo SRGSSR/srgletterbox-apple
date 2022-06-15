@@ -1,8 +1,8 @@
 #include "Xcode/Shared/Common.xcconfig"
 
 // Version information
-MARKETING_VERSION = 8.0.0
-CURRENT_PROJECT_VERSION = 93
+MARKETING_VERSION = 8.1.0
+CURRENT_PROJECT_VERSION = 95
 
 // Deployment targets
 IPHONEOS_DEPLOYMENT_TARGET = 12.0

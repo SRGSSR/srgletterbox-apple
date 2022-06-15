@@ -20,7 +20,6 @@
 #import "SRGLetterboxController+Private.h"
 #import "SRGLetterboxControllerView+Subclassing.h"
 #import "SRGLetterboxService.h"
-#import "SRGLetterboxPlaybackButton.h"
 #import "SRGLetterboxTimeSlider.h"
 #import "SRGLetterboxView+Private.h"
 #import "SRGLiveLabel.h"
@@ -288,6 +287,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     SRGLetterboxPlaybackButton *playbackButton = [[SRGLetterboxPlaybackButton alloc] init];
     playbackButton.tintColor = UIColor.whiteColor;
+    playbackButton.delegate = self;
     [view addSubview:playbackButton];
     self.playbackButton = playbackButton;
     
@@ -717,6 +717,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 - (void)timeSlider:(SRGLetterboxTimeSlider *)slider didStopDraggingAtTime:(CMTime)time date:(NSDate *)date withValue:(float)value
 {
     self.movingSlider = NO;
+}
+
+#pragma mark SRGPlaybackButtonDelegate protocol
+
+- (void)playbackButton:(SRGLetterboxPlaybackButton *)playbackButton didTogglePlayPause:(BOOL)paused
+{
+    [self.delegate controlsView:self didTogglePlayPause:paused];
 }
 
 #pragma mark SRGPlaybackSettingsButtonDelegate protocol

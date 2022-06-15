@@ -677,7 +677,7 @@ static const CGFloat kMessageLabelTopSpace = 0.f;
     CGFloat height = isLarge ? 57.f : 45.f;
     
     CGFloat digitFontSize = isLarge ? 45.f : 36.f;
-    CGFloat titleFontSize = isLarge ? 17.f : 13.f;
+    CGFloat titleFontSize = isLarge ? 16.f : 13.f;
     CGFloat digitCornerRadius = isLarge ? 3.f : 2.f;
     
     CGFloat spacing = isLarge ? 3.f : 2.f;

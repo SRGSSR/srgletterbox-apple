@@ -55,7 +55,7 @@ API_UNAVAILABLE(tvos)
 @property (nonatomic, getter=isCurrent) BOOL current;
 
 /**
- *  Cell optional delegate.
+ *  The cell delegate.
  */
 @property (nonatomic, weak, nullable) id<SRGLetterboxSubdivisionCellDelegate> delegate;
 

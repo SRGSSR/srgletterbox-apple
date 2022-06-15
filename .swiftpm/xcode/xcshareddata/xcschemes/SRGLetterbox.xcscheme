@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1330"
+   LastUpgradeVersion = "1340"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -68,6 +68,9 @@
             <SkippedTests>
                <Test
                   Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTFullDVRStream">
+               </Test>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTLimitedDVRStream">
                </Test>
                <Test
                   Identifier = "SwissTXTTestCase/testSwissTXTFullDVRNotYetAvailable">

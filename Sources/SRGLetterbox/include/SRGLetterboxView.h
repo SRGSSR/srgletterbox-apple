@@ -59,6 +59,12 @@ API_UNAVAILABLE(tvos)
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView;
 
 /**
+ *  This method is called when the user interactively toggles play / pause, with `paused` set to `YES` if the user
+ *  paused playback.
+ */
+- (void)letterboxView:(SRGLetterboxView *)letterboxView didTogglePlayPause:(BOOL)paused;
+
+/**
  *  This method is called when the Letterbox view slider did scroll. The subdivision, time and date (if any) corresponding to
  *  the current slider position are provided, if any. The `interactive` boolean is `YES` if scrolling was interactively made
  *  by the user.
@@ -199,7 +205,7 @@ IB_DESIGNABLE API_UNAVAILABLE(tvos)
 @interface SRGLetterboxView : SRGLetterboxControllerView <UIGestureRecognizerDelegate>
 
 /**
- *  View optional delegate.
+ *  The view delegate.
  */
 @property (nonatomic, weak, nullable) IBOutlet id<SRGLetterboxViewDelegate> delegate;
 

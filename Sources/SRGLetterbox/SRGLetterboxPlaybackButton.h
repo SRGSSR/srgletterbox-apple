@@ -7,6 +7,22 @@
 #import "SRGLetterboxController.h"
 #import "UIImage+SRGLetterbox.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class SRGLetterboxPlaybackButton;
+
+/**
+ *  Playback button delegate.
+ */
+@protocol SRGLetterboxPlaybackButtonDelegate <NSObject>
+
+/**
+ *  Called when the button is toggled, with `paused` set to `YES` if the user paused playback.
+ */
+- (void)playbackButton:(SRGLetterboxPlaybackButton *)playbackButton didTogglePlayPause:(BOOL)paused;
+
+@end
+
 /**
  *  Playback button.
  */
@@ -23,4 +39,11 @@ API_UNAVAILABLE(tvos)
  */
 @property (nonatomic) SRGImageSet imageSet;
 
+/**
+ *  The button delegate.
+ */
+@property (nonatomic, weak, nullable) id<SRGLetterboxPlaybackButtonDelegate> delegate;
+
 @end
+
+NS_ASSUME_NONNULL_END
