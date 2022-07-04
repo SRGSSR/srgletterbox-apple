@@ -70,9 +70,6 @@
                   Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTFullDVRStream">
                </Test>
                <Test
-                  Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTLimitedDVRStream">
-               </Test>
-               <Test
                   Identifier = "SwissTXTTestCase/testSwissTXTFullDVRNotYetAvailable">
                </Test>
                <Test

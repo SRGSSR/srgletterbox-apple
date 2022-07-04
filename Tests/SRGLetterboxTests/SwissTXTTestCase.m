@@ -38,7 +38,6 @@
 
 - (void)testSkipToLiveForSwissTXTLimitedDVRStream
 {
-#warning "This test has been disabled due to missing test stream. See issue #270"
     self.controller.updateInterval = 10.;
     self.controller.serviceURL = MMFServiceURL();
     
