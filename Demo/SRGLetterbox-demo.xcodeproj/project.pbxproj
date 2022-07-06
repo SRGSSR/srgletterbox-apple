@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041295032875BF400093534D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 041295052875BF400093534D /* Localizable.strings */; };
 		045D77D627B2E1C700951D07 /* AppCenterDistributeOptional in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */; };
 		045D77D927B2EFB000951D07 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D827B2EFB000951D07 /* AppCenterCrashes */; };
 		04ACEE1427B85FD0001F4C9E /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE0027B85FD0001F4C9E /* Application.xcconfig */; };
@@ -62,6 +63,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		041295042875BF400093534D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		041295062875BF430093534D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		041295072875BF450093534D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		041295082875BF450093534D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		041295092875BF460093534D /* rm */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = rm; path = rm.lproj/Localizable.strings; sourceTree = "<group>"; };
 		045D77D427B2E19800951D07 /* AppCenterDistributeOptional */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppCenterDistributeOptional; sourceTree = "<group>"; };
 		04ACEE0027B85FD0001F4C9E /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -259,6 +265,7 @@
 			children = (
 				6F28BAD11E323F6A004F43DD /* Images.xcassets */,
 				6FAB3B541E28FFEA00CC2197 /* LaunchScreen~ios.storyboard */,
+				041295052875BF400093534D /* Localizable.strings */,
 				086B9447234CED59003D6BAA /* MediaDemoConfiguration.plist */,
 			);
 			path = Resources;
@@ -447,6 +454,7 @@
 				04ACEE2227B85FD0001F4C9E /* Demo.release_appcenter.xcconfig in Resources */,
 				6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
+				041295032875BF400093534D /* Localizable.strings in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */,
 				086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */,
 				04ACEE2027B85FD0001F4C9E /* Demo.nightly.xcconfig in Resources */,
@@ -572,6 +580,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		041295052875BF400093534D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				041295042875BF400093534D /* en */,
+				041295062875BF430093534D /* fr */,
+				041295072875BF450093534D /* de */,
+				041295082875BF450093534D /* it */,
+				041295092875BF460093534D /* rm */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		04ACEDF927B85F49001F4C9E /* Release_AppCenter */ = {

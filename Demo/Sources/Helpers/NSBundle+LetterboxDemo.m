@@ -26,6 +26,11 @@ NSString *LetterboxDemoResourceNameForUIClass(Class cls)
 #endif
 }
 
+NSString *LetterboxDemoApplicationLocalization(void)
+{
+    return NSBundle.mainBundle.preferredLocalizations.firstObject;
+}
+
 @implementation NSBundle (SRGLetterbox)
 
 - (NSString *)letterbox_demo_friendlyVersionNumber
@@ -46,6 +51,8 @@ NSString *LetterboxDemoResourceNameForUIClass(Class cls)
         // Unbreakable spaces before / after the separator
         version = [version stringByAppendingString:@" - TF"];
     }
+    version = [version stringByAppendingFormat:@" (🌍 %@)", LetterboxDemoApplicationLocalization().uppercaseString];
+    
     return version;
 }
 
