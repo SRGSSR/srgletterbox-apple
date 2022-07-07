@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -467,6 +467,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		084F2EE323664ABC00A983FF /* Restore original icons if needed */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -485,6 +486,7 @@
 		};
 		084F2EE423664AE900A983FF /* Make custom icons */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -503,6 +505,7 @@
 		};
 		084F2EE523664B8400A983FF /* Restore original icons */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -521,6 +524,7 @@
 		};
 		6F261DC325190789008EF524 /* Extract Signing Identity */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
