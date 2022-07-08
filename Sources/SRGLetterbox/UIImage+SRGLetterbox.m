@@ -194,7 +194,6 @@ static void SRGImageDrawPDFPageInRect(CGPDFPageRef pageRef, CGRect rect)
         return [UIImage srg_letterboxImageNamed:@"no_network"];
     }
     else if ([error.domain isEqualToString:SRGLetterboxErrorDomain]) {
-        NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
         if (error.code == SRGLetterboxErrorCodeBlocked) {
             SRGBlockingReason blockingReason = [error.userInfo[SRGLetterboxBlockingReasonKey] integerValue];
             return [self srg_letterboxImageForBlockingReason:blockingReason];
