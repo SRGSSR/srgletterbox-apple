@@ -22,8 +22,8 @@ let package = Package(
     dependencies: [
         .package(name: "FXReachability", url: "https://github.com/SRGSSR/FXReachability.git", .branch("master")),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", .upToNextMajor(from: "9.0.0")),
-        .package(name: "SRGAnalytics", url: "https://github.com/SRGSSR/srganalytics-apple.git", .branch("feature/ios16-tvos16-xcode14")),
-        .package(name: "SRGAppearance", url: "https://github.com/SRGSSR/srgappearance-apple.git", .branch("feature/ios16-tvos16-xcode14")),
+        .package(name: "SRGAnalytics", url: "https://github.com/SRGSSR/srganalytics-apple.git", .branch("develop")),
+        .package(name: "SRGAppearance", url: "https://github.com/SRGSSR/srgappearance-apple.git", .branch("develop")),
         .package(name: "YYWebImage", url: "https://github.com/SRGSSR/YYWebImage.git", .exact("1.0.5-srg3"))
     ],
     targets: [

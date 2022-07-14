@@ -59,8 +59,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "99a5f3a5b7895a6a0feead33c47266757d7eb60e",
+          "branch": "develop",
+          "revision": "5ee181ee5dc9d696426dcc8fa14efca999895f37",
           "version": null
         }
       },
@@ -68,8 +68,8 @@
         "package": "SRGAppearance",
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "a08d0704a6c171aed77b3291f233333b0aac30b2",
+          "branch": "develop",
+          "revision": "108eb3aa7cbd61bfc585d15e68bc1cee8f08c22b",
           "version": null
         }
       },
@@ -77,8 +77,8 @@
         "package": "SRGContentProtection",
         "repositoryURL": "https://github.com/SRGSSR/srgcontentprotection-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "bdff8723d8cfbe57de58d1e9c441d06979ddb259",
+          "branch": "develop",
+          "revision": "c0abcc619de447ce9bed497e7563a53cb27fdcc3",
           "version": null
         }
       },
@@ -86,8 +86,8 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "65854c4a8538be50550713d242da6b615141da5c",
+          "branch": "develop",
+          "revision": "c0996dec6271cca7892f8260a493d92b607bbd5c",
           "version": null
         }
       },
@@ -95,8 +95,8 @@
         "package": "SRGDiagnostics",
         "repositoryURL": "https://github.com/SRGSSR/srgdiagnostics-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "5aade8a4fdeff3b6be17d620f3ebd746dae75112",
+          "branch": "develop",
+          "revision": "7a69fbcd1577a4317aa829b2d0afd9c061d279d8",
           "version": null
         }
       },
@@ -104,8 +104,8 @@
         "package": "SRGIdentity",
         "repositoryURL": "https://github.com/SRGSSR/srgidentity-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "e19abad8cd63f8e880d6613589b81d83fd6ecbfe",
+          "branch": "develop",
+          "revision": "5c3f647b9d11b8ab9dfe5722a02b964f16db0b22",
           "version": null
         }
       },
@@ -113,8 +113,8 @@
         "package": "SRGLogger",
         "repositoryURL": "https://github.com/SRGSSR/srglogger-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "36fd041b78224b77d8dd348511dbf6ed8cd88d68",
+          "branch": "develop",
+          "revision": "3b7c04bccfb6714d2ea9589e98591ed9088d128e",
           "version": null
         }
       },
@@ -122,8 +122,8 @@
         "package": "SRGMediaPlayer",
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "dd87fa068ddccc01721c546c74dad442eec987d4",
+          "branch": "develop",
+          "revision": "5897da5091bf866ed9384d1c45e992b43e5d9142",
           "version": null
         }
       },
@@ -131,8 +131,8 @@
         "package": "SRGNetwork",
         "repositoryURL": "https://github.com/SRGSSR/srgnetwork-apple.git",
         "state": {
-          "branch": "feature/ios16-tvos16-xcode14",
-          "revision": "ac107207c25f65060c13688239e0f0cdf3724e60",
+          "branch": "develop",
+          "revision": "dedfb9032837c72ec1c3365f3dfb3ff04d65ec75",
           "version": null
         }
       },
