@@ -560,13 +560,13 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     return self.timelineView.subdivisions;
 }
 
-- (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+- (void)setUserInterfaceStyle:(UIUserInterfaceStyle)userInterfaceStyle
 {
     _userInterfaceStyle = userInterfaceStyle;
     self.controlsView.userInterfaceStyle = userInterfaceStyle;
 }
 
-- (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+- (UIUserInterfaceStyle)userInterfaceStyle
 {
     return _userInterfaceStyle;
 }

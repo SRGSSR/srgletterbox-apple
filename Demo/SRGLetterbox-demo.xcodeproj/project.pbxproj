@@ -3,20 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		041295032875BF400093534D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 041295052875BF400093534D /* Localizable.strings */; };
 		045D77D627B2E1C700951D07 /* AppCenterDistributeOptional in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D527B2E1C700951D07 /* AppCenterDistributeOptional */; };
 		045D77D927B2EFB000951D07 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 045D77D827B2EFB000951D07 /* AppCenterCrashes */; };
-		04ACEE1427B85FD0001F4C9E /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE0027B85FD0001F4C9E /* Application.xcconfig */; };
-		04ACEE2027B85FD0001F4C9E /* Demo.nightly.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE0F27B85FD0001F4C9E /* Demo.nightly.xcconfig */; };
-		04ACEE2127B85FD0001F4C9E /* Demo.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1027B85FD0001F4C9E /* Demo.debug.xcconfig */; };
-		04ACEE2227B85FD0001F4C9E /* Demo.release_appcenter.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1127B85FD0001F4C9E /* Demo.release_appcenter.xcconfig */; };
-		04ACEE2327B85FD0001F4C9E /* Demo.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1227B85FD0001F4C9E /* Demo.release.xcconfig */; };
-		04ACEE2427B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE1327B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig */; };
-		04ACEE2627B945CB001F4C9E /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 04ACEE2527B945CB001F4C9E /* Common.xcconfig */; };
 		0849DA5A20FCD82E00026F0D /* TopicListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5820FCD82D00026F0D /* TopicListViewController.m */; };
 		0849DA5D20FD553100026F0D /* TopicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0849DA5C20FD553100026F0D /* TopicItem.m */; };
 		086AFBF222BE968E0047FD44 /* UILabel+Copyable~ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 086AFBF022BE968E0047FD44 /* UILabel+Copyable~ios.m */; };
@@ -397,7 +390,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SRG;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = "SRG SSR";
 				TargetAttributes = {
 					6FAB3B391E28FE2000CC2197 = {
@@ -442,22 +435,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1F5FC61E309BF0000215F3 /* AdvancedPlayerViewController~ios.storyboard in Resources */,
-				04ACEE2627B945CB001F4C9E /* Common.xcconfig in Resources */,
 				6F353A7222BB64C10035F656 /* PlayerPageViewController~ios.storyboard in Resources */,
-				04ACEE2327B85FD0001F4C9E /* Demo.release.xcconfig in Resources */,
-				04ACEE2427B85FD0001F4C9E /* Demo.nightly_appcenter.xcconfig in Resources */,
 				6FCE898C1E4B6D9A005C48F1 /* MultiPlayerViewController~ios.storyboard in Resources */,
-				04ACEE1427B85FD0001F4C9E /* Application.xcconfig in Resources */,
 				6FB78F8C1E4B2C5F0053D2A6 /* StandalonePlayerViewController~ios.storyboard in Resources */,
-				04ACEE2127B85FD0001F4C9E /* Demo.debug.xcconfig in Resources */,
 				6F0AD07B1E5EAB1A000A61A5 /* FeedsViewController~ios.storyboard in Resources */,
-				04ACEE2227B85FD0001F4C9E /* Demo.release_appcenter.xcconfig in Resources */,
 				6FFAD13C202C88BE00FDAA6C /* PlaylistViewController~ios.storyboard in Resources */,
 				6F28BAD21E323F6A004F43DD /* Images.xcassets in Resources */,
 				041295032875BF400093534D /* Localizable.strings in Resources */,
 				6FAB3B631E2900D200CC2197 /* SimplePlayerViewController~ios.storyboard in Resources */,
 				086B9448234CED59003D6BAA /* MediaDemoConfiguration.plist in Resources */,
-				04ACEE2027B85FD0001F4C9E /* Demo.nightly.xcconfig in Resources */,
 				6FAB3B5E1E28FFEA00CC2197 /* LaunchScreen~ios.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,6 +453,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		084F2EE323664ABC00A983FF /* Restore original icons if needed */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -485,6 +472,7 @@
 		};
 		084F2EE423664AE900A983FF /* Make custom icons */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -503,6 +491,7 @@
 		};
 		084F2EE523664B8400A983FF /* Restore original icons */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -521,6 +510,7 @@
 		};
 		6F261DC325190789008EF524 /* Extract Signing Identity */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -622,6 +612,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -630,6 +621,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -700,6 +692,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -708,6 +701,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -778,6 +772,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -786,6 +781,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -901,6 +897,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -909,6 +906,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -960,6 +958,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -968,6 +967,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

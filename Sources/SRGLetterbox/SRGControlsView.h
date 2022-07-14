@@ -85,11 +85,11 @@ API_UNAVAILABLE(tvos)
 
 /**
  *  The style to be applied for the view and views depending on it, like the playback settings popover. The default value is
- *  `SRGMediaPlayerUserInterfaceStyleUnspecified`.
+ *  `UIUserInterfaceStyleUnspecified`.
  *
  *  @discussion Style changes might be applied at a later time.
  */
-@property (nonatomic) SRGMediaPlayerUserInterfaceStyle userInterfaceStyle;
+@property (nonatomic) UIUserInterfaceStyle userInterfaceStyle;
 
 /**
  *  The radius in which forward and backward skip controls are located.
