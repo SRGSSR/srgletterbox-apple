@@ -501,11 +501,13 @@ end
 def pilot_fast_upload(platform)
   lane_context.delete(SharedValues::FL_CHANGELOG)
 
+  xcversion(version: '~> 13')
   login_with_app_store_connect_api_key
   pilot(
     app_platform: appstore_platform(platform),
     skip_waiting_for_build_processing: true
   )
+  xcversion(version: '~> 13')
 end
 
 def pilot_distribute(platform, build_number, changelog)
@@ -517,6 +519,7 @@ rescue StandardError => e
 end
 
 def srg_pilot_distribute(platform, build_number, changelog)
+  xcversion(version: '~> 13')
   login_with_app_store_connect_api_key
   pilot(
     distribute_only: true,
@@ -529,6 +532,7 @@ def srg_pilot_distribute(platform, build_number, changelog)
     demo_account_required: false,
     beta_app_review_info: beta_app_review_info
   )
+  xcversion(version: '~> 13')
 end
 
 # Update dSYMs from AppStore Connect to App Center.
