@@ -307,7 +307,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         @weakify(self)
         [self.controller addObserver:self keyPath:@keypath(SRGLetterboxController.new, mediaPlayerController.player.externalPlaybackActive) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            
             // Called e.g. when the route is changed from the control center
             [self showAirPlayNotificationMessageIfNeededAnimated:YES];
         }];
@@ -591,7 +590,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
+    @weakify(self)
     [controller addObserver:self keyPath:@keypath(controller.loading) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
         [self setNeedsLayoutAnimated:YES];
     }];
     
@@ -628,7 +629,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     SRGMediaPlayerView *mediaPlayerView = mediaPlayerController.view;
     
-    @weakify(self)
     [mediaPlayerView addObserver:self keyPath:@keypath(mediaPlayerView.readyForDisplay) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
         [self setNeedsLayoutAnimated:YES];
