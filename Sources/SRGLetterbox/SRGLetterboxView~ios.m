@@ -174,14 +174,14 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self addGestureRecognizer:singleTapGestureRecognizer];
     self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
-    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skipFromGestureRecognizer:)];
+    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSkip:)];
     doubleTapGestureRecognizer.numberOfTapsRequired = 2;
     doubleTapGestureRecognizer.delaysTouchesEnded = NO;
     doubleTapGestureRecognizer.tapDelay = 0.25;
     [self addGestureRecognizer:doubleTapGestureRecognizer];
     self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
     
-    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handleVideoGravityPinch:)];
     [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
 }
 
@@ -960,7 +960,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     switch (self.transientState) {
         case SRGLetterboxViewTransientStateDoubleTapSkippingBackward:
         case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
-            [self skipFromGestureRecognizer:gestureRecognizer];
+            [self handleSkip:gestureRecognizer];
             break;
         }
             
@@ -971,7 +971,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
-- (void)skipFromGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+- (void)handleSkip:(UIGestureRecognizer *)gestureRecognizer
 {
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
@@ -1031,7 +1031,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     self.doubleTapSkipCount = 0;
 }
 
-- (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
+#pragma mark Actions
+
+- (void)handleVideoGravityPinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         BOOL isZooming = (gestureRecognizer.scale > 1.f);
@@ -1053,8 +1055,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         }
     }
 }
-
-#pragma mark Actions
 
 - (void)toggleFullScreen:(id)sender
 {
