@@ -1063,6 +1063,24 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
 
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self setTogglableUserInterfaceHidden:YES animated:NO];
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
+#pragma mark SRGControlsViewDelegate protocol
+
 - (void)controlsView:(SRGControlsView *)controlsView didSelectPlaybackRate:(float)playbackRate
 {
     if ([self.delegate respondsToSelector:@selector(letterboxView:didSelectPlaybackRate:)]) {
@@ -1083,24 +1101,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [self.delegate letterboxView:self didSelectSubtitleLanguageCode:languageCode];
     }
 }
-
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [self setTogglableUserInterfaceHidden:YES animated:NO];
-    
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
-    }
-}
-
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
-    }
-}
-
-#pragma mark SRGControlsViewDelegate protocol
 
 - (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
