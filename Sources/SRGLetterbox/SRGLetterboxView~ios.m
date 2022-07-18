@@ -39,6 +39,27 @@
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
+static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer)
+{
+    if (! playerLayer) {
+        return NO;
+    }
+    
+    CGSize presentationSize = playerLayer.player.currentItem.presentationSize;
+    CGSize playerLayerSize = playerLayer.frame.size;
+    
+    if (presentationSize.width == 0.f || presentationSize.width == 0.f
+            || playerLayerSize.width == 0.f || playerLayerSize.height == 0.f) {
+        return NO;
+    }
+    
+    // Aspect fill only makes sense if content aspect ratios differ a bit
+    static const CGFloat kEpsilon = 0.1f;
+    CGFloat videoAspectRatio = presentationSize.width / presentationSize.height;
+    CGFloat layerAspectRatio = playerLayerSize.width / playerLayerSize.height;
+    return fabs(videoAspectRatio / layerAspectRatio - 1.f) >= kEpsilon;
+}
+
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -450,6 +471,15 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self setFullScreen:fullScreen animated:NO];
 }
 
+- (void)interactivelySetFullScreen:(BOOL)fullScreen
+{
+    if ([self isFullScreenButtonHidden]) {
+        return;
+    }
+    
+    [self setFullScreen:fullScreen animated:YES];
+}
+
 - (void)setFullScreen:(BOOL)fullScreen animated:(BOOL)animated
 {
     if (! [self.delegate respondsToSelector:@selector(letterboxView:toggleFullScreen:animated:withCompletionHandler:)]) {
@@ -787,10 +817,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         playerViewVisible = NO;
     }
     
-    // Force aspect fit ratio when not full screen
-    BOOL isFrameFullScreen = self.window && CGRectEqualToRect(self.window.bounds, self.frame);
-    if (! self.fullScreen && ! isFrameFullScreen) {
-        AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    // Reset to aspect fit gravity if the uodated layout does not support aspect fill anymore
+    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    if (! PlayerLayerSupportsAspectFillVideoGravity(playerLayer)) {
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
@@ -1040,18 +1069,31 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         
         if (self.isFullScreen) {
             AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-            AVLayerVideoGravity videoGravity = isZooming ? AVLayerVideoGravityResizeAspectFill : AVLayerVideoGravityResizeAspect;
-            if (playerLayer && playerLayer.videoGravity != videoGravity) {
-                [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
-                    playerLayer.videoGravity = videoGravity;
-                }];
+            if (playerLayer) {
+                if (isZooming) {
+                    if (PlayerLayerSupportsAspectFillVideoGravity(playerLayer) && playerLayer.videoGravity != AVLayerVideoGravityResizeAspectFill) {
+                        [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+                            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+                        }];
+                    }
+                }
+                else {
+                    if (playerLayer.videoGravity != AVLayerVideoGravityResizeAspect) {
+                        [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
+                            playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+                        }];
+                    }
+                    else {
+                        [self interactivelySetFullScreen:NO];
+                    }
+                }
             }
-            else if (! isZooming && ! [self isFullScreenButtonHidden]) {
-                [self setFullScreen:NO animated:YES];
+            else if (! isZooming) {
+                [self interactivelySetFullScreen:NO];
             }
         }
-        else if (isZooming && ! [self isFullScreenButtonHidden]) {
-            [self setFullScreen:YES animated:YES];
+        else if (isZooming) {
+            [self interactivelySetFullScreen:YES];
         }
     }
 }
