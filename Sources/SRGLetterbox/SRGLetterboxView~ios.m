@@ -174,14 +174,14 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     [self addGestureRecognizer:singleTapGestureRecognizer];
     self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
-    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(skipFromGestureRecognizer:)];
+    SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSkip:)];
     doubleTapGestureRecognizer.numberOfTapsRequired = 2;
     doubleTapGestureRecognizer.delaysTouchesEnded = NO;
     doubleTapGestureRecognizer.tapDelay = 0.25;
     [self addGestureRecognizer:doubleTapGestureRecognizer];
     self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
     
-    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+    UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handleVideoGravityPinch:)];
     [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
 }
 
@@ -307,7 +307,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         @weakify(self)
         [self.controller addObserver:self keyPath:@keypath(SRGLetterboxController.new, mediaPlayerController.player.externalPlaybackActive) options:0 block:^(MAKVONotification *notification) {
             @strongify(self)
-            
             // Called e.g. when the route is changed from the control center
             [self showAirPlayNotificationMessageIfNeededAnimated:YES];
         }];
@@ -591,7 +590,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
 - (void)registerObservers
 {
     SRGLetterboxController *controller = self.controller;
+    @weakify(self)
     [controller addObserver:self keyPath:@keypath(controller.loading) options:0 block:^(MAKVONotification *notification) {
+        @strongify(self)
         [self setNeedsLayoutAnimated:YES];
     }];
     
@@ -628,7 +629,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     SRGMediaPlayerView *mediaPlayerView = mediaPlayerController.view;
     
-    @weakify(self)
     [mediaPlayerView addObserver:self keyPath:@keypath(mediaPlayerView.readyForDisplay) options:0 block:^(MAKVONotification *notification) {
         @strongify(self)
         [self setNeedsLayoutAnimated:YES];
@@ -960,7 +960,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     switch (self.transientState) {
         case SRGLetterboxViewTransientStateDoubleTapSkippingBackward:
         case SRGLetterboxViewTransientStateDoubleTapSkippingForward: {
-            [self skipFromGestureRecognizer:gestureRecognizer];
+            [self handleSkip:gestureRecognizer];
             break;
         }
             
@@ -971,7 +971,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
-- (void)skipFromGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+- (void)handleSkip:(UIGestureRecognizer *)gestureRecognizer
 {
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
@@ -1031,7 +1031,9 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     self.doubleTapSkipCount = 0;
 }
 
-- (void)handlePinch:(UIPinchGestureRecognizer *)gestureRecognizer
+#pragma mark Actions
+
+- (void)handleVideoGravityPinch:(UIPinchGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         BOOL isZooming = (gestureRecognizer.scale > 1.f);
@@ -1054,14 +1056,30 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
-#pragma mark Actions
-
 - (void)toggleFullScreen:(id)sender
 {
     [self setFullScreen:! self.isFullScreen animated:YES];
 }
 
 #pragma mark SRGContinuousPlaybackViewDelegate protocol
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    [self setTogglableUserInterfaceHidden:YES animated:NO];
+    
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
+- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
+{
+    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
+        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
+    }
+}
+
+#pragma mark SRGControlsViewDelegate protocol
 
 - (void)controlsView:(SRGControlsView *)controlsView didSelectPlaybackRate:(float)playbackRate
 {
@@ -1083,24 +1101,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
         [self.delegate letterboxView:self didSelectSubtitleLanguageCode:languageCode];
     }
 }
-
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didEngageWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    [self setTogglableUserInterfaceHidden:YES animated:NO];
-    
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didEngageInContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didEngageInContinuousPlaybackWithUpcomingMedia:upcomingMedia];
-    }
-}
-
-- (void)continuousPlaybackView:(SRGContinuousPlaybackView *)continuousPlaybackView didCancelWithUpcomingMedia:(SRGMedia *)upcomingMedia
-{
-    if ([self.delegate respondsToSelector:@selector(letterboxView:didCancelContinuousPlaybackWithUpcomingMedia:)]) {
-        [self.delegate letterboxView:self didCancelContinuousPlaybackWithUpcomingMedia:upcomingMedia];
-    }
-}
-
-#pragma mark SRGControlsViewDelegate protocol
 
 - (BOOL)controlsViewShouldHideFullScreenButton:(SRGControlsView *)controlsView
 {
