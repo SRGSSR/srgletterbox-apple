@@ -39,27 +39,6 @@
 static const CGFloat kBottomConstraintGreaterPriority = 950.f;
 static const CGFloat kBottomConstraintLesserPriority = 850.f;
 
-static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer)
-{
-    if (! playerLayer) {
-        return NO;
-    }
-    
-    CGSize presentationSize = playerLayer.player.currentItem.presentationSize;
-    CGSize playerLayerSize = playerLayer.frame.size;
-    
-    if (presentationSize.width == 0.f || presentationSize.width == 0.f
-            || playerLayerSize.width == 0.f || playerLayerSize.height == 0.f) {
-        return NO;
-    }
-    
-    // Aspect fill only makes sense if content aspect ratios differ a bit
-    static const CGFloat kEpsilon = 0.1f;
-    CGFloat videoAspectRatio = presentationSize.width / presentationSize.height;
-    CGFloat layerAspectRatio = playerLayerSize.width / playerLayerSize.height;
-    return fabs(videoAspectRatio / layerAspectRatio - 1.f) >= kEpsilon;
-}
-
 @interface SRGLetterboxView () <SRGAirPlayViewDelegate, SRGLetterboxTimelineViewDelegate, SRGContinuousPlaybackViewDelegate, SRGControlsViewDelegate>
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -818,9 +797,8 @@ static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer
     }
     
     // Reset to aspect fit gravity if the updated layout does not support aspect fill anymore
-    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
-    if (! PlayerLayerSupportsAspectFillVideoGravity(playerLayer)) {
-        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    if (! [self isSupportingAspectFillVideoGravity]) {
+        self.controller.mediaPlayerController.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
     [self recursivelyUpdateLayoutInView:self forUserInterfaceHidden:userInterfaceHidden transientState:self.transientState];
@@ -829,6 +807,29 @@ static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer
     mediaPlayerController.view.alpha = playerViewVisible ? 1.f : 0.f;
     
     return userInterfaceHidden;
+}
+
+- (BOOL)isSupportingAspectFillVideoGravity
+{
+    AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
+    if (! playerLayer) {
+        return NO;
+    }
+    
+    CGSize presentationSize = playerLayer.player.currentItem.presentationSize;
+    CGSize viewSize = self.frame.size;
+    
+    if (presentationSize.width == 0.f || presentationSize.width == 0.f
+        || viewSize.width == 0.f || viewSize.height == 0.f) {
+        return NO;
+    }
+    
+    // Aspect fill only makes sense if content aspect ratios differ a bit
+    static const CGFloat kEpsilon = 0.1f;
+    CGFloat videoAspectRatio = presentationSize.width / presentationSize.height;
+    CGFloat viewAspectRatio = viewSize.width / viewSize.height;
+    BOOL supportAspectFillGravity = fabs(videoAspectRatio / viewAspectRatio - 1.f) >= kEpsilon;
+    return supportAspectFillGravity;
 }
 
 - (void)recursivelyUpdateLayoutInView:(UIView *)view
@@ -1071,7 +1072,7 @@ static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer
             AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
             if (playerLayer) {
                 if (isZooming) {
-                    if (PlayerLayerSupportsAspectFillVideoGravity(playerLayer) && playerLayer.videoGravity != AVLayerVideoGravityResizeAspectFill) {
+                    if ([self isSupportingAspectFillVideoGravity] && playerLayer.videoGravity != AVLayerVideoGravityResizeAspectFill) {
                         [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
                             playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
                         }];
