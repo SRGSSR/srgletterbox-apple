@@ -817,7 +817,7 @@ static BOOL PlayerLayerSupportsAspectFillVideoGravity(AVPlayerLayer *playerLayer
         playerViewVisible = NO;
     }
     
-    // Reset to aspect fit gravity if the uodated layout does not support aspect fill anymore
+    // Reset to aspect fit gravity if the updated layout does not support aspect fill anymore
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     if (! PlayerLayerSupportsAspectFillVideoGravity(playerLayer)) {
         playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
