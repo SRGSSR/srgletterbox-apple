@@ -797,7 +797,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
     
     // Reset to aspect fit gravity if the updated layout does not support aspect fill anymore
-    if (! [self isSupportingAspectFillVideoGravity]) {
+    if (! [self supportsAspectFillVideoGravity]) {
         self.controller.mediaPlayerController.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     
@@ -809,7 +809,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     return userInterfaceHidden;
 }
 
-- (BOOL)isSupportingAspectFillVideoGravity
+- (BOOL)supportsAspectFillVideoGravity
 {
     AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
     if (! playerLayer) {
@@ -820,7 +820,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     CGSize viewSize = self.frame.size;
     
     if (presentationSize.width == 0.f || presentationSize.width == 0.f
-        || viewSize.width == 0.f || viewSize.height == 0.f) {
+            || viewSize.width == 0.f || viewSize.height == 0.f) {
         return NO;
     }
     
@@ -1072,7 +1072,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
             AVPlayerLayer *playerLayer = self.controller.mediaPlayerController.playerLayer;
             if (playerLayer) {
                 if (isZooming) {
-                    if ([self isSupportingAspectFillVideoGravity] && playerLayer.videoGravity != AVLayerVideoGravityResizeAspectFill) {
+                    if ([self supportsAspectFillVideoGravity] && playerLayer.videoGravity != AVLayerVideoGravityResizeAspectFill) {
                         [self setNeedsLayoutAnimated:YES withAdditionalAnimations:^{
                             playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
                         }];
