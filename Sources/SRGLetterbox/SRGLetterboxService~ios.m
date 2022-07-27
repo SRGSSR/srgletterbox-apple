@@ -318,6 +318,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     playCommand.enabled = NO;
     [playCommand srg_addUniqueTarget:self action:@selector(play:)];
     
+    // Must be registered after the play command
+    MPRemoteCommand *ratingCommand = commandCenter.ratingCommand;
+    ratingCommand.enabled = YES;
+    [ratingCommand srg_addUniqueTarget:self action:@selector(doNothing:)];
+    
     MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
     pauseCommand.enabled = NO;
     [pauseCommand srg_addUniqueTarget:self action:@selector(pause:)];
@@ -641,6 +646,11 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 }
 
 #pragma mark Remote commands
+
+- (MPRemoteCommandHandlerStatus)doNothing:(MPRemoteCommandEvent *)event
+{
+    return MPRemoteCommandHandlerStatusSuccess;
+}
 
 - (MPRemoteCommandHandlerStatus)play:(MPRemoteCommandEvent *)event
 {
