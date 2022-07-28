@@ -380,6 +380,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     MPRemoteCommand *playCommand = commandCenter.playCommand;
     [playCommand removeTarget:self action:@selector(play:)];
     
+    MPRemoteCommand *ratingCommand = commandCenter.ratingCommand;
+    [ratingCommand removeTarget:self action:@selector(doNothing:)];
+    
     MPRemoteCommand *pauseCommand = commandCenter.pauseCommand;
     [pauseCommand removeTarget:self action:@selector(pause:)];
     
