@@ -115,7 +115,7 @@ static __attribute__((constructor)) void ApplicationInit(void)
         return YES;
     }];
     
-#if TARGET_OS_IOS
+#if defined(APPCENTER)
     MSACDistribute.updateTrack = MSACUpdateTrackPrivate;
     [MSACAppCenter start:appCenterSecret withServices:@[ MSACCrashes.class, MSACDistribute.class ]];
 #else

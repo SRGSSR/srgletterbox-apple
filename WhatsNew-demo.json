@@ -61,5 +61,6 @@
   "8.0.0-94": "## Modern gestures (iOS only)\n\n- Skip mode is entered by double-tapping the player once. This gesture can be followed by additional single taps to move further in time.\n- Content gravity is now managed with a pinch gesture and also provides a way to enter or exit full screen mode (provided the dedicated button is also available).\n- The skip and pinch gestures can be performed whether user interface controls are visible or not.\n- The forward skip buttons now move 10 seconds forward instead of 30 seconds. Control center behavior has been updated accordingly.\n\n## Improvements\n\n- Times displayed by a Letterbox view during DVR livestream playback are now always formatted in the Zurich timezone.\n- Age rating blocking reason messages have been updated.",
   "8.1.0-95": "- This releases is a maintenance release without visible changes.",
   "8.2.0-96": "- This demo application now supports 5 languages: Romansh, Italian, German, French and English.\n- Forced subtitles matching the currently selected audio language are automatically displayed.\n- Fix font weight on devices whose language is different from English.",
-  "8.2.1-97": "- This releases is a maintenance release without visible changes."
+  "8.2.1-97": "- This releases is a maintenance release without visible changes.",
+  "8.3.0-98": "- Xcode compatibility: this demo is built with Xcode 14 beta 5 version.\n- Remove superfluous zoom gestures when zooming is not possible."
 }

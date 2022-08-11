@@ -375,13 +375,13 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 #pragma mark Getters and setters
 
-- (void)setUserInterfaceStyle:(SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+- (void)setUserInterfaceStyle:(UIUserInterfaceStyle)userInterfaceStyle
 {
     _userInterfaceStyle = userInterfaceStyle;
     self.playbackSettingsButton.userInterfaceStyle = userInterfaceStyle;
 }
 
-- (SRGMediaPlayerUserInterfaceStyle)userInterfaceStyle
+- (UIUserInterfaceStyle)userInterfaceStyle
 {
     return _userInterfaceStyle;
 }
