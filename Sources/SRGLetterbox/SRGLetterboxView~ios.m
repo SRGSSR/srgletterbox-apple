@@ -171,18 +171,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTapGestureRecognizer.delegate = self;
-    [self addGestureRecognizer:singleTapGestureRecognizer];
+    [playbackView addGestureRecognizer:singleTapGestureRecognizer];
     self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
     SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSkip:)];
     doubleTapGestureRecognizer.numberOfTapsRequired = 2;
     doubleTapGestureRecognizer.delaysTouchesEnded = NO;
     doubleTapGestureRecognizer.tapDelay = 0.25;
-    [self addGestureRecognizer:doubleTapGestureRecognizer];
+    [playbackView addGestureRecognizer:doubleTapGestureRecognizer];
     self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
     
     UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handleVideoGravityPinch:)];
-    [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
+    [playbackView addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
 }
 
 - (void)layoutControlsViewInView:(UIView *)view
