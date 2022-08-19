@@ -119,7 +119,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     [self layoutTimelineViewInView:self.contentView];
     [self layoutPlayerViewInView:self.contentView];
-    [self layoutControlsViewInView:self.contentView];
+    [self layoutControlsViewInView:self.playbackView];
     [self layoutNotificationViewInView:self.contentView];
     [self layoutAvailabilityViewInView:self.contentView];
     [self layoutContinuousPlaybackViewInView:self.contentView];
@@ -402,7 +402,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     UIView *mediaPlayerView = controller.mediaPlayerController.view;
     if (mediaPlayerView) {
-        [self.playbackView addSubview:mediaPlayerView];
+        [self.playbackView insertSubview:mediaPlayerView atIndex:0];
         
         // Force autolayout to ensure the layout is immediately correct
         mediaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
