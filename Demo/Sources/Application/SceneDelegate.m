@@ -34,7 +34,7 @@
 
 #pragma mark Custom scheme urls
 
-// Open [scheme]://open?media=[media_urn] (optional &server=[server_name])
+// Open [scheme]://media/[media_urn] (optional server=[server_name])
 - (void)handleURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts
 {
     // FIXME: Works as long as only one context is received
