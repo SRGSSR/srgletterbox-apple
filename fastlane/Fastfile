@@ -211,20 +211,21 @@ platform :ios do
 
     can_upload = can_upload_testflight_build(nil, platform, build_number)
     UI.message("SRGLetterbox-demo (Release #{build_number}) already uploaded 🔁 ✅") unless can_upload
-    next unless can_upload
 
-    build_lane(
-      configuration: 'Release',
-      scheme: demo_scheme,
-      platform: platform,
-      export_to_appstore: true
-    )
+    if can_upload
+      build_lane(
+        configuration: 'Release',
+        scheme: demo_scheme,
+        platform: platform,
+        export_to_appstore: true
+      )
 
-    pilot_fast_upload(platform)
+      pilot_fast_upload(platform)
 
-    clean_build_artifacts
+      clean_build_artifacts
 
-    UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded. ✅"
+      UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded. ✅"
+    end
 
     pilot_distribute(platform, build_number, what_s_new_for_demo)
 
