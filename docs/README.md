@@ -77,12 +77,12 @@ make setup
 
 from the main repository directory.
 
-#### URL schemes (iOS)
+#### URL schemes
 
-The iOS demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
+The demo application can be opened with a custom URL scheme having the following format: `letterbox(-nightly|-debug)`.
 
-* Open a media within the player: `[scheme]://open?media=[media_urn]`.
-* A `&server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
+* Open a media within the player: `[scheme]://media/[media_urn]`.
+* An optional `server=[server_name]` parameter can be added to force a server selection. The available server list can be found in the _Server_ section of the application settings.
 
 ## Settings
 

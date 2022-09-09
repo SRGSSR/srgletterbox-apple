@@ -119,7 +119,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     [self layoutTimelineViewInView:self.contentView];
     [self layoutPlayerViewInView:self.contentView];
-    [self layoutControlsViewInView:self.contentView];
+    [self layoutControlsViewInView:self.playbackView];
     [self layoutNotificationViewInView:self.contentView];
     [self layoutAvailabilityViewInView:self.contentView];
     [self layoutContinuousPlaybackViewInView:self.contentView];
@@ -171,18 +171,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTapGestureRecognizer.delegate = self;
-    [self addGestureRecognizer:singleTapGestureRecognizer];
+    [playbackView addGestureRecognizer:singleTapGestureRecognizer];
     self.singleTapGestureRecognizer = singleTapGestureRecognizer;
     
     SRGTapGestureRecognizer *doubleTapGestureRecognizer = [[SRGTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSkip:)];
     doubleTapGestureRecognizer.numberOfTapsRequired = 2;
     doubleTapGestureRecognizer.delaysTouchesEnded = NO;
     doubleTapGestureRecognizer.tapDelay = 0.25;
-    [self addGestureRecognizer:doubleTapGestureRecognizer];
+    [playbackView addGestureRecognizer:doubleTapGestureRecognizer];
     self.doubleTapGestureRecognizer = doubleTapGestureRecognizer;
     
     UIPinchGestureRecognizer *videoGravityChangePinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handleVideoGravityPinch:)];
-    [self addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
+    [playbackView addGestureRecognizer:videoGravityChangePinchGestureRecognizer];
 }
 
 - (void)layoutControlsViewInView:(UIView *)view
@@ -402,7 +402,7 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     
     UIView *mediaPlayerView = controller.mediaPlayerController.view;
     if (mediaPlayerView) {
-        [self.playbackView addSubview:mediaPlayerView];
+        [self.playbackView insertSubview:mediaPlayerView atIndex:0];
         
         // Force autolayout to ensure the layout is immediately correct
         mediaPlayerView.translatesAutoresizingMaskIntoConstraints = NO;

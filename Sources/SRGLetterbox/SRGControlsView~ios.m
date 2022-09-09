@@ -50,8 +50,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 
 @interface SRGControlsView ()
 
-@property (nonatomic, weak) UIView *userInterfaceToggleActiveView;
-
 @property (nonatomic, weak) SRGLetterboxPlaybackButton *playbackButton;
 @property (nonatomic, weak) SRGLabeledControlButton *backwardSkipButton;
 @property (nonatomic, weak) SRGLabeledControlButton *forwardSkipButton;
@@ -92,7 +90,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     [super layoutContentView];
     
-    [self layoutUserInterfaceToggleActiveViewInView:self.contentView];
     [self layoutBottomControlsInView:self.contentView];
     [self layoutCenterControlsInView:self.contentView];
     
@@ -104,20 +101,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     }];
 }
 
-- (void)layoutUserInterfaceToggleActiveViewInView:(UIView *)view
-{
-    UIView *userInterfaceToggleActiveView = [[UIView alloc] init];
-    [view addSubview:userInterfaceToggleActiveView];
-    self.userInterfaceToggleActiveView = userInterfaceToggleActiveView;
-    
-    userInterfaceToggleActiveView.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[
-        [userInterfaceToggleActiveView.topAnchor constraintEqualToAnchor:view.topAnchor],
-        [userInterfaceToggleActiveView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
-        [userInterfaceToggleActiveView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor],
-    ]];
-}
-
 - (void)layoutBottomControlsInView:(UIView *)view
 {
     UIStackView *bottomStackView = [[UIStackView alloc] init];
@@ -126,7 +109,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     bottomStackView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [bottomStackView.topAnchor constraintEqualToAnchor:self.userInterfaceToggleActiveView.bottomAnchor],
         [[bottomStackView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor] srgletterbox_withPriority:750],
         [bottomStackView.bottomAnchor constraintLessThanOrEqualToAnchor:view.safeAreaLayoutGuide.bottomAnchor],
         [bottomStackView.leadingAnchor constraintEqualToAnchor:view.safeAreaLayoutGuide.leadingAnchor],

@@ -16,6 +16,21 @@ NSURL *LetterboxDemoMMFServiceURL(void)
     return serviceURL ?: [NSURL URLWithString:@"https://play-mmf.herokuapp.com"];
 }
 
+NSURL *SRGSamProductionServiceURL(void)
+{
+    return [SRGIntegrationLayerProductionServiceURL() URLByAppendingPathComponent:@"sam"];
+}
+
+NSURL *SRGSamStageServiceURL(void)
+{
+    return [SRGIntegrationLayerStagingServiceURL() URLByAppendingPathComponent:@"sam"];
+}
+
+NSURL *SRGSamTestServiceURL(void)
+{
+    return [SRGIntegrationLayerTestServiceURL() URLByAppendingPathComponent:@"sam"];
+}
+
 NSURL *LetterboxDemoServiceURLForKey(NSString *key)
 {
     NSInteger index = [ServerSettings.serverSettings indexOfObjectPassingTest:^BOOL(ServerSettings * _Nonnull serverSettings, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -63,7 +78,10 @@ NSString *LetterboxDemoServiceNameForURL(NSURL *URL)
             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Production", nil) URL:SRGIntegrationLayerProductionServiceURL()],
             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Stage", nil) URL:SRGIntegrationLayerStagingServiceURL()],
             [[ServerSettings alloc] initWithName:NSLocalizedString(@"Test", nil) URL:SRGIntegrationLayerTestServiceURL()],
-            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", nil) URL:LetterboxDemoMMFServiceURL()]
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"Play MMF", nil) URL:LetterboxDemoMMFServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"SAM Production", nil) URL:SRGSamProductionServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"SAM Stage", nil) URL:SRGSamStageServiceURL()],
+            [[ServerSettings alloc] initWithName:NSLocalizedString(@"SAM Test", nil) URL:SRGSamTestServiceURL()]
         ];
     });
     return s_serverSettings;

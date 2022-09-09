@@ -7,16 +7,13 @@
 #import "AppDelegate.h"
 
 #import "Application.h"
-#import "ServerSettings.h"
 #import "SettingsViewController.h"
-#import "UIViewController+LetterboxDemo.h"
 
 @import AppCenter;
 @import AppCenterCrashes;
 #if TARGET_OS_IOS
 @import AppCenterDistribute;
 #endif
-@import libextobjc;
 @import SRGAnalytics;
 @import SRGLetterbox;
 @import SRGNetwork;
@@ -67,27 +64,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     return YES;
 }
 
-// Open [scheme]://open?media=[media_urn] (optional &server=[server_name])
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:YES];
-    if ([URLComponents.host.lowercaseString isEqualToString:@"media"]) {
-        NSString *mediaURN = URLComponents.path.lastPathComponent;
-        if (mediaURN) {
-            NSURL *serviceURL = nil;
-            NSString *server = [self valueFromURLComponents:URLComponents withParameterName:@"server"];
-            if (server) {
-                serviceURL = LetterboxDemoServiceURLForKey(server);
-            }
-      
-            [self.window.rootViewController openPlayerWithURN:mediaURN serviceURL:serviceURL];
-            return YES;
-        }
-        return NO;
-    }
-    return NO;
-}
-
 #pragma mark Helpers
 
 - (void)setupAppCenter
@@ -121,22 +97,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
 #else
     [MSACAppCenter start:appCenterSecret withServices:@[ MSACCrashes.class ]];
 #endif
-}
-
-#pragma mark Custom URL scheme support
-
-- (NSString *)valueFromURLComponents:(NSURLComponents *)URLComponents withParameterName:(NSString *)parameterName
-{
-    NSParameterAssert(URLComponents);
-    NSParameterAssert(parameterName);
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @keypath(NSURLQueryItem.new, name), parameterName];
-    NSURLQueryItem *queryItem = [URLComponents.queryItems filteredArrayUsingPredicate:predicate].firstObject;
-    if (! queryItem) {
-        return nil;
-    }
-    
-    return queryItem.value;
 }
 
 @end
