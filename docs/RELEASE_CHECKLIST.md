@@ -36,7 +36,7 @@ To release an SRG SSR library, perform the following steps sequentially (some st
 - Push _master_, _develop_ and tag.
 - Close the milestone and issues on github.
 - Create the github release. Use a global diff to write release notes.
-- Deliver demos on AppCenter / TestFlight from _master_, if any.
+- Deliver demos on TestFlight from _master_, if any.
 
 The libraries must be released in the order given by the table below, which you can use to keep track of version numbers as you release libraries:
 
@@ -62,4 +62,4 @@ A new Letterbox demo application can also be delivered if a **direct or transiti
 - Bump the demo build number on _develop_ to prepare for the next demo release (`Demo.xcconfig`).
 - **DON'T push** the new `demo` tag. Remove it locally.
 - Push _master_ and _develop_.
-- Deliver demos on AppCenter / TestFlight from _master_.
+- Deliver demos on TestFlight from _master_.
