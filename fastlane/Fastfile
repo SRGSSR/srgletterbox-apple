@@ -9,7 +9,7 @@
 # All lines starting with a # are ignored when running `fastlane`
 
 # This is the minimum version number required.
-fastlane_version '2.201.0'
+fastlane_version '2.210.1'
 
 default_platform :ios
 
@@ -33,9 +33,9 @@ platform :ios do
     clean_result_files
     clean_derived_data
 
-    iphone13 = Device.new('iOS', 'iPhone 13')
+    iphone14 = Device.new('iOS', 'iPhone 14')
     appletv = Device.new('tvOS', 'Apple TV')
-    devices = [iphone13, appletv]
+    devices = [iphone14, appletv]
 
     scheme = swift_package_name
     swift_package_tests = TestBuild.new(scheme, '', false)
@@ -476,13 +476,11 @@ end
 def pilot_fast_upload(platform)
   lane_context.delete(SharedValues::FL_CHANGELOG)
 
-  xcversion(version: '~> 13')
   login_with_app_store_connect_api_key
   pilot(
     app_platform: appstore_platform(platform),
     skip_waiting_for_build_processing: true
   )
-  xcversion(version: '~> 13')
 end
 
 def pilot_distribute(platform, build_number, changelog)
@@ -494,7 +492,6 @@ rescue StandardError => e
 end
 
 def srg_pilot_distribute(platform, build_number, changelog)
-  xcversion(version: '~> 13')
   login_with_app_store_connect_api_key
   pilot(
     distribute_only: true,
@@ -507,7 +504,6 @@ def srg_pilot_distribute(platform, build_number, changelog)
     demo_account_required: false,
     beta_app_review_info: beta_app_review_info
   )
-  xcversion(version: '~> 13')
 end
 
 def upload_appcenter_dsyms(appcenter_appname)
