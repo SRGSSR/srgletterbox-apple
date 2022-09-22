@@ -39,14 +39,6 @@ Build a new iOS nightly demo on App Center
 
 Build a new tvOS nightly demo on AppStore Connect and wait build processing.
 
-### ios tvOSnightlyDSYMs
-
-```sh
-[bundle exec] fastlane ios tvOSnightlyDSYMs
-```
-
-Send latest tvOS nightly dSYMs to App Center. Optional 'build_number', 'version' or 'min_version' parameters.
-
 ### ios iOSnightly
 
 ```sh
@@ -54,14 +46,6 @@ Send latest tvOS nightly dSYMs to App Center. Optional 'build_number', 'version'
 ```
 
 Build a new iOS nightly demo on AppStore Connect and wait build processing.
-
-### ios iOSnightlyDSYMs
-
-```sh
-[bundle exec] fastlane ios iOSnightlyDSYMs
-```
-
-Send latest iOS nightly dSYMs to App Center. Optional 'build_number', 'version' or 'min_version' parameters.
 
 ### ios demo
 
@@ -79,14 +63,6 @@ Build a new iOS demo on App Center with the current build number. You are respon
 
 Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.
 
-### ios tvOSdemoDSYMs
-
-```sh
-[bundle exec] fastlane ios tvOSdemoDSYMs
-```
-
-Send latest tvOS demo dSYMs to App Center. Optional 'build_number', 'version' or 'min_version' parameters.
-
 ### ios iOSdemo
 
 ```sh
@@ -94,14 +70,6 @@ Send latest tvOS demo dSYMs to App Center. Optional 'build_number', 'version' or
 ```
 
 Build a new iOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.
-
-### ios iOSdemoDSYMs
-
-```sh
-[bundle exec] fastlane ios iOSdemoDSYMs
-```
-
-Send latest iOS demo dSYMs to App Center. Optional 'build_number', 'version' or 'min_version' parameters.
 
 ----
 
