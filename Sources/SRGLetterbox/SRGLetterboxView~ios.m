@@ -791,11 +791,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && mediaPlayerController.view.readyForDisplay && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     
-    // Prevent capture in production builds
-    if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {
-        playerViewVisible = NO;
-    }
-    
     // Reset to aspect fit gravity if the updated layout does not support aspect fill anymore
     if (! [self supportsAspectFillVideoGravity]) {
         self.controller.mediaPlayerController.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;

@@ -48,10 +48,9 @@ static __attribute__((constructor)) void ApplicationInit(void)
     // Use test setup and pre-production mode since there will never be any public App Store version of this demo application.
     // This prevents tvOS builds delivered with TestFlight from sending production data.
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
-                                                                                                       container:10
+                                                                                                       sourceKey:@"39ae8f94-595c-4ca4-81f7-fb7748bd3f04"
                                                                                                         siteName:@"rts-app-test-v"];
     configuration.centralized = YES;
-    configuration.environmentMode = SRGAnalyticsEnvironmentModePreProduction;
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
     

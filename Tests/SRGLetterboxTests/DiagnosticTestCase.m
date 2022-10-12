@@ -701,27 +701,4 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     [self waitForExpectationsWithTimeout:30. handler:nil];
 }
 
-- (void)testPlaybackReportForForcedAnalyticsEnvironmentMode
-{
-    NSString *URN = OnDemandVideoURN;
-    
-    SRGAnalyticsEnvironmentMode originalAnalyticsEnvironmentMode = SRGAnalyticsTracker.sharedTracker.configuration.environmentMode;
-    SRGAnalyticsTracker.sharedTracker.configuration.environmentMode = SRGAnalyticsEnvironmentModeProduction;
-    
-    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"prod");
-        return YES;
-    }];
-    
-    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    SRGAnalyticsTracker.sharedTracker.configuration.environmentMode = originalAnalyticsEnvironmentMode;
-}
-
 @end

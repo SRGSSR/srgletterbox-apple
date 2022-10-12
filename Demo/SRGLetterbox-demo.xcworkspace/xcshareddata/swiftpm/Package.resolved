@@ -77,9 +77,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "c92014ca8838ad3cf403735ce25757afb04cd31f",
-          "version": "8.2.0"
+          "branch": "feature/62-update-to-tag-commander-v5",
+          "revision": "349803c4ea4b07e9fdc9c277bf7e6481bbf5cd55",
+          "version": null
         }
       },
       {
@@ -159,17 +159,17 @@
         "repositoryURL": "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "eb686883e63af28174472a09eda97acf07179c88",
-          "version": "4.5.4-srg5"
+          "revision": "6f5e24bed11558da8c1479157ec74a0485443834",
+          "version": "5.1.1"
         }
       },
       {
-        "package": "TCSDK",
-        "repositoryURL": "https://github.com/SRGSSR/TCSDK-xcframework-apple.git",
+        "package": "TCServerSide",
+        "repositoryURL": "https://github.com/SRGSSR/TCServerSide-xcframework-apple.git",
         "state": {
           "branch": null,
-          "revision": "c4becb0b250258b78cb46225af5e269da834db5a",
-          "version": "4.4.1-srg5"
+          "revision": "bb47eef2a14d486aa72896abc8d911fe9aed67d0",
+          "version": "5.1.2"
         }
       },
       {

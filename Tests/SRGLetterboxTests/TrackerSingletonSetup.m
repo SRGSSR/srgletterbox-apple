@@ -10,7 +10,7 @@
 __attribute__((constructor)) static void SetupTestSingletonTracker(void)
 {
     SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
-                                                                                                       container:7
+                                                                                                       sourceKey:@"39ae8f94-595c-4ca4-81f7-fb7748bd3f04"
                                                                                                         siteName:@"rts-app-test-v"];
     [SRGAnalyticsTracker.sharedTracker startWithConfiguration:configuration];
 }
