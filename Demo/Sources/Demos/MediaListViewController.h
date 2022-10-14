@@ -18,17 +18,29 @@ typedef NS_ENUM(NSInteger, MediaList) {
      */
     MediaListUnknown = 0,
     /**
-     *  Live center SRF
+     *  Live center SRF (only with result)
      */
     MediaListLiveCenterSRF,
     /**
-     *  Live center RTS
+     *  Live center RTS (only with result)
      */
     MediaListLiveCenterRTS,
     /**
-     *  Live center RSI
+     *  Live center RSI (only with result)
      */
     MediaListLiveCenterRSI,
+    /**
+     *  Live center SRF (all)
+     */
+    MediaListLiveCenterAllSRF,
+    /**
+     *  Live center RTS (all)
+     */
+    MediaListLiveCenterAllRTS,
+    /**
+     *  Live center RSI (all)
+     */
+    MediaListLiveCenterAllRSI,
     /**
      *  Latest by topic
      */
