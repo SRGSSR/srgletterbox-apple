@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "72d9475b46d97ecde0298b5bc80a654e8b424ebb",
-          "version": "5.2.0"
+          "revision": "37858eb83365f498d3861cc546ba86a51e061293",
+          "version": "5.2.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "340c676f77eec1bd437bed91f30165736fc10abb",
-          "version": "16.1.0"
+          "revision": "4f840770c70bbe47340bfd32ff856d71ba002093",
+          "version": "16.1.1"
         }
       },
       {
