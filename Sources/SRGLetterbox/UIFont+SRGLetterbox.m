@@ -13,9 +13,12 @@ __attribute__((constructor)) static void SRGLetterboxFontInit(void)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSURL *fontFileURL = [SWIFTPM_MODULE_BUNDLE URLForResource:@"FontAwesome" withExtension:@"otf"];
-        __unused BOOL success = CTFontManagerRegisterFontsForURL((CFURLRef)fontFileURL, kCTFontManagerScopeProcess, NULL);
-        NSCAssert(success, @"The FontAwesome font could not be registered. Please ensure only SRG Letterbox registers "
-                  "this font (check font declarations in your application Info.plist)");
+        BOOL success = CTFontManagerRegisterFontsForURL((CFURLRef)fontFileURL, kCTFontManagerScopeProcess, NULL);
+        if (! success) {
+            NSLog(@"The FontAwesome font could not be registered. Please ensure only SRG Letterbox registers "
+                  "this font (check font declarations in your application Info.plist). Please ignore this "
+                  "issue in unit tests.");
+        }
     });
 }
 
