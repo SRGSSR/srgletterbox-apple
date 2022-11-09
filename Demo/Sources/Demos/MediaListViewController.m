@@ -97,9 +97,12 @@
         static dispatch_once_t s_onceToken;
         static NSDictionary<NSNumber *, NSString *> *s_titles;
         dispatch_once(&s_onceToken, ^{
-            s_titles = @{ @(MediaListLiveCenterSRF) : NSLocalizedString(@"SRF Live center", nil),
-                          @(MediaListLiveCenterRTS) : NSLocalizedString(@"RTS Live center", nil),
-                          @(MediaListLiveCenterRSI) : NSLocalizedString(@"RSI Live center", nil),
+            s_titles = @{ @(MediaListLiveCenterSRF) : NSLocalizedString(@"SRF Live center (with result)", nil),
+                          @(MediaListLiveCenterRTS) : NSLocalizedString(@"RTS Live center (with result)", nil),
+                          @(MediaListLiveCenterRSI) : NSLocalizedString(@"RSI Live center (with result)", nil),
+                          @(MediaListLiveCenterAllSRF) : NSLocalizedString(@"SRF Live center (all)", nil),
+                          @(MediaListLiveCenterAllRTS) : NSLocalizedString(@"RTS Live center (all)", nil),
+                          @(MediaListLiveCenterAllRSI) : NSLocalizedString(@"RSI Live center (all)", nil),
                           @(MediaListLiveTVSRF) : NSLocalizedString(@"SRF Live TVs", nil),
                           @(MediaListLiveTVRTS) : NSLocalizedString(@"RTS Live TVs", nil),
                           @(MediaListLiveTVRSI) : NSLocalizedString(@"RSI Live TVs", nil),
@@ -175,7 +178,24 @@
             
             NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
             NSAssert(vendorNumber != nil, @"The business unit must be supported");
-            request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
+            request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue contentTypeFilter:SRGContentTypeFilterNone eventsWithResultOnly:YES withCompletionBlock:completionBlock] requestWithPageSize:100];
+            break;
+        }
+            
+        case MediaListLiveCenterAllSRF:
+        case MediaListLiveCenterAllRTS:
+        case MediaListLiveCenterAllRSI: {
+            static NSDictionary<NSNumber *, NSNumber *> *s_vendors;
+            static dispatch_once_t s_onceToken;
+            dispatch_once(&s_onceToken, ^{
+                s_vendors = @{ @(MediaListLiveCenterAllSRF) : @(SRGVendorSRF),
+                               @(MediaListLiveCenterAllRTS) : @(SRGVendorRTS),
+                               @(MediaListLiveCenterAllRSI) : @(SRGVendorRSI) };
+            });
+            
+            NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
+            NSAssert(vendorNumber != nil, @"The business unit must be supported");
+            request = [[self.dataProvider liveCenterVideosForVendor:vendorNumber.integerValue contentTypeFilter:SRGContentTypeFilterNone eventsWithResultOnly:NO withCompletionBlock:completionBlock] requestWithPageSize:100];
             break;
         }
             
@@ -316,7 +336,7 @@
             
             NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
             NSAssert(vendorNumber != nil, @"The business unit must be supported");
-            request = [[self.dataProvider tvScheduledLivestreamsForVendor:vendorNumber.integerValue withCompletionBlock:completionBlock] requestWithPageSize:100];
+            request = [[self.dataProvider tvScheduledLivestreamsForVendor:vendorNumber.integerValue signLanguageOnly:NO withCompletionBlock:completionBlock] requestWithPageSize:100];
             break;
         }
             

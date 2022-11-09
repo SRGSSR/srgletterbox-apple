@@ -197,19 +197,19 @@ platform :ios do
 
       pilot_fast_upload(platform)
 
-      clean_build_artifacts
-
       UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded. ✅"
+
+      appcenter_appname = appcenter_testflight_demo_name(platform)
+      upload_appcenter_dsyms(appcenter_appname)
+
+      UI.message "SRGLetterbox-demo (Release #{build_number}) dSYM file OK. ✅"
+
+      clean_build_artifacts
     end
 
     pilot_distribute(platform, build_number, what_s_new_for_demo)
 
     UI.message "SRGLetterbox-demo (Release #{build_number}) distributed. ✅"
-
-    appcenter_appname = appcenter_testflight_demo_name(platform)
-    upload_appcenter_dsyms(appcenter_appname)
-
-    UI.message "SRGLetterbox-demo (Release #{build_number}) dSYM file OK. ✅"
 
     UI.important('You are responsible to tag the library and bump the version (and the build number).')
   end
