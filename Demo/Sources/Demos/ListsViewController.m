@@ -51,7 +51,7 @@
         s_rows = @[ @6,
                     @4,
                     @4,
-                    @3,
+                    @6,
                     @4,
                     @5,
                     @15 ];
@@ -122,9 +122,12 @@
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil),
                          NSLocalizedString(@"RTR", nil) ],
-                      @[ NSLocalizedString(@"SRF", nil),
-                         NSLocalizedString(@"RTS", nil),
-                         NSLocalizedString(@"RSI", nil) ],
+                      @[ NSLocalizedString(@"SRF (with result)", nil),
+                         NSLocalizedString(@"SRF (all)", nil),
+                         NSLocalizedString(@"RTS (with result)", nil),
+                         NSLocalizedString(@"RTS (all)", nil),
+                         NSLocalizedString(@"RSI (with result)", nil),
+                         NSLocalizedString(@"RSI (all)", nil) ],
                       @[ NSLocalizedString(@"SRF", nil),
                          NSLocalizedString(@"RTS", nil),
                          NSLocalizedString(@"RSI", nil),
@@ -202,8 +205,11 @@
             static NSArray<NSNumber *> *s_lists;
             dispatch_once(&s_onceToken, ^{
                 s_lists = @[ @(MediaListLiveCenterSRF),
+                             @(MediaListLiveCenterAllSRF),
                              @(MediaListLiveCenterRTS),
-                             @(MediaListLiveCenterRSI) ];
+                             @(MediaListLiveCenterAllRTS),
+                             @(MediaListLiveCenterRSI),
+                             @(MediaListLiveCenterAllRSI) ];
             });
             [self openMediaListWithType:s_lists[indexPath.row].integerValue];
             break;
