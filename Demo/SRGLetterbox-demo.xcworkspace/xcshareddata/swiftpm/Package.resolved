@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "TagCommander SDK V5",
+        "repositoryURL": "https://github.com/CommandersAct/iOSV5.git",
+        "state": {
+          "branch": null,
+          "revision": "804f8d04acf4556820341f02b8b5e657a060ed1f",
+          "version": "5.2.1"
+        }
+      },
+      {
         "package": "libextobjc",
         "repositoryURL": "https://github.com/SRGSSR/libextobjc.git",
         "state": {
@@ -78,7 +87,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/62-update-to-tag-commander-v5",
-          "revision": "349803c4ea4b07e9fdc9c277bf7e6481bbf5cd55",
+          "revision": "e2643601c199c06c5ceb8f48aee159fec9437c21",
           "version": null
         }
       },
@@ -152,24 +161,6 @@
           "branch": null,
           "revision": "153a2544391c1aaccae2d38d8b113fd0a03421b8",
           "version": "3.1.0"
-        }
-      },
-      {
-        "package": "TCCore",
-        "repositoryURL": "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
-        "state": {
-          "branch": null,
-          "revision": "6f5e24bed11558da8c1479157ec74a0485443834",
-          "version": "5.1.1"
-        }
-      },
-      {
-        "package": "TCServerSide",
-        "repositoryURL": "https://github.com/SRGSSR/TCServerSide-xcframework-apple.git",
-        "state": {
-          "branch": null,
-          "revision": "bb47eef2a14d486aa72896abc8d911fe9aed67d0",
-          "version": "5.1.2"
         }
       },
       {

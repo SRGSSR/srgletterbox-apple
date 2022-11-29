@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AVInitialRouteSharingPolicy</key>
+	<string>LongFormVideo</string>
 	<key>AppCenterSecret</key>
 	<string>$(APPCENTER_SECRET)</string>
 	<key>AppCenterURL</key>
@@ -51,8 +53,29 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>The application should not use Bluetooth. Please don’t allow.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>The application should not use Bluetooth. Please don’t allow.</string>
 	<key>PlayMMFServiceURL</key>
 	<string>$(PLAY_MMF_SERVICE_URL)</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default</string>
+					<key>UISceneDelegateClassName</key>
+					<string>SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -78,26 +101,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>AVInitialRouteSharingPolicy</key>
-	<string>LongFormVideo</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Automatic</string>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
-		<key>UISceneConfigurations</key>
-		<dict>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneConfigurationName</key>
-					<string>Default</string>
-					<key>UISceneDelegateClassName</key>
-					<string>SceneDelegate</string>
-				</dict>
-			</array>
-		</dict>
-	</dict>
 </dict>
 </plist>
