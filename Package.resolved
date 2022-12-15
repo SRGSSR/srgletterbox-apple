@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/CommandersAct/iOSV5.git",
         "state": {
           "branch": null,
-          "revision": "804f8d04acf4556820341f02b8b5e657a060ed1f",
-          "version": "5.2.1"
+          "revision": "a92022d04e838f8db41dd2088169d2102bcc5cc0",
+          "version": "5.2.2"
         }
       },
       {
@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": "feature/62-update-to-tag-commander-v5",
-          "revision": "e2643601c199c06c5ceb8f48aee159fec9437c21",
+          "revision": "e7264b7b182385cdc369db53cd4e8da90fc71918",
           "version": null
         }
       },
