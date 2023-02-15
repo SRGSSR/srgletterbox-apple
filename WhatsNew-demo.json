@@ -65,5 +65,6 @@
   "8.3.0-98": "- Xcode compatibility: this demo is built with Xcode 14 beta 5 version.\n- Remove superfluous zoom gestures when zooming is not possible.",
   "8.3.1-99": "- Fix iOS timeline view not interactive in some cases (playback stopped, Mac with Apple Silicon).\n- Restore custom url to open a media.\n- Add SAM servers in the settings tab.",
   "8.3.2-100": "- Maintenance release for unit tests.",
-  "8.4.0-101": "- Maintenance release for the library.\n- App: update Live Center section in list tab."
+  "8.4.0-101": "- Maintenance release for the library.\n- Demo: update Live Center section in list tab.",
+  "8.4.0-102": "- Maintenance release for the library.\n- Demo: update Live Center section in list tab."
 }
