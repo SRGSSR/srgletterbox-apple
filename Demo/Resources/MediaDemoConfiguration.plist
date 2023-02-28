@@ -19,7 +19,7 @@
 			<key>name</key>
 			<string>Common medias</string>
 			<key>summary</key>
-			<string>Examples for common tyoes of medias supplied by the SRG SSR.</string>
+			<string>Examples for common types of medias supplied by the SRG SSR.</string>
 			<key>medias</key>
 			<array>
 				<dict>
