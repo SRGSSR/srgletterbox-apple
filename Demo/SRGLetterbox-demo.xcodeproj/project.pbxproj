@@ -389,8 +389,9 @@
 		6FE321381E28E24E00FD8E42 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = SRG;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "SRG SSR";
 				TargetAttributes = {
 					6FAB3B391E28FE2000CC2197 = {
