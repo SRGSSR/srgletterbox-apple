@@ -19,7 +19,7 @@ xcuserdata
 /fastlane/*.xml
 
 /vendor
-/.bundle
+
 /Demo/Scripts/generate-icons-caches
 
 .vscode

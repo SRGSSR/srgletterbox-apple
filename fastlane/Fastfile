@@ -25,7 +25,8 @@ platform :ios do
 
     ensure_git_status_clean
 
-    xcversion(version: '~> 14')
+    # Use .xcode-version file
+    xcodes(select_for_current_build_only: true)
   end
 
   desc 'Run library tests'
@@ -235,7 +236,6 @@ platform :ios do
       configuration: options[:configuration],
       scheme: options[:scheme],
       silent: true,
-      clean: true,
       xcargs: srg_xcargs(options),
       export_method: options[:export_to_appstore] ? 'app-store' : 'enterprise',
       include_bitcode: false,

@@ -25,6 +25,12 @@ setup:
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" "${CONFIGURATION_FOLDER}"
 	@echo "... done.\n"
 
+.PHONY: rbenv
+rbenv:
+	@echo "Installing needed ruby version if missing..."
+	@Scripts/rbenv-install.sh "./"
+	@echo "... done.\n"
+
 .PHONY: help
 help:
 	@echo "The following targets are available:"
@@ -32,4 +38,5 @@ help:
 	@echo "   all             Build and run unit tests for all platforms"
 	@echo "   test-ios        Build and run unit tests for iOS"
 	@echo "   test-tvos       Build and run unit tests for tvOS"
+	@echo "   rbenv           Install needed ruby version if missing"
 	@echo "   help            Display this help message"

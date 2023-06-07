@@ -31,17 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) SRGQuality quality;
 
 /**
- *  The bit rate the media should start playing with, in kbps. This parameter is a recommendation with no result guarantee,
- *  though it should in general be applied. The nearest available quality (larger or smaller than the requested size) is
- *  used.
- *
- *  Usual SRG SSR valid bit ranges vary from 100 to 3000 kbps. Use 0 to start with the lowest quality stream.
- *
- *  Default value is `SRGDefaultStartBitRate`.
- */
-@property (nonatomic) NSUInteger startBitRate;
-
-/**
  *  If set to `NO`, the content is played in the context of its full length media. If set to `YES`, the content is played
  *  standalone.
  *
