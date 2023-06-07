@@ -15,7 +15,6 @@
     if (self = [super init]) {
         self.streamType = SRGStreamTypeNone;
         self.quality = SRGQualityNone;
-        self.startBitRate = SRGDefaultStartBitRate;
         self.standalone = NO;
     }
     return self;
@@ -28,7 +27,6 @@
     SRGLetterboxPlaybackSettings *settings = [self.class allocWithZone:zone];
     settings.streamType = self.streamType;
     settings.quality = self.quality;
-    settings.startBitRate = self.startBitRate;
     settings.standalone = self.standalone;
     settings.sourceUid = self.sourceUid;
     return settings;

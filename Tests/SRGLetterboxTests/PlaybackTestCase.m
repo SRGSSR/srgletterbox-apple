@@ -1640,6 +1640,9 @@
             XCTAssertFalse(self.controller.loading);
             return YES;
         }
+        else {
+            return NO;
+        }
     }];
     
     CMTime seekTime = CMTimeMakeWithSeconds(40., NSEC_PER_SEC);

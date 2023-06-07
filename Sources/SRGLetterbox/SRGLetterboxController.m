@@ -125,7 +125,6 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     SRGPlaybackSettings *playbackSettings = [[SRGPlaybackSettings alloc] init];
     playbackSettings.streamType = settings.streamType;
     playbackSettings.quality = settings.quality;
-    playbackSettings.startBitRate = settings.startBitRate;
     playbackSettings.sourceUid = settings.sourceUid;
     return playbackSettings;
 }
