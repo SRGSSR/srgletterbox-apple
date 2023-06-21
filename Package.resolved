@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "ede1a4aee58fc63a308e2babf3e33f55fedecb68",
-          "version": "6.10.2"
+          "revision": "7e3c521ad689b0e2bbf5cfb62e19c9e1619feae2",
+          "version": "6.10.0"
         }
       },
       {
@@ -59,9 +59,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": null,
-          "revision": "363171981dc1cf97d4b8db4ae2a1e052d2478124",
-          "version": "8.0.0"
+          "branch": "feature/legacy-image-services",
+          "revision": "acd5f2eaa281466bb06649c4b15577786046414a",
+          "version": null
         }
       },
       {
@@ -86,9 +86,9 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": null,
-          "revision": "75818e9de479d6cc460840d6f924be9f144513d8",
-          "version": "17.0.1"
+          "branch": "feature/legacy-image-services",
+          "revision": "1533690f1d339f99464e20209c7661f1455f41ae",
+          "version": null
         }
       },
       {

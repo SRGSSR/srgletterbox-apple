@@ -579,7 +579,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 - (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withWidth:(SRGImageWidth)width
 {
     SRGMedia *media = controller.displayableMedia;
-    NSURL *artworkURL = SRGLetterboxArtworkImageURL(media.image, width, controller);
+    NSURL *artworkURL = SRGLetterboxImageURL(media.image, width, controller);
     if (! artworkURL) {
         artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
     }
