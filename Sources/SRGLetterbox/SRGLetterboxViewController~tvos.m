@@ -373,7 +373,7 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
     
     YYWebImageManager *webImageManager = [YYWebImageManager sharedManager];
     
-    NSURL *imageURL = [self.controller URLForImage:fromImage withSize:kImageSize scalingService:SRGImageScalingServiceDefault];
+    NSURL *imageURL = [self.controller URLForImage:fromImage withSize:kImageSize];
     if (imageURL) {
         NSString *key = [webImageManager cacheKeyForURL:imageURL];
         UIImage *image = [webImageManager.cache getImageForKey:key];

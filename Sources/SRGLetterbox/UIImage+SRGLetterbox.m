@@ -40,7 +40,7 @@ NSString *SRGLetterboxFilePathForImagePlaceholder(void)
 
 NSURL *SRGLetterboxImageURL(SRGImage *image, SRGImageSize size, SRGLetterboxController *controller)
 {
-    NSURL *URL = [controller URLForImage:image withSize:size scalingService:SRGImageScalingServiceDefault];
+    NSURL *URL = [controller URLForImage:image withSize:size];
     return SRGLetterboxSupportedURL(URL);
 }
 

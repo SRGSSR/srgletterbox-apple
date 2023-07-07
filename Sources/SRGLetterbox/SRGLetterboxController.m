@@ -1616,14 +1616,9 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 #pragma mark Image retrieval
 
-- (NSURL *)URLForImage:(SRGImage *)image withWidth:(SRGImageWidth)width scalingService:(SRGImageScalingService)scalingService
+- (NSURL *)URLForImage:(SRGImage *)image withSize:(SRGImageSize)size
 {
-    return [self.dataProvider URLForImage:image withWidth:width scalingService:scalingService];
-}
-
-- (NSURL *)URLForImage:(SRGImage *)image withSize:(SRGImageSize)size scalingService:(SRGImageScalingService)scalingService
-{
-    return [self.dataProvider URLForImage:image withSize:size scalingService:scalingService];
+    return [self.dataProvider URLForImage:image withSize:size scalingService:SRGImageScalingServiceCentralized];
 }
 
 #pragma mark Diagnostics
