@@ -138,12 +138,12 @@
 
 - (void)letterboxDidStartPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
+    [[SRGAnalyticsTracker sharedTracker] trackEventWithName:@"pip_start"];
 }
 
 - (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
+    [[SRGAnalyticsTracker sharedTracker] trackEventWithName:@"pip_end"];
 }
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture
