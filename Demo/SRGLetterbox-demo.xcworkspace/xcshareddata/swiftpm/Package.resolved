@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "b2dc99cfedead0bad4e6573d86c5228c89cff332",
-          "version": "4.4.3"
+          "revision": "5756ddb0f09041e91bdb3b73c17296ac005ad11a",
+          "version": "5.0.3"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "7e3c521ad689b0e2bbf5cfb62e19c9e1619feae2",
-          "version": "6.10.0"
+          "revision": "ede1a4aee58fc63a308e2babf3e33f55fedecb68",
+          "version": "6.10.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
         "state": {
           "branch": null,
-          "revision": "81cdec2b3827feb03286cb297f4c501a8eb98df1",
-          "version": "1.10.2"
+          "revision": "1aed8f7dc79ce8e674c61e430ef51ca3db18cea9",
+          "version": "1.11.1"
         }
       },
       {
@@ -105,7 +105,7 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": "feature/legacy-image-services",
-          "revision": "4c52c8c5fda50887fb456258f7be3ece694a6423",
+          "revision": "20a6be2b49b64a7f7525b274b5b5d0f06ccea406",
           "version": null
         }
       },

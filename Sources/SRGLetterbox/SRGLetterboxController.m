@@ -1618,7 +1618,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
 
 - (NSURL *)URLForImage:(SRGImage *)image withSize:(SRGImageSize)size
 {
-    return [self.dataProvider URLForImage:image withSize:size scalingService:SRGImageScalingServiceCentralized];
+    return [self.dataProvider URLForImage:image withSize:size];
 }
 
 #pragma mark Diagnostics
