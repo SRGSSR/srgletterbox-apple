@@ -491,17 +491,17 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = SRGLetterboxMetadataSubtitle(media);
     nowPlayingInfo[MPMediaItemPropertyArtist] = @"";
     
-    static const SRGImageWidth kWidth = SRGImageWidth480;
+    static const SRGImageSize kSize = SRGImageSizeMedium;
     
     // A subtle issue might arise if the controller is strongly captured by the block (successive now playing information
     // center updates might deadlock).
     @weakify(self) @weakify(controller)
-    UIImage *artworkImage = [self cachedArtworkImageForController:controller withWidth:kWidth completion:^{
+    UIImage *artworkImage = [self cachedArtworkImageForController:controller withSize:kSize completion:^{
         @strongify(self) @strongify(controller)
         [self updateNowPlayingInformationWithController:controller];
     }];
     if (artworkImage) {
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(kWidth, kWidth) requestHandler:^UIImage * _Nonnull(CGSize size) {
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = [[MPMediaItemArtwork alloc] initWithBoundsSize:SRGRecommendedImageCGSize(kSize, SRGImageVariantDefault) requestHandler:^UIImage * _Nonnull(CGSize size) {
             // Return the closest image we have, see https://developer.apple.com/videos/play/wwdc2017/251. Here just
             // the image we retrieved for this specific purpose.
             return artworkImage;
@@ -576,12 +576,12 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     }
 }
 
-- (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withWidth:(SRGImageWidth)width
+- (NSURL *)artworkURLForController:(SRGLetterboxController *)controller withSize:(SRGImageSize)size
 {
     SRGMedia *media = controller.displayableMedia;
-    NSURL *artworkURL = SRGLetterboxImageURL(media.image, width, controller);
+    NSURL *artworkURL = SRGLetterboxImageURL(media.image, size, controller);
     if (! artworkURL) {
-        artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
+        artworkURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:SRGRecommendedImageCGSize(size, SRGImageVariantDefault)];
     }
     
     NSAssert(artworkURL != nil, @"An artwork URL must always be returned");
@@ -590,9 +590,9 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
 
 // Return the best available image to display in the control center, performing an asynchronous update only when an image is not
 // readily available from the cache
-- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withWidth:(SRGImageWidth)width completion:(void (^)(void))completion
+- (UIImage *)cachedArtworkImageForController:(SRGLetterboxController *)controller withSize:(SRGImageSize)size completion:(void (^)(void))completion
 {
-    NSURL *artworkURL = [self artworkURLForController:controller withWidth:width];
+    NSURL *artworkURL = [self artworkURLForController:controller withSize:size];
     if (! [artworkURL isEqual:self.cachedArtworkURL] || ! self.cachedArtworkImage) {
         // SRGLetterboxImageURL might return file URLs for overridden images
         if (artworkURL.fileURL) {
@@ -603,7 +603,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
             return image;
         }
         else {
-            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withWidth:width];
+            NSURL *placeholderImageURL = [UIImage srg_URLForVectorImageAtPath:SRGLetterboxFilePathForImagePlaceholder() withSize:SRGRecommendedImageCGSize(size, SRGImageVariantDefault)];
             UIImage *placeholderImage = [UIImage imageWithContentsOfFile:placeholderImageURL.path];
             
             SRGLetterboxLogDebug(@"service", @"Artwork image update triggered");
