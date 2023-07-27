@@ -77,8 +77,8 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/legacy-image-services",
-          "revision": "acd5f2eaa281466bb06649c4b15577786046414a",
+          "branch": "develop",
+          "revision": "c350d95e1cc42c50afc0a384b90efd6c1ed857be",
           "version": null
         }
       },
@@ -104,8 +104,8 @@
         "package": "SRGDataProvider",
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
-          "branch": "feature/legacy-image-services",
-          "revision": "20a6be2b49b64a7f7525b274b5b5d0f06ccea406",
+          "branch": "develop",
+          "revision": "1300445e42638f00bc4a0281000e21a70c4bd3ee",
           "version": null
         }
       },
