@@ -669,14 +669,20 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     CMTimeRange timeRange = self.controller.timeRange;
     if (SRG_CMTIMERANGE_IS_DEFINITE(timeRange) && SRG_CMTIMERANGE_IS_NOT_EMPTY(timeRange)) {
         NSTimeInterval durationInSeconds = CMTimeGetSeconds(timeRange.duration);
-        if (durationInSeconds < 60. * 60.) {
-            self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+        if (! (isnan(durationInSeconds) || isinf(durationInSeconds))) {
+            if (durationInSeconds < 60. * 60.) {
+                self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+            }
+            else {
+                self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+            }
+            
+            self.durationLabel.accessibilityLabel = [NSDateComponentsFormatter.srg_accessibilityDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
         }
         else {
-            self.durationLabel.text = [NSDateComponentsFormatter.srg_mediumDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
+            self.durationLabel.text = nil;
+            self.durationLabel.accessibilityLabel = nil;
         }
-        
-        self.durationLabel.accessibilityLabel = [NSDateComponentsFormatter.srg_accessibilityDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
     }
     else {
         self.durationLabel.text = nil;
