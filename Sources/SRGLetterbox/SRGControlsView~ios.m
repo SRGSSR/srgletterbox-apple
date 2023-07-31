@@ -669,6 +669,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     CMTimeRange timeRange = self.controller.timeRange;
     if (SRG_CMTIMERANGE_IS_DEFINITE(timeRange) && SRG_CMTIMERANGE_IS_NOT_EMPTY(timeRange)) {
         NSTimeInterval durationInSeconds = CMTimeGetSeconds(timeRange.duration);
+        // TODO: Use `SRGMediaPlayer` macro named `SRG_NSTIMEINTERVAL_IS_VALID(interval)` when library is released.
         if (! (isnan(durationInSeconds) || isinf(durationInSeconds))) {
             if (durationInSeconds < 60. * 60.) {
                 self.durationLabel.text = [NSDateComponentsFormatter.srg_shortDateComponentsFormatter stringFromTimeInterval:durationInSeconds];
