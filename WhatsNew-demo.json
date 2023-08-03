@@ -68,5 +68,6 @@
   "8.4.0-101": "- Maintenance release for the library.\n- Demo: update Live Center section in list tab.",
   "8.4.0-102": "- Maintenance release for the library.\n- Demo: update Live Center section in list tab.",
     "8.4.0-103": "- Maintenance release for the library.\n- Demo: update Live Center section in list tab.",
-    "9.0.0-104": "- Remove bit rate setting in the library."
+    "9.0.0-104": "- Remove bit rate setting in the library.",
+    "9.1.0-105": "- Update image provider. Updated artwork in control center.\n- Fix some crashes with UI controls and the slider."
 }
