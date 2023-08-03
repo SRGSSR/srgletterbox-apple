@@ -30,12 +30,6 @@ OBJC_EXPORT NSString *SRGLetterboxFilePathForImagePlaceholder(void);
 OBJC_EXPORT NSURL * _Nullable SRGLetterboxImageURL(SRGImage * _Nullable image, SRGImageSize size, SRGLetterboxController * _Nullable controller);
 
 /**
- *  Return the (square) artwork image URL for an object with the specified width, retrieved on behalf of the provided
- *  controller.
- */
-OBJC_EXPORT NSURL * _Nullable SRGLetterboxArtworkImageURL(SRGImage * _Nullable image, SRGImageWidth width, SRGLetterboxController * _Nullable controller);
-
-/**
  *  Standard images from Letterbox bundle.
  */
 @interface UIImage (SRGLetterboxImages)

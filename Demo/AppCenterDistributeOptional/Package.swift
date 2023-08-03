@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "AppCenterDistributeOptional",
         platforms: [
-        .iOS(.v9),
-        .macOS(.v10_10),
+        .iOS(.v11),
+        .macOS(.v10_13),
         .tvOS(.v11)
     ],
     products: [
@@ -16,7 +16,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "AppCenter", url: "https://github.com/microsoft/appcenter-sdk-apple.git", .upToNextMajor(from: "4.4.1"))
+        .package(name: "AppCenter", url: "https://github.com/microsoft/appcenter-sdk-apple.git", .upToNextMajor(from: "5.0.3"))
     ],
     targets: [
         .target(

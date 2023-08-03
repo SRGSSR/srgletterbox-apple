@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "b2dc99cfedead0bad4e6573d86c5228c89cff332",
-          "version": "4.4.3"
+          "revision": "5756ddb0f09041e91bdb3b73c17296ac005ad11a",
+          "version": "5.0.3"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "7e3c521ad689b0e2bbf5cfb62e19c9e1619feae2",
-          "version": "6.10.0"
+          "revision": "ede1a4aee58fc63a308e2babf3e33f55fedecb68",
+          "version": "6.10.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
         "state": {
           "branch": null,
-          "revision": "81cdec2b3827feb03286cb297f4c501a8eb98df1",
-          "version": "1.10.2"
+          "revision": "1aed8f7dc79ce8e674c61e430ef51ca3db18cea9",
+          "version": "1.11.1"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "363171981dc1cf97d4b8db4ae2a1e052d2478124",
-          "version": "8.0.0"
+          "revision": "438f5cff10a7624624eced42852c9789eeab2889",
+          "version": "8.1.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "7b1c3e001213315ef1eed9892cb97651a3e03dfd",
-          "version": "17.0.0"
+          "revision": "93a46a26d9ea068e3d812755e5a44c7402b2ad04",
+          "version": "18.0.0"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": null,
-          "revision": "0e5993756dc0fdfa892205fcf5bf3b9e62dd22ac",
-          "version": "7.1.0"
+          "revision": "717608146d3787bd269d5a524e109ee30be828e4",
+          "version": "7.2.1"
         }
       },
       {
