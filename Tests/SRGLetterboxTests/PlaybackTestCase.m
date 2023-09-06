@@ -307,7 +307,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:swi:video:_NO_ID_" atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:@"urn:rts:video:1234" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);
