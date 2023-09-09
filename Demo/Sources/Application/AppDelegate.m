@@ -46,9 +46,9 @@ static __attribute__((constructor)) void ApplicationInit(void)
 #endif
     
     // Use a debug source key since there will never be any public App Store version of this demo application.
-    SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierRTS
+    SRGAnalyticsConfiguration *configuration = [[SRGAnalyticsConfiguration alloc] initWithBusinessUnitIdentifier:SRGAnalyticsBusinessUnitIdentifierSRG
                                                                                                        sourceKey:@"39ae8f94-595c-4ca4-81f7-fb7748bd3f04"
-                                                                                                        siteName:@"rts-app-test-v"];
+                                                                                                        siteName:@"srg-app-letterbox-apple"];
     configuration.centralized = YES;
     
     [[SRGAnalyticsTracker sharedTracker] startWithConfiguration:configuration];
