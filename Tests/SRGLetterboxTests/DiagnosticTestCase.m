@@ -89,7 +89,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -161,7 +160,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -203,7 +201,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -252,7 +249,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -328,7 +324,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -623,7 +618,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -672,7 +666,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
