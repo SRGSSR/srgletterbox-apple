@@ -5,6 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
+#import "TrackerSingletonSetup.h"
 
 @import libextobjc;
 @import OHHTTPStubs;
@@ -33,6 +34,11 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 @implementation DiagnosticTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {

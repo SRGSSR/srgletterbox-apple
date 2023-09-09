@@ -5,6 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
+#import "TrackerSingletonSetup.h"
 
 @import libextobjc;
 @import SRGLetterbox;
@@ -21,6 +22,11 @@
 @implementation SwissTXTTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {
