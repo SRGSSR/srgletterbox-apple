@@ -152,6 +152,18 @@
     }
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Feeds";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Detail";
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

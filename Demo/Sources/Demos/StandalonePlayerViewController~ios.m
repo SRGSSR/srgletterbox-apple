@@ -114,6 +114,18 @@
     return YES;
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Standalone Player";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Detail";
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture

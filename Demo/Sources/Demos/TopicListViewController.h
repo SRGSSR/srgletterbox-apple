@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@import SRGAnalytics;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -42,7 +43,7 @@ typedef NS_ENUM(NSInteger, TopicList) {
     TopicListMMF
 };
 
-@interface TopicListViewController : UITableViewController
+@interface TopicListViewController : UITableViewController <SRGAnalyticsViewTracking>
 
 - (instancetype)initWithTopicList:(TopicList)topicList;
 

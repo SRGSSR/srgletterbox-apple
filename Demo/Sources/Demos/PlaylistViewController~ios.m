@@ -143,6 +143,18 @@
     }];
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Playlist";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Overview";
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture

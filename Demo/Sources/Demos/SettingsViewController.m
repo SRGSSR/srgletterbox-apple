@@ -275,6 +275,18 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
     [cache.diskCache removeAllObjects];
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Settings";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"LandingPage";
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

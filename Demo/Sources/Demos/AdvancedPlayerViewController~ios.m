@@ -290,6 +290,18 @@
     self.URNLabel.text = media.URN;
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Advanced Player";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Detail";
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture
