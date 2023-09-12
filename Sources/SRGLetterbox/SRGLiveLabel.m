@@ -7,6 +7,7 @@
 #import "SRGLiveLabel.h"
 
 #import "NSBundle+SRGLetterbox.h"
+#import "NSLayoutConstraint+SRGLetterboxPrivate.h"
 #import "UIColor+SRGLetterbox.h"
 
 @import SRGAppearance;
@@ -68,8 +69,8 @@ static void commonInit(SRGLiveLabel *self)
     [NSLayoutConstraint activateConstraints:@[
         [label.topAnchor constraintEqualToAnchor:self.topAnchor],
         [label.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-        [label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:kMargin],
-        [label.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-kMargin]
+        [[label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:kMargin] srgletterbox_withPriority:999],
+        [[label.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-kMargin]  srgletterbox_withPriority:999]
     ]];
     
     label.text = SRGLetterboxLocalizedString(@"Live", @"Very short text in the slider bubble, or in the bottom right corner of the Letterbox view when playing a live only stream or a DVR stream in live").uppercaseString;
