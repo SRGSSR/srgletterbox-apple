@@ -121,7 +121,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [self layoutPictureInPictureButtonInStackView:bottomStackView];
     [self layoutTimeSliderInStackView:bottomStackView];
     [self layoutDurationLabelInStackView:bottomStackView];
-    [self layoutLiveLabelInStackView:bottomStackView];
     [self layoutPlaybackSettingsButtonInStackView:bottomStackView];
     [self layoutFullScreenPhantomButtonInStackView:bottomStackView];
 }
