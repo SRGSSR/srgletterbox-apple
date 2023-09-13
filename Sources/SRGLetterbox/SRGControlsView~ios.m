@@ -181,8 +181,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor],
-        [timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor],
+        [[timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f] srgletterbox_withPriority:999],
+        [[timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f] srgletterbox_withPriority:999],
         [timeSlider.centerYAnchor constraintEqualToAnchor:timeSliderWrapperView.centerYAnchor],
         [timeSlider.heightAnchor constraintGreaterThanOrEqualToAnchor:timeSliderWrapperView.widthAnchor]
     ]];
