@@ -86,9 +86,9 @@
         "package": "SRGAnalytics",
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
-          "branch": "feature/62-update-to-tag-commander-v5",
-          "revision": "7ab0afa3dcb4f0677030b78ad6397726854dfebf",
-          "version": null
+          "branch": null,
+          "revision": "5b42f334290ee3268f61b62d02e509ec74f4a721",
+          "version": "9.0.0"
         }
       },
       {
