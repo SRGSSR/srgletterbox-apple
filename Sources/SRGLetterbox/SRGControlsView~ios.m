@@ -206,7 +206,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     [NSLayoutConstraint activateConstraints:@[
         [durationLabel.leadingAnchor constraintEqualToAnchor:durationLabelWrapperView.leadingAnchor constant:11.f],
         [durationLabel.trailingAnchor constraintEqualToAnchor:durationLabelWrapperView.trailingAnchor constant:-11.f],
-        [durationLabel.centerYAnchor constraintEqualToAnchor:durationLabelWrapperView.centerYAnchor]
+        [durationLabel.centerYAnchor constraintEqualToAnchor:durationLabelWrapperView.centerYAnchor],
+        [durationLabel.widthAnchor constraintEqualToConstant:44.f]
     ]];
 }
 
