@@ -184,7 +184,7 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
         [[timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f] srgletterbox_withPriority:999],
         [[timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f] srgletterbox_withPriority:999],
         [timeSlider.centerYAnchor constraintEqualToAnchor:timeSliderWrapperView.centerYAnchor],
-        [timeSlider.heightAnchor constraintGreaterThanOrEqualToAnchor:timeSliderWrapperView.widthAnchor]
+        [timeSlider.heightAnchor constraintEqualToConstant:22.f]
     ]];
 }
 
@@ -224,7 +224,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [liveLabel.centerXAnchor constraintEqualToAnchor:liveLabelWrapperView.centerXAnchor],
-        [liveLabel.centerYAnchor constraintEqualToAnchor:liveLabelWrapperView.centerYAnchor]
+        [liveLabel.centerYAnchor constraintEqualToAnchor:liveLabelWrapperView.centerYAnchor],
+        [[liveLabelWrapperView.widthAnchor constraintEqualToConstant:70.f] srgletterbox_withPriority:999]
     ]];
 }
 
