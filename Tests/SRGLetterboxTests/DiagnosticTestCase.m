@@ -5,6 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
+#import "TrackerSingletonSetup.h"
 
 @import libextobjc;
 @import OHHTTPStubs;
@@ -33,6 +34,11 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 @implementation DiagnosticTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {
@@ -83,7 +89,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -155,7 +160,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -197,7 +201,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -246,7 +249,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -322,7 +324,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -617,7 +618,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -666,7 +666,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
         XCTAssertEqualObjects(JSONDictionary[@"browser"], NSBundle.mainBundle.bundleIdentifier);
         NSString *playerName = [NSString stringWithFormat:@"Letterbox/%@/%@", DiagnosticTestCasePlatform, SRGLetterboxMarketingVersion()];
         XCTAssertEqualObjects(JSONDictionary[@"player"], playerName);
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"preprod");
         
         XCTAssertNotNil(JSONDictionary[@"clientTime"]);
         XCTAssertNotNil(JSONDictionary[@"device"]);
@@ -699,29 +698,6 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
     [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
     
     [self waitForExpectationsWithTimeout:30. handler:nil];
-}
-
-- (void)testPlaybackReportForForcedAnalyticsEnvironmentMode
-{
-    NSString *URN = OnDemandVideoURN;
-    
-    SRGAnalyticsEnvironmentMode originalAnalyticsEnvironmentMode = SRGAnalyticsTracker.sharedTracker.configuration.environmentMode;
-    SRGAnalyticsTracker.sharedTracker.configuration.environmentMode = SRGAnalyticsEnvironmentModeProduction;
-    
-    [self expectationForSingleNotification:SRGLetterboxPlaybackStateDidChangeNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
-        return [notification.userInfo[SRGMediaPlayerPlaybackStateKey] integerValue] == SRGMediaPlayerPlaybackStatePlaying;
-    }];
-    [self expectationForSingleNotification:DiagnosticTestDidSendReportNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
-        NSDictionary *JSONDictionary = notification.userInfo[DiagnosticTestJSONDictionaryKey];
-        XCTAssertEqualObjects(JSONDictionary[@"environment"], @"prod");
-        return YES;
-    }];
-    
-    [self.controller playURN:URN atPosition:nil withPreferredSettings:nil];
-    
-    [self waitForExpectationsWithTimeout:30. handler:nil];
-    
-    SRGAnalyticsTracker.sharedTracker.configuration.environmentMode = originalAnalyticsEnvironmentMode;
 }
 
 @end

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@import SRGAnalytics;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,7 +28,7 @@ typedef API_UNAVAILABLE(tvos) NS_ENUM(NSInteger, Feed) {
 };
 
 API_UNAVAILABLE(tvos)
-@interface FeedsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FeedsViewController : UIViewController <SRGAnalyticsViewTracking, UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) Feed feed;
 
