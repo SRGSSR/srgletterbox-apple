@@ -881,10 +881,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     if (isTimelineVisible) {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+        self.timelineView.alpha = 1.f;
     }
     else {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        self.timelineView.alpha = 0.f;
     }
     
     return timelineHeight;
