@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface AdvancedPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
+@interface AdvancedPlayerViewController : UIViewController <SRGAnalyticsViewTracking, SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate, UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
 
 // If `media` is set, `URN` is ignored.
 - (instancetype)initWithURN:(nullable NSString *)URN media:(nullable SRGMedia *)media serviceURL:(nullable NSURL *)serviceURL;

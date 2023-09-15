@@ -4,11 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+@import SRGAnalytics;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MediasViewController : UITableViewController
+@interface MediasViewController : UITableViewController <SRGAnalyticsViewTracking>
 
 @end
 

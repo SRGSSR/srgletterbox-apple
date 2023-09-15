@@ -4,12 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
+@import SRGAnalytics;
 @import UIKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface SimplePlayerViewController : UIViewController
+@interface SimplePlayerViewController : UIViewController <SRGAnalyticsViewTracking>
 
 - (instancetype)initWithURN:(nullable NSString *)URN;
 

@@ -4,14 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-@import SRGAnalytics;
-@import UIKit;
+@import Foundation;
 
 NS_ASSUME_NONNULL_BEGIN
 
-API_UNAVAILABLE(tvos)
-@interface MiscellaneousViewController : UITableViewController <SRGAnalyticsViewTracking>
-
-@end
+OBJC_EXPORT void SetupTestSingletonTracker(void);
 
 NS_ASSUME_NONNULL_END

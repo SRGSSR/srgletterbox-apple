@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface MultiPlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
+@interface MultiPlayerViewController : UIViewController <SRGAnalyticsViewTracking, SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
 - (instancetype)initWithURN:(nullable NSString *)URN URN1:(nullable NSString *)URN1 URN2:(nullable NSString *)URN2 userInterfaceAlwaysHidden:(BOOL)userInterfaceAlwaysHidden;
 

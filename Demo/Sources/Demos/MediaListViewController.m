@@ -348,6 +348,18 @@
     self.request = request;
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Media List";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Overview";
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

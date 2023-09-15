@@ -26,13 +26,4 @@ NS_ASSUME_NONNULL_BEGIN
 __attribute__((annotate("returns_localized_nsstring")))
 OBJC_EXPORT NSString *SRGLetterboxNonLocalizedString(NSString *string);
 
-@interface NSBundle (SRGLetterbox)
-
-/**
- *  Return `YES` iff the application bundle corresponds to an AppStore or TestFlight release.
- */
-@property (class, nonatomic, readonly) BOOL srg_letterbox_isProductionVersion;
-
-@end
-
 NS_ASSUME_NONNULL_END

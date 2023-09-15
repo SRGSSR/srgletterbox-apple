@@ -71,5 +71,6 @@
   "9.0.0-104": "- Remove bit rate setting in the library.",
   "9.1.0-105": "- Update image provider. Updated artwork in control center.\n- Fix some crashes with UI controls and the slider.",
   "9.1.1-106": "- Maintenance release for the library.",
-    "9.1.2-107": "- Fix slider layout issues on iOS 17."
+    "9.1.2-107": "- Fix slider layout issues on iOS 17.",
+    "9.2.0-108": "- Support for Commanders Act version 5\n- Allow capturing the player in screenshots and screen recordings."
 }

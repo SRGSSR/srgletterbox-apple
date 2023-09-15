@@ -12,23 +12,3 @@ NSString *SRGLetterboxNonLocalizedString(NSString *string)
 {
     return string;
 }
-
-@implementation NSBundle (SRGLetterbox)
-
-#pragma mark Class methods
-
-+ (BOOL)srg_letterbox_isProductionVersion
-{
-    if (NSProcessInfo.processInfo.environment[@"SIMULATOR_DEVICE_NAME"]
-            || [UIDevice.currentDevice.name.lowercaseString containsString:@"simulator"]) {
-        return NO;
-    }
-    
-    if ([NSBundle.mainBundle pathForResource:@"embedded" ofType:@"mobileprovision"]) {
-        return NO;
-    }
-    
-    return (NSBundle.mainBundle.appStoreReceiptURL != nil);
-}
-
-@end

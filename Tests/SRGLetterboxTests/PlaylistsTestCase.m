@@ -6,6 +6,7 @@
 
 #import "LetterboxBaseTestCase.h"
 #import "TestPlaylist.h"
+#import "TrackerSingletonSetup.h"
 
 @import libextobjc;
 @import SRGDataProviderNetwork;
@@ -27,6 +28,11 @@ static NSString * const MediaURN2 = @"urn:rts:video:9314051";
 @implementation PlaylistsTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {
