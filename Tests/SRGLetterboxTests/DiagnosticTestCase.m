@@ -140,7 +140,7 @@ static NSString * const DiagnosticTestCasePlatform = @"iOS";
 
 - (void)testPlaybackReportForUnknownMedia
 {
-    NSString *URN = @"urn:swi:video:_UNKNOWN_ID_";
+    NSString *URN = @"urn:rts:video:1234";
     
     [self expectationForSingleNotification:SRGLetterboxPlaybackDidFailNotification object:self.controller handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;

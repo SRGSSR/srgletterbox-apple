@@ -181,8 +181,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     timeSlider.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f],
-        [timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f],
+        [[timeSlider.leadingAnchor constraintEqualToAnchor:timeSliderWrapperView.leadingAnchor constant:11.f] srgletterbox_withPriority:999],
+        [[timeSlider.trailingAnchor constraintEqualToAnchor:timeSliderWrapperView.trailingAnchor constant:-11.f] srgletterbox_withPriority:999],
         [timeSlider.centerYAnchor constraintEqualToAnchor:timeSliderWrapperView.centerYAnchor],
         [timeSlider.heightAnchor constraintEqualToConstant:22.f]
     ]];
@@ -204,9 +204,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [durationLabel.leadingAnchor constraintEqualToAnchor:durationLabelWrapperView.leadingAnchor constant:11.f],
-        [durationLabel.trailingAnchor constraintEqualToAnchor:durationLabelWrapperView.trailingAnchor constant:-11.f],
-        [durationLabel.centerYAnchor constraintEqualToAnchor:durationLabelWrapperView.centerYAnchor]
+        [durationLabel.centerXAnchor constraintEqualToAnchor:durationLabelWrapperView.centerXAnchor],
+        [durationLabel.centerYAnchor constraintEqualToAnchor:durationLabelWrapperView.centerYAnchor],
+        [[durationLabelWrapperView.widthAnchor constraintEqualToConstant:48.f] srgletterbox_withPriority:999]
     ]];
 }
 
@@ -223,9 +223,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     
     liveLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
-        [liveLabel.leadingAnchor constraintEqualToAnchor:liveLabelWrapperView.leadingAnchor constant:11.f],
-        [liveLabel.trailingAnchor constraintEqualToAnchor:liveLabelWrapperView.trailingAnchor constant:-11.f],
-        [liveLabel.centerYAnchor constraintEqualToAnchor:liveLabelWrapperView.centerYAnchor]
+        [liveLabel.centerXAnchor constraintEqualToAnchor:liveLabelWrapperView.centerXAnchor],
+        [liveLabel.centerYAnchor constraintEqualToAnchor:liveLabelWrapperView.centerYAnchor],
+        [[liveLabelWrapperView.widthAnchor constraintEqualToConstant:70.f] srgletterbox_withPriority:999]
     ]];
 }
 
