@@ -260,9 +260,9 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
 {
     [self layoutPlaybackButtonInView:view];
     [self layoutBackwardSkipButtonInView:view];
+    [self layoutSkipToLiveButtonInView:view];
     [self layoutForwardSkipButtonInView:view];
     [self layoutStartOverButtonInView:view];
-    [self layoutSkipToLiveButtonInView:view];
 }
 
 - (void)layoutPlaybackButtonInView:(UIView *)view
