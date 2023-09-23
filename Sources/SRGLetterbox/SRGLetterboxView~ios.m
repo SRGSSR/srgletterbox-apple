@@ -1003,14 +1003,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
     }
-    
-    // Avoid conflicts between skip buttons and gestures in the center area
-    CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
+
     CGPoint location = [gestureRecognizer locationInView:self];
-    if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
+    if (location.x < CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
-    else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
+    else if (location.x > CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:SRGLetterboxSkipInterval];
     }
 }

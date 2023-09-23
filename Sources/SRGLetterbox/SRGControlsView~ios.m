@@ -390,11 +390,6 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     return (CGRectGetWidth(self.bottomStackView.frame) < 668.f || CGRectGetHeight(self.parentLetterboxView.frame) < 376.f) ? SRGImageSetNormal : SRGImageSetLarge;
 }
 
-- (CGFloat)skipControlsRadius
-{
-    return self.imageSet == SRGImageSetLarge ? kDistanceToCenterLargeUnit + kLargeIconDimension / 2.f : kDistanceToCenterNormalUnit + kNormalIconDimension / 2.f;
-}
-
 #pragma mark Overrides
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
