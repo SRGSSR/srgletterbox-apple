@@ -1005,6 +1005,10 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 
     CGPoint location = [gestureRecognizer locationInView:self];
+    if ([self isLocationInsidePlayButton:location]) {
+        return;
+    }
+
     if (location.x < CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
@@ -1013,6 +1017,18 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     }
 }
 
+- (BOOL)isLocationInsidePlayButton:(CGPoint)location
+{
+    for (UIView *view in self.controlsView.subviews) {
+        for (UIView *subview in view.subviews) {
+            if ([subview isKindOfClass:SRGLetterboxPlaybackButton.class]) {
+                return CGRectContainsPoint(subview.frame, location);
+            }
+        }
+    }
+
+    return NO;
+}
 
 - (void)skipWithInterval:(NSTimeInterval)interval
 {
