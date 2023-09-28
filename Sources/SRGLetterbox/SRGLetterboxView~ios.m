@@ -1003,16 +1003,31 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
     }
-    
-    // Avoid conflicts between skip buttons and gestures in the center area
-    CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
+
     CGPoint location = [gestureRecognizer locationInView:self];
-    if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
+    if ([self isLocationInsidePlayButton:location]) {
+        return;
+    }
+
+    if (location.x < CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
-    else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
+    else if (location.x > CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:SRGLetterboxSkipInterval];
     }
+}
+
+- (BOOL)isLocationInsidePlayButton:(CGPoint)location
+{
+    for (UIView *view in self.controlsView.subviews) {
+        for (UIView *subview in view.subviews) {
+            if ([subview isKindOfClass:SRGLetterboxPlaybackButton.class]) {
+                return CGRectContainsPoint(subview.frame, location);
+            }
+        }
+    }
+
+    return NO;
 }
 
 - (void)skipWithInterval:(NSTimeInterval)interval
