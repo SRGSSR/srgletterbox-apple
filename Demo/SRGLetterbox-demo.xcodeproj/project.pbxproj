@@ -362,9 +362,9 @@
 			buildConfigurationList = 6FAB3B4E1E28FE2000CC2197 /* Build configuration list for PBXNativeTarget "SRGLetterbox-demo" */;
 			buildPhases = (
 				084F2EE323664ABC00A983FF /* Restore original icons if needed */,
+				084F2EE423664AE900A983FF /* Make custom icons */,
 				6FAB3B361E28FE2000CC2197 /* Sources */,
 				6FAB3B371E28FE2000CC2197 /* Frameworks */,
-				084F2EE423664AE900A983FF /* Make custom icons */,
 				6FAB3B381E28FE2000CC2197 /* Resources */,
 				084F2EE523664B8400A983FF /* Restore original icons */,
 				6F261DC325190789008EF524 /* Extract Signing Identity */,
