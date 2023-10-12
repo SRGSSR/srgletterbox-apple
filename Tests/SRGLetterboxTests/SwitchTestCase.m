@@ -5,6 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
+#import "TrackerSingletonSetup.h"
 
 @import SRGDataProviderNetwork;
 @import SRGLetterbox;
@@ -18,6 +19,11 @@
 @implementation SwitchTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {

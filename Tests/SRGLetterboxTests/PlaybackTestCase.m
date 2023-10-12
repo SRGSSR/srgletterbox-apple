@@ -5,6 +5,7 @@
 //
 
 #import "LetterboxBaseTestCase.h"
+#import "TrackerSingletonSetup.h"
 
 @import libextobjc;
 @import SRGDataProviderNetwork;
@@ -22,6 +23,11 @@
 @implementation PlaybackTestCase
 
 #pragma mark Setup and tear down
+
++ (void)setUp
+{
+    SetupTestSingletonTracker();
+}
 
 - (void)setUp
 {
@@ -307,7 +313,7 @@
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityNone);
     XCTAssertFalse(self.controller.loading);
     
-    [self.controller playURN:@"urn:swi:video:_NO_ID_" atPosition:nil withPreferredSettings:nil];
+    [self.controller playURN:@"urn:rts:video:1234" atPosition:nil withPreferredSettings:nil];
     
     XCTAssertEqual(self.controller.dataAvailability, SRGLetterboxDataAvailabilityLoading);
     XCTAssertTrue(self.controller.loading);

@@ -6,6 +6,7 @@
 
 #include "ServerSettings.h"
 
+@import SRGAnalytics;
 @import SRGDataProviderModel;
 @import UIKit;
 
@@ -29,7 +30,7 @@ OBJC_EXPORT NSTimeInterval const LetterboxDemoSettingUpdateIntervalShort;
 OBJC_EXPORT API_UNAVAILABLE(tvos) BOOL ApplicationSettingIsBackgroundVideoPlaybackEnabled(void);
 OBJC_EXPORT BOOL ApplicationSettingPrefersMediaContentEnabled(void);
 
-@interface SettingsViewController : UITableViewController
+@interface SettingsViewController : UITableViewController <SRGAnalyticsViewTracking>
 
 @end
 

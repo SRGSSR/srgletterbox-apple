@@ -155,6 +155,18 @@
     return YES;
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Multi Player";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Detail";
+}
+
 #pragma mark SRGLetterboxPictureInPictureDelegate protocol
 
 - (BOOL)letterboxDismissUserInterfaceForPictureInPicture
@@ -179,12 +191,12 @@
 
 - (void)letterboxDidStartPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_start"];
+    [[SRGAnalyticsTracker sharedTracker] trackEventWithName:@"pip_start"];
 }
 
 - (void)letterboxDidEndPictureInPicture
 {
-    [[SRGAnalyticsTracker sharedTracker] trackHiddenEventWithName:@"pip_end"];
+    [[SRGAnalyticsTracker sharedTracker] trackEventWithName:@"pip_end"];
 }
 
 - (void)letterboxDidStopPlaybackFromPictureInPicture

@@ -41,6 +41,6 @@ The SRG Letterbox library provides an advanced player with several features:
 * Thumbnail retrieval and display.
 * Error display.
 * Recovery after network loss.
-* Anonymous stream tracking conforming to internal (TagCommander / Webtrekk) and legal (Mediapulse) specifications.
+* Anonymous stream tracking conforming to internal (Commanders Act / Webtrekk) and legal (Mediapulse) specifications.
 
 

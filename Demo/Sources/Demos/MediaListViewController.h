@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@import SRGAnalytics;
 @import SRGDataProviderModel;
 @import UIKit;
 
@@ -175,7 +176,7 @@ typedef NS_ENUM(NSInteger, MediaList) {
     MediaListLiveWebRTR
 };
 
-@interface MediaListViewController : UITableViewController
+@interface MediaListViewController : UITableViewController <SRGAnalyticsViewTracking>
 
 - (instancetype)initWithMediaList:(MediaList)mediaList topic:(nullable SRGTopic *)topic serviceURL:(nullable NSURL *)serviceURL;
 

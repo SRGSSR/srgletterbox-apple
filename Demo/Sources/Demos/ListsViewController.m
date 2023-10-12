@@ -36,6 +36,18 @@
 #endif
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Lists";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"LandingPage";
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

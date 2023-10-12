@@ -91,6 +91,18 @@
     return self.letterboxView.userInterfaceHidden;
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Page Navigation Player";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"Detail";
+}
+
 #pragma mark SRGLetterboxViewDelegate protocol
 
 - (void)letterboxViewWillAnimateUserInterface:(SRGLetterboxView *)letterboxView

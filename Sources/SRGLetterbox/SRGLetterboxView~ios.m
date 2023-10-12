@@ -791,11 +791,6 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     BOOL playerViewVisible = (self.controller.media.mediaType == SRGMediaTypeVideo && mediaPlayerController.view.readyForDisplay && ! mediaPlayerController.externalNonMirroredPlaybackActive
                               && playbackState != SRGMediaPlayerPlaybackStateIdle && playbackState != SRGMediaPlayerPlaybackStatePreparing && playbackState != SRGMediaPlayerPlaybackStateEnded);
     
-    // Prevent capture in production builds
-    if (NSBundle.srg_letterbox_isProductionVersion && UIScreen.mainScreen.captured && ! AVAudioSession.srg_isAirPlayActive) {
-        playerViewVisible = NO;
-    }
-    
     // Reset to aspect fit gravity if the updated layout does not support aspect fill anymore
     if (! [self supportsAspectFillVideoGravity]) {
         self.controller.mediaPlayerController.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
@@ -881,10 +876,12 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     if (isTimelineVisible) {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintGreaterPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintLesserPriority;
+        self.timelineView.alpha = 1.f;
     }
     else {
         self.timelineToSafeAreaBottomConstraint.priority = kBottomConstraintLesserPriority;
         self.timelineToSelfBottomConstraint.priority = kBottomConstraintGreaterPriority;
+        self.timelineView.alpha = 0.f;
     }
     
     return timelineHeight;
@@ -1006,16 +1003,31 @@ static const CGFloat kBottomConstraintLesserPriority = 850.f;
     if (! self.userInterfaceTogglable && self.userInterfaceHidden) {
         return;
     }
-    
-    // Avoid conflicts between skip buttons and gestures in the center area
-    CGFloat skipControlsRadius = self.controlsView.skipControlsRadius;
+
     CGPoint location = [gestureRecognizer locationInView:self];
-    if (location.x < CGRectGetMidX(self.bounds) - skipControlsRadius) {
+    if ([self isLocationInsidePlayButton:location]) {
+        return;
+    }
+
+    if (location.x < CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:-SRGLetterboxSkipInterval];
     }
-    else if (location.x > CGRectGetMidX(self.bounds) + skipControlsRadius) {
+    else if (location.x > CGRectGetMidX(self.bounds)) {
         [self skipWithInterval:SRGLetterboxSkipInterval];
     }
+}
+
+- (BOOL)isLocationInsidePlayButton:(CGPoint)location
+{
+    for (UIView *view in self.controlsView.subviews) {
+        for (UIView *subview in view.subviews) {
+            if ([subview isKindOfClass:SRGLetterboxPlaybackButton.class]) {
+                return CGRectContainsPoint(subview.frame, location);
+            }
+        }
+    }
+
+    return NO;
 }
 
 - (void)skipWithInterval:(NSTimeInterval)interval

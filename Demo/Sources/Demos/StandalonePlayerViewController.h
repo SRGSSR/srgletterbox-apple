@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 API_UNAVAILABLE(tvos)
-@interface StandalonePlayerViewController : UIViewController <SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
+@interface StandalonePlayerViewController : UIViewController <SRGAnalyticsViewTracking, SRGLetterboxPictureInPictureDelegate, SRGLetterboxViewDelegate>
 
 - (instancetype)initWithURN:(nullable NSString *)URN;
 

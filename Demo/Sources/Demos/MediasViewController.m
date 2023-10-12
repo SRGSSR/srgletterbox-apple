@@ -62,6 +62,18 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+#pragma mark SRGAnalyticsViewTracking protocol
+
+- (NSString *)srg_pageViewTitle
+{
+    return @"Medias";
+}
+
+- (NSString *)srg_pageViewType
+{
+    return @"LandingPage";
+}
+
 #pragma mark UITableViewDataSource protocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

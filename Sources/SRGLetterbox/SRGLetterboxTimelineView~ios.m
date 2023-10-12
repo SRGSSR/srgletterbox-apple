@@ -47,7 +47,10 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
     UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
     collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     collectionViewLayout.minimumLineSpacing = SRGLetterboxCellMargin;
-    
+    CGFloat height = SRGLetterboxTimelineViewDefaultHeight - 2 * SRGLetterboxCellMargin;
+    NSAssert(height > 0.f, @"Height must be positive");
+    collectionViewLayout.itemSize = CGSizeMake(16.f / 13.f * height, height);
+
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:collectionViewLayout];
     collectionView.backgroundColor = UIColor.clearColor;
     collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -100,18 +103,6 @@ static const CGFloat SRGLetterboxCellMargin = 3.f;
 }
 
 #pragma mark Overrides
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    UICollectionViewFlowLayout *collectionViewLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    CGFloat height = CGRectGetHeight(self.frame) - 2 * SRGLetterboxCellMargin;
-    CGFloat width = (height > 0) ? 16.f / 13.f * height : 10e-6f; // UICollectionViewFlowLayout doesn't allow CGSizeZero
-    collectionViewLayout.itemSize = CGSizeMake(width, height);
-    
-    [self.collectionView.collectionViewLayout invalidateLayout];
-}
 
 - (void)contentSizeCategoryDidChange
 {
