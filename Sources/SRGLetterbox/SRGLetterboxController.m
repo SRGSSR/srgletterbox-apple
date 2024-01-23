@@ -487,8 +487,8 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     self.updateTimer = [NSTimer srgletterbox_timerWithTimeInterval:updateInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         
-        [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
-            if (resourceChanged || error) {
+        [self updateMetadataWithCompletionBlock:^(NSError *error, NSError *previousError) {
+            if (error) {
                 [self stop];
             }
             // Start the player if the blocking reason changed from an not available state to an available one
@@ -766,7 +766,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         @weakify(self)
         self.startDateTimer = [NSTimer srgletterbox_timerWithTimeInterval:startTimeInterval repeats:NO block:^(NSTimer * _Nonnull timer) {
             @strongify(self)
-            [self updateMetadataWithCompletionBlock:^(NSError *error, BOOL resourceChanged, NSError *previousError) {
+            [self updateMetadataWithCompletionBlock:^(NSError *error, NSError *previousError) {
                 if (error) {
                     [self stop];
                 }
@@ -855,7 +855,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
     }
 }
 
-- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, BOOL resourceChanged, NSError *previousError))completionBlock
+- (void)updateMetadataWithCompletionBlock:(void (^)(NSError *error, NSError *previousError))completionBlock
 {
     void (^updateCompletionBlock)(SRGMedia * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable, BOOL, SRGMedia * _Nullable, NSError * _Nullable) = ^(SRGMedia * _Nullable media, NSHTTPURLResponse * _Nullable HTTPResponse, NSError * _Nullable error, BOOL resourceChanged, SRGMedia * _Nullable previousMedia, NSError * _Nullable previousError) {
         // Do not erase playback errors with successful metadata updates
@@ -867,7 +867,7 @@ static SRGPlaybackSettings *SRGPlaybackSettingsFromLetterboxPlaybackSettings(SRG
         
         self.lastUpdateDate = NSDate.date;
         
-        completionBlock ? completionBlock(error, resourceChanged, previousError) : nil;
+        completionBlock ? completionBlock(error, previousError) : nil;
     };
     
     if (self.contentURLOverridden) {
