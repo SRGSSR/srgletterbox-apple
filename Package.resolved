@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "ede1a4aee58fc63a308e2babf3e33f55fedecb68",
-          "version": "6.10.2"
+          "revision": "fef761279a592960243e67f2aea110c6fa097fd8",
+          "version": "6.11.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/CommandersAct/iOSV5.git",
         "state": {
           "branch": null,
-          "revision": "2e56e97db76d55657d0dc7d13e2fcd81ce4eaa6c",
-          "version": "5.3.3"
+          "revision": "1350bca4163cfdd62d1508068601817d86d9f4a5",
+          "version": "5.4.4"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "5b42f334290ee3268f61b62d02e509ec74f4a721",
-          "version": "9.0.0"
+          "revision": "0e48e8e36951bc474ef80f29192759ea93d8009d",
+          "version": "9.1.0"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "93a46a26d9ea068e3d812755e5a44c7402b2ad04",
-          "version": "18.0.0"
+          "revision": "ae92436f7861651e66de5d33d2c0d1cf7d73345e",
+          "version": "19.0.0"
         }
       },
       {
