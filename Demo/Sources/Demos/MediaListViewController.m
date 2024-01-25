@@ -336,7 +336,10 @@
             
             NSNumber *vendorNumber = s_vendors[@(self.mediaList)];
             NSAssert(vendorNumber != nil, @"The business unit must be supported");
-            request = [[self.dataProvider tvScheduledLivestreamsForVendor:vendorNumber.integerValue signLanguageOnly:NO withCompletionBlock:completionBlock] requestWithPageSize:100];
+            request = [[self.dataProvider tvScheduledLivestreamsForVendor:vendorNumber.integerValue
+                                                         signLanguageOnly:NO
+                                                                eventType:SRGScheduledLivestreamEventTypeAll
+                                                      withCompletionBlock:completionBlock] requestWithPageSize:100];
             break;
         }
             
