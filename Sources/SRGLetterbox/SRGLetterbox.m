@@ -12,6 +12,8 @@
 @import SRGDiagnostics;
 @import SRGNetwork;
 
+#warning "Letterbox will be sunset in August 2025. Please upgrade to Pillarbox (https://github.com/SRGSSR/pillarbox-apple)."
+
 __attribute__((constructor)) static void SRGLetterboxDiagnosticsInit(void)
 {
     // SRGPlaybackMetrics anatomy:
