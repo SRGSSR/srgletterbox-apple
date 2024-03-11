@@ -35,7 +35,7 @@ platform :ios do
     clean_derived_data
 
     iphone14 = Device.new('iOS', 'iPhone 14')
-    appletv = Device.new('tvOS', 'Apple TV,OS=17.0')
+    appletv = Device.new('tvOS', 'Apple TV')
     devices = [iphone14, appletv]
 
     scheme = swift_package_name
