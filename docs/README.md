@@ -3,7 +3,7 @@
 [![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/srgletterbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/srgletterbox-apple)](https://github.com/SRGSSR/srgletterbox-apple/blob/master/LICENSE) 
 
 > [!IMPORTANT]
-> Letterbox will be sunset in August 2025 and will be replaced with [Pillarbox](https://github.com/SRGSSR/pillarbox-apple):
+> Letterbox will be sunset in August 2025 and will be replaced by [Pillarbox](https://github.com/SRGSSR/pillarbox-apple):
 >  - New SRG SSR products must use Pillarbox only.
 >  - Existing SRG SSR products using Letterbox must transition to Pillarbox before this date.
 
