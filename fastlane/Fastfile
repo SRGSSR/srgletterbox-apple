@@ -34,7 +34,7 @@ platform :ios do
     clean_result_files
     clean_derived_data
 
-    iphone14 = Device.new('iOS', 'iPhone 15')
+    iphone14 = Device.new('iOS', 'iPhone 16')
     appletv = Device.new('tvOS', 'Apple TV')
     devices = [iphone14, appletv]
 
