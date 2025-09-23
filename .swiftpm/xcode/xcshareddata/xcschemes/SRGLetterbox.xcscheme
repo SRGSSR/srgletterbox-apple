@@ -67,7 +67,19 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "DiagnosticTestCase/testPlaybackReportForTokenProtectedMedia">
+               </Test>
+               <Test
+                  Identifier = "DiagnosticTestCase/testPlaybackReportForTokenProtectedMediaChangedURN">
+               </Test>
+               <Test
+                  Identifier = "PlaybackTestCase/testRestartLiveOnlyAfterTokenExpiration">
+               </Test>
+               <Test
                   Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTFullDVRStream">
+               </Test>
+               <Test
+                  Identifier = "SwissTXTTestCase/testSkipToLiveForSwissTXTLimitedDVRStream">
                </Test>
                <Test
                   Identifier = "SwissTXTTestCase/testSwissTXTFullDVRNotYetAvailable">
