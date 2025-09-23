@@ -715,6 +715,15 @@ static NSMutableSet<SRGLetterboxViewController *> *s_letterboxViewControllers;
 
 - (NSArray<AVTimedMetadataGroup *> *)playerViewController:(SRGMediaPlayerViewController *)playerViewController navigationMarkersForSegments:(NSArray<id<SRGSegment>> *)segments
 {
+    if (@available(tvOS 26, *)) {
+        // Avoid uncontrolled memory growth on tvOS 26 due to artwork images associated with markers in livestreams
+        // leaking memory.
+        SRGMedia *media = self.controller.fullLengthMedia;
+        if (media.contentType != SRGContentTypeEpisode) {
+            return @[];
+        }
+    }
+
     NSMutableArray<AVTimedMetadataGroup *> *navigationMarkers = [NSMutableArray array];
     
     for (SRGSegment *segment in segments) {

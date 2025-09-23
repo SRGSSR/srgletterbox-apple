@@ -74,6 +74,7 @@
   "9.1.2-107": "- Fix slider layout issues on iOS 17.",
   "9.2.0-108": "- Support for Commanders Act version 5\n- Allow capturing the player in screenshots and screen recordings.",
   "9.2.1-109": "- Enhancement skip gestures handling and button Interactions\n- Modernize with Xcode 15.",
-    "9.3.0-110": "- Playback kill switch removed.\n- User identification preservation for analytics.",
-    "9.3.1-111": "- Maintenance release"
+  "9.3.0-110": "- Playback kill switch removed.\n- User identification preservation for analytics.",
+  "9.3.1-111": "- Maintenance release",
+  "9.3.2-112": "- Fix memory leak when playing livestreams on tvOS 26."
 }

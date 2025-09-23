@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "5756ddb0f09041e91bdb3b73c17296ac005ad11a",
-          "version": "5.0.3"
+          "revision": "9308921a2f6ef828cf9fae898ea4f080a81cdf11",
+          "version": "5.0.6"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
           "branch": null,
-          "revision": "fef761279a592960243e67f2aea110c6fa097fd8",
-          "version": "6.11.0"
+          "revision": "2d1cd9c0cb52ca76702023b528a059fc0a7d5a4d",
+          "version": "6.13.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/CommandersAct/iOSV5.git",
         "state": {
           "branch": null,
-          "revision": "1350bca4163cfdd62d1508068601817d86d9f4a5",
-          "version": "5.4.4"
+          "revision": "24ffbad1da8467b615958be9d0dd1e92c4396699",
+          "version": "5.4.12"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
         "state": {
           "branch": null,
-          "revision": "1aed8f7dc79ce8e674c61e430ef51ca3db18cea9",
-          "version": "1.11.1"
+          "revision": "fec2ff791b27fd9b9ceab9072025dea56409cca1",
+          "version": "1.11.3"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srganalytics-apple.git",
         "state": {
           "branch": null,
-          "revision": "0e48e8e36951bc474ef80f29192759ea93d8009d",
-          "version": "9.1.0"
+          "revision": "c1f3bdf97d4a134f9a2f9e8e6058d23bd09b13da",
+          "version": "9.1.6"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgappearance-apple.git",
         "state": {
           "branch": null,
-          "revision": "37858eb83365f498d3861cc546ba86a51e061293",
-          "version": "5.2.1"
+          "revision": "17415ec82264d47d882c19a5db33e1be31fb1de5",
+          "version": "5.2.2"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgdataprovider-apple.git",
         "state": {
           "branch": null,
-          "revision": "ae92436f7861651e66de5d33d2c0d1cf7d73345e",
-          "version": "19.0.0"
+          "revision": "543cc5b64294fb5dd52eaf9752b3aff1a1f581db",
+          "version": "19.0.8"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/SRGSSR/srgmediaplayer-apple.git",
         "state": {
           "branch": null,
-          "revision": "717608146d3787bd269d5a524e109ee30be828e4",
-          "version": "7.2.1"
+          "revision": "354b2c5bb53b412504c49c85639620677aeb4948",
+          "version": "7.2.3"
         }
       },
       {
