@@ -307,6 +307,7 @@ static void commonInit(SRGLetterboxTimeSlider *self)
     slider.resumingAfterSeek = YES;
     slider.tintColor = UIColor.whiteColor;
     slider.maximumTrackTintColor = [UIColor colorWithWhite:1.f alpha:0.3f];
+    [slider setThumbImage:[UIImage srg_letterboxImageNamed:@"slider_thumb"] forState:UIControlStateNormal];
     [self.contentView addSubview:slider];
     self.slider = slider;
     
