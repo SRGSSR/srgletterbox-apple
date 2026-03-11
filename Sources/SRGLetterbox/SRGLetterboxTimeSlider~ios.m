@@ -304,10 +304,9 @@ static void commonInit(SRGLetterboxTimeSlider *self)
 {
     SRGTimeSlider *slider = [[SRGTimeSlider alloc] initWithFrame:self.bounds];
     slider.delegate = self;
-    slider.minimumTrackTintColor = UIColor.whiteColor;
-    slider.maximumTrackTintColor = [UIColor colorWithWhite:1.f alpha:0.3f];
-    slider.bufferingTrackColor = [UIColor colorWithWhite:1.f alpha:0.5f];
     slider.resumingAfterSeek = YES;
+    slider.tintColor = UIColor.whiteColor;
+    slider.maximumTrackTintColor = [UIColor colorWithWhite:1.f alpha:0.3f];
     [self.contentView addSubview:slider];
     self.slider = slider;
     
