@@ -555,8 +555,8 @@ static NSDateComponentsFormatter *SRGControlsViewSkipIntervalAccessibilityFormat
     SRGMediaPlayerPlaybackState playbackState = self.controller.playbackState;
     SRGMediaPlayerStreamType streamType = self.controller.mediaPlayerController.streamType;
     self.durationLabel.hidden = (playbackState == SRGMediaPlayerPlaybackStateIdle || playbackState == SRGMediaPlayerPlaybackStateEnded || playbackState == SRGMediaPlayerPlaybackStatePreparing
-                                 || streamType != SRGStreamTypeOnDemand);
-    self.liveLabel.hidden = (streamType != SRGStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
+                                 || streamType != SRGMediaPlayerStreamTypeOnDemand);
+    self.liveLabel.hidden = (streamType != SRGMediaPlayerStreamTypeLive || playbackState == SRGMediaPlayerPlaybackStateIdle);
     
     SRGImageSet imageSet = self.imageSet;
     self.playbackButton.imageSet = imageSet;
