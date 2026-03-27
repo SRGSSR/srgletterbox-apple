@@ -418,7 +418,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     SRGMediaPlayerController *mediaPlayerController = controller.mediaPlayerController;
     
-    if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaTypeAudio
+    if (mediaPlayerController && mediaPlayerController.playbackState != SRGMediaPlayerPlaybackStateIdle && (mediaPlayerController.mediaType == SRGMediaPlayerMediaTypeAudio
                                                                                                             || controller.backgroundVideoPlaybackEnabled
                                                                                                             || UIApplication.sharedApplication.applicationState != UIApplicationStateBackground
                                                                                                             || AVAudioSession.srg_isAirPlayActive
@@ -435,7 +435,7 @@ static MPNowPlayingInfoLanguageOptionGroup *SRGLetterboxServiceLanguageOptionGro
         commandCenter.changePlaybackPositionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackPosition) && SRG_CMTIMERANGE_IS_NOT_EMPTY(controller.timeRange);
         commandCenter.enableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
         commandCenter.disableLanguageOptionCommand.enabled = (self.allowedCommands & SRGLetterboxCommandLanguageSelection);
-        commandCenter.changePlaybackRateCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackRate) && (mediaPlayerController.streamType != SRGStreamTypeLive);
+        commandCenter.changePlaybackRateCommand.enabled = (self.allowedCommands & SRGLetterboxCommandChangePlaybackRate) && (mediaPlayerController.streamType != SRGMediaPlayerStreamTypeLive);
     }
     else {
         commandCenter.playCommand.enabled = NO;
