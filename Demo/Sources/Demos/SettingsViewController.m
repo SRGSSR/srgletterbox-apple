@@ -13,7 +13,6 @@
 @import YYWebImage;
 
 #if TARGET_OS_IOS
-@import AppCenterDistribute;
 @import SafariServices;
 #endif
 
@@ -34,9 +33,6 @@ typedef NS_ENUM(NSInteger, SettingSection) {
 #endif
     SettingSectionPrefersMediaContent,
     SettingSectionReset,
-#if TARGET_OS_IOS
-    SettingSectionApplicationVersion,
-#endif
     SettingSectionCount
 };
 
@@ -292,7 +288,7 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 #if TARGET_OS_IOS
-    return MSACDistribute.isEnabled ? SettingSectionCount : SettingSectionCount - 1;
+    return SettingSectionCount - 1;
 #else
     return SettingSectionCount;
 #endif
@@ -344,11 +340,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             
         case SettingSectionBackgroundVideoPlayback: {
             return NSLocalizedString(@"Background video playback", nil);
-            break;
-        }
-            
-        case SettingSectionApplicationVersion: {
-            return NSLocalizedString(@"Application", nil);
             break;
         }
 #endif
@@ -419,11 +410,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionControlCenterIntegration:
         case SettingSectionBackgroundVideoPlayback: {
             return 2;
-            break;
-        }
-            
-        case SettingSectionApplicationVersion: {
-            return 1;
             break;
         }
 #endif
@@ -680,13 +666,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
             }
             break;
         }
-            
-        case SettingSectionApplicationVersion: {
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            cell.textLabel.text = NSLocalizedString(@"Versions and release notes", nil);
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            break;
-        }
 #endif
            
         case SettingSectionPrefersMediaContent: {
@@ -828,21 +807,6 @@ NSDictionary<NSString *, NSString *> *ApplicationSettingGlobalParameters(void)
         case SettingSectionBackgroundVideoPlayback: {
             ApplicationSettingSetBackgroundVideoPlaybackEnabled(indexPath.row == 1);
             SRGLetterboxService.sharedService.controller.backgroundVideoPlaybackEnabled = (indexPath.row == 1);
-            break;
-        }
-            
-        case SettingSectionApplicationVersion: {
-            // Clear internal App Center timestamp to force a new update request
-            [NSUserDefaults.standardUserDefaults removeObjectForKey:@"MSAppCenterPostponedTimestamp"];
-            [MSACDistribute checkForUpdate];
-            
-            // Display version history
-            NSString *appCenterURLString = [NSBundle.mainBundle.infoDictionary objectForKey:@"AppCenterURL"];
-            NSURL *appCenterURL = (appCenterURLString.length > 0) ? [NSURL URLWithString:appCenterURLString] : nil;
-            if (appCenterURL) {
-                SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:appCenterURL];
-                [self presentViewController:safariViewController animated:YES completion:nil];
-            }
             break;
         }
 #endif

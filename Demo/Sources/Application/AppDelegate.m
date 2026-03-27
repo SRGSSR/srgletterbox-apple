@@ -9,11 +9,6 @@
 #import "Application.h"
 #import "SettingsViewController.h"
 
-@import AppCenter;
-@import AppCenterCrashes;
-#if TARGET_OS_IOS
-@import AppCenterDistribute;
-#endif
 @import SRGAnalytics;
 @import SRGLetterbox;
 @import SRGNetwork;
@@ -34,10 +29,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:NULL];
     
     application.accessibilityLanguage = @"en";
-        
-#ifndef DEBUG
-    [self setupAppCenter];
-#endif
     
 #if TARGET_OS_IOS
     [SRGNetworkActivityManagement enable];
@@ -60,41 +51,6 @@ static __attribute__((constructor)) void ApplicationInit(void)
         self.window.rootViewController = ApplicationRootViewController();
     }
     return YES;
-}
-
-#pragma mark Helpers
-
-- (void)setupAppCenter
-{
-    NSString *appCenterSecret = [NSBundle.mainBundle objectForInfoDictionaryKey:@"AppCenterSecret"];
-    if (appCenterSecret.length == 0) {
-        return;
-    }
-    
-    [MSACCrashes setUserConfirmationHandler:^BOOL(NSArray<MSACErrorReport *> * _Nonnull errorReports) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"The application unexpectedly quit", nil)
-                                                                                 message:NSLocalizedString(@"Do you want to send an anonymous crash report so we can fix the issue?", nil)
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Don't send", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [MSACCrashes notifyWithUserConfirmation:MSACUserConfirmationSend];
-        }]];
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Send", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [MSACCrashes notifyWithUserConfirmation:MSACUserConfirmationSend];
-        }]];
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Always send", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [MSACCrashes notifyWithUserConfirmation:MSACUserConfirmationSend];
-        }]];
-        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-        
-        return YES;
-    }];
-    
-#if defined(APPCENTER)
-    MSACDistribute.updateTrack = MSACUpdateTrackPrivate;
-    [MSACAppCenter start:appCenterSecret withServices:@[ MSACCrashes.class, MSACDistribute.class ]];
-#else
-    [MSACAppCenter start:appCenterSecret withServices:@[ MSACCrashes.class ]];
-#endif
 }
 
 @end

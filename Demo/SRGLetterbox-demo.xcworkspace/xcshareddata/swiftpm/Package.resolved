@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "AppCenter",
-        "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
-        "state": {
-          "branch": null,
-          "revision": "404f0c432ae9d6191c6ca7c6553fe5566c5f4bc6",
-          "version": "5.12.0"
-        }
-      },
-      {
         "package": "ComScore",
         "repositoryURL": "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
         "state": {
@@ -71,15 +62,6 @@
           "branch": null,
           "revision": "12f19662426d0434d6c330c6974d53e2eb10ecd9",
           "version": "9.1.0"
-        }
-      },
-      {
-        "package": "PLCrashReporter",
-        "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
-        "state": {
-          "branch": null,
-          "revision": "0254f941c646b1ed17b243654723d0f071e990d0",
-          "version": "1.12.2"
         }
       },
       {
