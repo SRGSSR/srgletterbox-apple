@@ -51,42 +51,6 @@ platform :ios do
 
   # Nightlies
 
-  desc 'Build a new iOS nightly demo on App Center'
-  lane :nightly do
-    platform = 'iOS'
-    service = 'AppCenter'
-
-    build_number = latest_appcenter_build_number(
-      ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME']
-    )
-    build_number = xcode_override_build_number(build_number + 1)
-
-    branch_name = git_branch_name
-
-    notify_build_number_to_ci(nightly_build_name(branch_name))
-
-    build_lane(
-      configuration: 'Nightly_AppCenter',
-      scheme: demo_scheme,
-      display_name_suffix: nighlty_display_name_suffix(branch_name),
-      version_suffix: nightly_version_suffix(branch_name),
-      build_name: nightly_build_name(branch_name),
-      platform: platform
-    )
-
-    appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_NIGHTLY_APPCENTER_DESTINATIONS'],
-      notes: nightly_changelog(platform, service)
-    )
-
-    clean_build_artifacts
-
-    UI.message "SRGLetterbox-demo (Nightly #{build_number}) uploaded and distributed. ✅"
-
-    save_last_nightlies_success_git_commit_hash(platform, service)
-  end
-
   desc 'Build a new tvOS nightly demo on AppStore Connect and wait build processing.'
   lane :tvOSnightly do
     testflight_nightlies(platform: 'tvOS')
@@ -98,32 +62,6 @@ platform :ios do
   end
 
   # Demo
-
-  desc 'Build a new iOS demo on App Center with the current build number. You are responsible to tag the library and bump the version (and the build number).'
-  lane :demo do
-    platform = 'iOS'
-
-    notify_build_number_to_ci(nil)
-
-    build_lane(
-      configuration: 'Release_AppCenter',
-      scheme: demo_scheme,
-      platform: platform
-    )
-
-    appcenter_lane(
-      appname: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_APPNAME'],
-      destinations: ENV['LETTERBOX_DEMO_RELEASE_APPCENTER_DESTINATIONS'],
-      notes: what_s_new_for_demo,
-      notify_testers: true
-    )
-
-    clean_build_artifacts
-
-    UI.message "SRGLetterbox-demo (Release #{xcode_build_number}) uploaded and distributed. ✅"
-
-    UI.important('You are responsible to tag the library and bump the version (and the build number).')
-  end
 
   desc 'Build a new tvOS demo on AppStore Connect and wait build processing. You are responsible to tag the library and bump the version (and the build number) after.'
   lane :tvOSdemo do
@@ -163,11 +101,6 @@ platform :ios do
 
     UI.message "SRGLetterbox-demo (Nightly #{build_number}) uploaded. ✅"
 
-    appcenter_appname = appcenter_testflight_nightly_name(platform)
-    upload_appcenter_dsyms(appcenter_appname)
-
-    UI.message "SRGLetterbox-demo (Nightly #{build_number}) dSYM file OK. ✅"
-
     clean_build_artifacts
 
     pilot_distribute(platform, build_number, nightly_changelog(platform, service))
@@ -199,11 +132,6 @@ platform :ios do
       pilot_fast_upload(platform)
 
       UI.message "SRGLetterbox-demo (Release #{build_number}) uploaded. ✅"
-
-      appcenter_appname = appcenter_testflight_demo_name(platform)
-      upload_appcenter_dsyms(appcenter_appname)
-
-      UI.message "SRGLetterbox-demo (Release #{build_number}) dSYM file OK. ✅"
 
       clean_build_artifacts
     end
@@ -244,34 +172,6 @@ platform :ios do
       derived_data_path: srg_xcodebuild_derived_data_path,
       output_directory: output_directory
     )
-  end
-
-  desc 'Upload a build on App Center or just a dSYM file.'
-  private_lane :appcenter_lane do |options|
-    options[:notify_testers] ||= false
-
-    if options[:upload_dsym]
-      appcenter_upload(
-        api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-        owner_type: 'organization',
-        owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
-        app_name: options[:appname],
-        release_notes: options[:notes],
-        upload_dsym_only: true,
-        dsym: options[:upload_dsym]
-      )
-    else
-      appcenter_upload(
-        api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-        owner_type: 'organization',
-        owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
-        app_name: options[:appname],
-        release_notes: options[:notes],
-        destination_type: 'group',
-        destinations: options[:destinations],
-        notify_testers: options[:notify_testers]
-      )
-    end
   end
 
   after_all do |lane|
@@ -439,26 +339,6 @@ def demo_scheme
   'SRGLetterbox-demo'
 end
 
-def appcenter_testflight_nightly_name(platform)
-  platform ||= 'iOS'
-
-  if platform == 'iOS'
-    ENV['LETTERBOX_DEMO_IOS_NIGHTLY_APPCENTER_APPNAME']
-  else
-    ENV['LETTERBOX_DEMO_TVOS_NIGHTLY_APPCENTER_APPNAME']
-  end
-end
-
-def appcenter_testflight_demo_name(platform)
-  platform ||= 'iOS'
-
-  if platform == 'iOS'
-    ENV['LETTERBOX_DEMO_IOS_RELEASE_APPCENTER_APPNAME']
-  else
-    ENV['LETTERBOX_DEMO_TVOS_RELEASE_APPCENTER_APPNAME']
-  end
-end
-
 # Return current tag version
 def tag_version
   "#{xcode_marketing_version}-#{xcode_build_number}"
@@ -506,16 +386,6 @@ def srg_pilot_distribute(platform, build_number, changelog)
   )
 end
 
-def upload_appcenter_dsyms(appcenter_appname)
-  dsym = lane_context[SharedValues::DSYM_OUTPUT_PATH]
-  appcenter_lane(
-    appname: appcenter_appname,
-    notes: 'DSYMs from local build (via fastlane).',
-    upload_dsym: dsym
-  )
-  lane_context.delete(SharedValues::DSYM_OUTPUT_PATH)
-end
-
 # Share build number to the continuous integration
 def notify_build_number_to_ci(build_name)
   return unless ENV['TEAMCITY_VERSION']
@@ -525,15 +395,6 @@ def notify_build_number_to_ci(build_name)
   displayed_build_number += "-#{xcode_build_number}"
   displayed_build_number += "+#{build_name}" unless build_name.empty?
   puts "##teamcity[buildNumber '#{displayed_build_number}']"
-end
-
-# Returns current build number on App Center
-def latest_appcenter_build_number(app_name)
-  Integer(appcenter_fetch_version_number(
-    api_token: ENV['LETTERBOX_DEMO_APPCENTER_TOKEN'],
-    owner_name: ENV['LETTERBOX_DEMO_APPCENTER_OWNER'],
-    app_name: app_name
-  )['build_number'])
 end
 
 # Returns current build number on AppStore Connect
